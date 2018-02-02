@@ -10,8 +10,30 @@ cache:
 jobs:
   include:
     - stage: test
-      before_script: cd frontend && npm i
-    - before_script: cd backend && npm i
+      before_script:
+        - cd frontend && npm i
+        - npm i codecov
+      script:
+        - npm test -- --coverage
+        - ./node_modules/.bin/codecov
+
+    - stage: test
+      before_script:
+        - cd backend && npm i
+        - npm i codecov
+      script:
+        - npm test
 
     - stage: build
       script: cd frontend && npm run build
+
+    - stage: apiDoc
+      script: cd backend && npm run apidoc
+      deploy:
+        provider: pages
+        skip-cleanup: true
+        github-token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
+        keep-history: true
+        local-dir: doc # We already cd into the backend dir
+        on:
+          branch: master
