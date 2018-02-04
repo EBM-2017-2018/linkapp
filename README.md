@@ -2,7 +2,7 @@ EBM Boilerplate
 ===============
 
 [![Build Status](https://travis-ci.org/EBM-2017-2018/EBM-boilerplate.svg?branch=master)](https://travis-ci.org/EBM-2017-2018/EBM-boilerplate)
-[![Maintainability](https://api.codeclimate.com/v1/badges/7b5e67d7a1c25ebd47d0/maintainability)](https://codeclimate.com/github/EBM-2017-2018/EBM-boilerplate/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/8c769b7b37b10c0cda64/maintainability)](https://codeclimate.com/github/EBM-2017-2018/linkapp/maintainability)
 
 **Frontend :**
 
