@@ -16,5 +16,6 @@ Linkapp
 ##### Frontend :
 [![codecov](https://codecov.io/gh/EBM-2017-2018/linkapp/branch/develop/graph/badge.svg)](https://codecov.io/gh/EBM-2017-2018/linkapp)
 
-Ce dépot contient le code du projet projet Linkapp 
+Ce dépot contient le code du projet projet Linkapp.
+
 [ApiDoc du backend](https://ebm-2017-2018.github.io/linkapp/)
