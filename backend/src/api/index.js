@@ -94,7 +94,7 @@ router.post('/signup', (req, res) => {
  * @apiVersion 1.0.0-SNAPSHOT
  * @api {post} /signin connection
  * @apiDescription connection à la plateforme linkapp
- * @apiName Signup
+ * @apiName Signin
  * @apiGroup General
  * @apiParam {String} username
  * @apiParam {String} password
