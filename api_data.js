@@ -2,6 +2,69 @@ define({ "api": [
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "post",
+    "url": "/signin",
+    "title": "connection",
+    "description": "<p>connection à la plateforme linkapp</p>",
+    "name": "Signin",
+    "group": "General",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n \"success\": true,\n \"token\": \"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMmJ\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "User",
+            "description": "<p>not found code</p>"
+          },
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Wrong",
+            "description": "<p>password</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/index.js",
+    "groupTitle": "General",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/signin"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "post",
     "url": "/signup",
     "title": "inscription",
     "description": "<p>inscrit un nouvel utilisateur</p>",
@@ -101,72 +164,10 @@ define({ "api": [
     ]
   },
   {
-    "version": "1.0.0-SNAPSHOT",
-    "type": "post",
-    "url": "/signin",
-    "title": "connection",
-    "description": "<p>connection à la plateforme linkapp</p>",
-    "name": "Signup",
-    "group": "General",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "username",
-            "description": ""
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "password",
-            "description": ""
-          }
-        ]
-      }
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "{\n \"success\": true,\n \"token\": \"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMmJ\"\n }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "4xx": [
-          {
-            "group": "4xx",
-            "optional": false,
-            "field": "User",
-            "description": "<p>not found code</p>"
-          },
-          {
-            "group": "4xx",
-            "optional": false,
-            "field": "Wrong",
-            "description": "<p>password</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/api/index.js",
-    "groupTitle": "General",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:3000/api/signin"
-      }
-    ]
-  },
-  {
     "type": "get",
     "url": "/user/role/:username",
     "title": "getUserRole",
+    "version": "1.0.0-SNAPSHOT",
     "description": "<p>récupère le role de l'utilisateur</p>",
     "name": "getUserRole",
     "group": "User",
@@ -248,7 +249,6 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "src/api/users.js",
     "groupTitle": "User",
     "sampleRequest": [
