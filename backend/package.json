@@ -1,12 +1,11 @@
 {
-  "name": "boilerplate-backend",
+  "name": "Linkapp",
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "start": "dotenv nodemon src/index.js",
+    "start": "dotenv nodemon ./bin/www",
     "setup-env": "node -e \"(fs => fs.existsSync('.env') || fs.copyFileSync('.env.example', '.env'))(require('fs'))\"",
-    "test": "eslint src/",
-    "apidoc": "apidoc -i src/ -o doc/"
+    "test": "eslint src/"
   },
   "keywords": [
     "react",
@@ -21,13 +20,21 @@
   },
   "dependencies": {
     "body-parser": "^1.18.2",
+    "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "dotenv-cli": "^1.4.0",
+    "debug": "~2.6.0",
     "express": "^4.16.2",
     "express-jwt": "^5.3.0",
+    "express-session": "^1.15.2",
     "jsonwebtoken": "^8.1.0",
+    "mongoose": "^4.9.3",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
+    "bcrypt-nodejs": "0.0.3",
+    "morgan": "^1.7.0",
+    "passport-jwt": "^2.2.1",
+    "serve-favicon": "~2.3.2",
+    "validator": "^9.3.0"
   },
   "devDependencies": {
     "apidoc": "^0.17.6",
