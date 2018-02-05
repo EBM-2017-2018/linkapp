@@ -1,11 +1,13 @@
 {
   "name": "Linkapp",
-  "version": "0.1.0",
+  "version": "1.0.0-SNAPSHOT",
   "main": "index.js",
   "scripts": {
-    "start": "dotenv nodemon ./bin/www",
+    "start": "dotenv nodemon src/index.js",
+    "prod": "dotenv node src/index.js",
     "setup-env": "node -e \"(fs => fs.existsSync('.env') || fs.copyFileSync('.env.example', '.env'))(require('fs'))\"",
-    "test": "eslint src/"
+    "test": "eslint src/",
+    "apidoc": "apidoc -i src/ -o doc/"
   },
   "keywords": [
     "react",
@@ -14,9 +16,9 @@
   ],
   "license": "MIT",
   "apidoc": {
-    "title": "ApiDoc pour le projet Boilerplate",
+    "title": "ApiDoc pour le projet Linkapp",
     "url": "/api",
-    "sampleUrl": "http://localhost:4000/api"
+    "sampleUrl": "http://localhost:3000/api"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -34,7 +36,9 @@
     "morgan": "^1.7.0",
     "passport-jwt": "^2.2.1",
     "serve-favicon": "~2.3.2",
-    "validator": "^9.3.0"
+    "validator": "^9.3.0",
+    "passport-local": "^1.0.0",
+    "serve-static": "^1.13.1"
   },
   "devDependencies": {
     "apidoc": "^0.17.6",

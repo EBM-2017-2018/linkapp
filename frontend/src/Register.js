@@ -3,8 +3,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import Login from './Login';
-// import axios from 'axios';
 
 
 class Register extends Component {
@@ -70,17 +68,10 @@ class Register extends Component {
 
     handleClick(event){
         console.log("event", event);
-        var apiBaseUrl = "http://localhost:4000/api/";
         console.log("values",this.state.first_name,this.state.last_name,this.state.email,this.state.username,this.state.password);
 
         // TODO:check for empty values before hitting submit
-        var self = this;
-        var payload={
-            "first_name": this.state.first_name,
-            "last_name":this.state.last_name,
-            "email":this.state.email,
-            "password":this.state.password
-        }
+
     }
 }
 

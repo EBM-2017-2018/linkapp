@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import LoginScreen from "./LoginScreen";
 import './PageAccueilPerso.css';
 import MenuNavigationLinkapp from "./MenuNavigationLinkapp";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import logo from './IconeApp.png';
 
 class PageAccueilPerso extends Component {
-    constructor(props){
-        super(props);
-    }
 
     render() {
         return (
@@ -23,11 +19,11 @@ class PageAccueilPerso extends Component {
                 </MuiThemeProvider>
 
             <div className="blocApplication">
-                <a href="https://google.com"><img src={logo} className="application"/></a>
-                <a href="https://google.com"><img src={logo} className="application"/></a>
-                <a href="https://google.com"><img src={logo} className="application"/></a>
-                <a href="https://google.com"><img src={logo} className="application"/></a>
-                <a href="https://google.com"><img src={logo} className="application"/></a>
+                <a href="https://google.com"><img src={logo} className="application" alt="app1"/></a>
+                <a href="https://google.com"><img src={logo} className="application" alt="app2"/></a>
+                <a href="https://google.com"><img src={logo} className="application" alt="app3"/></a>
+                <a href="https://google.com"><img src={logo} className="application" alt="app4"/></a>
+                <a href="https://google.com"><img src={logo} className="application" alt="app5"/></a>
                 </div>
             </div>
         );

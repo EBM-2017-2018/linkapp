@@ -1,0 +1,19 @@
+version: "3"
+services:
+  linkapp:
+    image: ebm1718travis/linkapp:latest
+    environment:
+      - MONGODB_URI=mongodb://mongodb/node-auth
+    networks:
+      linkapp:
+      ebm-filrouge:
+        aliases:
+          - linkapp-master
+  mongodb:
+    image: mongo
+    networks:
+      - linkapp
+networks:
+  linkapp:
+  ebm-filrouge:
+    external: true
