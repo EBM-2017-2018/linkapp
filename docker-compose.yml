@@ -4,6 +4,7 @@ services:
     image: ebm1718travis/linkapp:latest
     environment:
       - MONGODB_URI=mongodb://mongodb/node-auth
+      - APP_PORT=4000
     networks:
       linkapp:
       ebm-filrouge:
