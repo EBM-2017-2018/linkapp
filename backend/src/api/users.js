@@ -18,6 +18,7 @@ const getToken = (headers) => {
 
 /**
  * @api {get} /user/role/:username getUserRole
+ * @apiVersion 1.0.0-SNAPSHOT
  * @apiDescription récupère le role de l'utilisateur
  * @apiName getUserRole
  * @apiGroup User
