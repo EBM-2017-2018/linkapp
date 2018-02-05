@@ -1,4 +1,4 @@
-EBM Boilerplate
+Linkapp
 ===============
 
 [![Build Status](https://travis-ci.org/EBM-2017-2018/EBM-boilerplate.svg?branch=master)](https://travis-ci.org/EBM-2017-2018/EBM-boilerplate)
@@ -14,6 +14,10 @@ Il comprend :
 - un backend en NodeJS et Express
 - un frontend en React
 - des tests automatiques grâce à Travis
+
+## Backend
+
+la documentation du backend se trouve ici : [!APIDoc](https://ebm-2017-2018.github.io/linkapp/)
 
 ## Mode d'emploi
 
