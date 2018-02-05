@@ -32,16 +32,13 @@
     "jsonwebtoken": "^8.1.0",
     "mongoose": "^4.9.3",
     "passport": "^0.4.0",
-<<<<<<< HEAD
     "bcrypt-nodejs": "0.0.3",
     "morgan": "^1.7.0",
     "passport-jwt": "^2.2.1",
     "serve-favicon": "~2.3.2",
-    "validator": "^9.3.0"
-=======
+    "validator": "^9.3.0",
     "passport-local": "^1.0.0",
     "serve-static": "^1.13.1"
->>>>>>> f7fbdb7d8162fe3522e904794ad34f1af9f858cf
   },
   "devDependencies": {
     "apidoc": "^0.17.6",
