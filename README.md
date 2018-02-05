@@ -17,7 +17,7 @@ Il comprend :
 
 ## Backend
 
-la documentation du backend se trouve ici : [!APIDoc](https://ebm-2017-2018.github.io/linkapp/)
+la documentation du backend se trouve ici : [APIDoc](https://ebm-2017-2018.github.io/linkapp/)
 
 ## Mode d'emploi
 
