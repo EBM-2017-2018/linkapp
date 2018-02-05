@@ -4,7 +4,6 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import PageAccueilPerso from './PageAccueilPerso';
-import App from "./App";
 import ReactDOM from "react-dom";
 
 
@@ -50,12 +49,7 @@ class Login extends Component {
     handleClick(event)
     {
         console.log("event", event)
-        var apiBaseUrl = "http://localhost:4000/api/";
-        var self = this;
-        var payload = {
-            "email": this.state.username,
-            "password": this.state.password
-        }
+
         console.log(this.state.username, this.state.password);
         ReactDOM.render(<PageAccueilPerso parentContext={this}/>, document.getElementById('root'));
 
