@@ -6,12 +6,12 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const config = require('./src/config/database');
+const config = require('./database');
 
 mongoose.connect(config.database);
 
-const api = require('./src/api/index');
-const users = require('./src/api/users');
+const api = require('../api/index');
+const users = require('../api/users');
 
 const app = express();
 
@@ -49,7 +49,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

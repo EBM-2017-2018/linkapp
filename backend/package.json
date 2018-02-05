@@ -3,7 +3,7 @@
   "version": "1.0.0-SNAPSHOT",
   "main": "index.js",
   "scripts": {
-    "start": "dotenv nodemon ./bin/www",
+    "start": "dotenv nodemon src/index.js",
     "prod": "dotenv node src/index.js",
     "setup-env": "node -e \"(fs => fs.existsSync('.env') || fs.copyFileSync('.env.example', '.env'))(require('fs'))\"",
     "test": "eslint src/",

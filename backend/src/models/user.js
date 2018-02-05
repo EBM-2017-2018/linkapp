@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 const bcrypt = require('bcrypt-nodejs');
 const validator = require('validator');
 
@@ -36,32 +36,31 @@ const UserSchema = new Schema({
 
 });
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', function pre(next) {
   const user = this;
   if (this.isModified('password') || this.isNew) {
-    bcrypt.genSalt(10000, (err, salt) => {
+    return bcrypt.genSalt(10000, (err, salt) => {
       if (err) {
         return next(err);
       }
-      bcrypt.hash(user.password, salt, null, (err, hash) => {
+      return bcrypt.hash(user.password, salt, null, (hash) => {
         if (err) {
           return next(err);
         }
         user.password = hash;
-        next();
+        return next();
       });
     });
-  } else {
-    return next();
   }
+  return next();
 });
 
-UserSchema.methods.comparePassword = function (passw, cb) {
+UserSchema.methods.comparePassword = function compare(passw, cb) {
   bcrypt.compare(passw, this.password, (err, isMatch) => {
     if (err) {
       return cb(err);
     }
-    cb(null, isMatch);
+    return cb(null, isMatch);
   });
 };
 

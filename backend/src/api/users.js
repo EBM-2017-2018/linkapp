@@ -1,9 +1,20 @@
 const express = require('express');
-const mongoose = require('mongoose');
 
 const router = express.Router();
 const User = require('../models/user');
 const passport = require('passport');
+
+
+const getToken = (headers) => {
+  if (headers && headers.authorization) {
+    const parted = headers.authorization.split(' ');
+    if (parted.length === 2) {
+      return parted[1];
+    }
+    return null;
+  }
+  return null;
+};
 
 /**
  * @api {get} /user/role/:username getUserRole
@@ -27,26 +38,34 @@ const passport = require('passport');
  * @apiError (4xx) wrongUser
  * @apiError (4xx) Unauthorized
  */
-router.get('/role/:username', passport.authenticate('jwt', { session: false} ), (req, res) => {
+router.get('/role/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
   const token = getToken(req.headers);
   if (token) {
     const userToFind = req.params.username;
-    User.findOne({
+    return User.findOne({
       username: userToFind,
     }, (err, user) => {
       if (err) throw err;
-
       if (!user) {
-        res.status(401).send({ success: false, msg: 'Wrong user' });
-      } else {
-        // check if password matches
-        // return the information including token as JSON
-        return res.json({ success: true, role: user.role });
+        return res.status(401)
+          .send({
+            success: false,
+            msg: 'Wrong user',
+          });
       }
+      // check if password matches
+      // return the role of the user
+      return res.json({
+        success: true,
+        role: user.role,
+      });
     });
-  } else {
-    return res.status(403).send({ success: false, msg: 'Unauthorized.' });
   }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Unauthorized.',
+    });
 });
 
 
@@ -87,35 +106,46 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false} ), 
  * @apiError (4xx) wrongRole
  * @apiError (4xx) Unauthorized
  */
-router.get('/list/:role', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/list/:role', passport.authenticate('jwt', { session: false }), (req, res) => {
   const token = getToken(req.headers);
   if (token) {
     const roleToFind = req.params.role;
-    User.find({
+    return User.find({
       role: roleToFind,
     }, (err, users) => {
       if (err) throw err;
 
       if (!users) {
-        res.status(401).send({success: false, msg: 'wrong role'});
-      } else {
-        // check if password matches
-        // return the information including token as JSON
-        const outputUsers = [];
-        users.forEach((user) => {
-          outputUsers.push({
-            username: user.username,
-            nom: user.nom,
-            prenom: user.prenom,
-            role: user.role,
-
+        return res.status(401)
+          .send({
+            success: false,
+            msg: 'wrong role',
           });
-        });
-        return res.json({ success: true, users: outputUsers });
       }
+      // check if password matches
+      // return the information including token as JSON
+      const outputUsers = [];
+      users.forEach((user) => {
+        outputUsers.push({
+          username: user.username,
+          nom: user.nom,
+          prenom: user.prenom,
+          role: user.role,
+
+        });
+      });
+      return res.json({
+        success: true,
+        users: outputUsers,
+      });
     });
-  } else {
-    return res.status(403).send({ success: false, msg: 'Unauthorized.' });
   }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Unauthorized.',
+    });
 });
+
+
 module.exports = router;
