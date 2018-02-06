@@ -3,20 +3,10 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const passport = require('passport');
-
-
-const getToken = (headers) => {
-  if (headers && headers.authorization) {
-    const parted = headers.authorization.split(' ');
-    if (parted.length === 2) {
-      return parted[1];
-    }
-    return null;
-  }
-  return null;
-};
+const tokenUtils = require('../libs/tokenUtils');
 
 /**
+ * @apiVersion 1.0.0-SNAPSHOT
  * @api {get} /user/role/:username getUserRole
  * @apiDescription récupère le role de l'utilisateur
  * @apiName getUserRole
@@ -39,7 +29,7 @@ const getToken = (headers) => {
  * @apiError (4xx) Unauthorized
  */
 router.get('/role/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const token = getToken(req.headers);
+  const token = tokenUtils.getToken(req.headers);
   if (token) {
     const userToFind = req.params.username;
     return User.findOne({
@@ -107,7 +97,7 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false }), 
  * @apiError (4xx) Unauthorized
  */
 router.get('/list/:role', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const token = getToken(req.headers);
+  const token = tokenUtils.getToken(req.headers);
   if (token) {
     const roleToFind = req.params.role;
     return User.find({
