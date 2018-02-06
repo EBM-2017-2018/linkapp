@@ -3,6 +3,7 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const serveStatic = require('serve-static');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const config = require('./database');
@@ -39,11 +40,13 @@ app.get('/', (req, res) => {
 
 app.use('/api', api);
 app.use('/users', users);
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+
+app.use(serveStatic('./public'));
+
+// 404 errors should now be handled by the frontend, so we redirect everything
+// to index.html
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // error handler
