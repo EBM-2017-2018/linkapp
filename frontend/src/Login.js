@@ -5,6 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import PageAccueilPerso from './PageAccueilPerso';
 import ReactDOM from "react-dom";
+import axios from 'axios';
 
 
 class Login extends Component {
@@ -49,12 +50,52 @@ class Login extends Component {
     handleClick(event)
     {
         console.log("event", event)
-
         console.log(this.state.username, this.state.password);
-        ReactDOM.render(<PageAccueilPerso parentContext={this}/>, document.getElementById('root'));
 
+        var apiBaseUrl = "https://linkapp.ebm.nymous.io/api/";
+        var self = this;
+        var donneesFormulaire={
+            "username":this.state.username,
+            "password":this.state.password
+        }
 
+        axios.post(apiBaseUrl+'signin', this.creerStructureFormulaire(donneesFormulaire), {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(function (response) {
+                console.log(response);
+
+                if(response.status == 200){
+                    console.log("Login successfull");
+                    ReactDOM.render(<PageAccueilPerso parentContext={this}/>, document.getElementById('root'));
+                    // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
+                }
+                else if(response.status == 401){
+                    console.log("Username password do not match");
+                    alert("username password do not match")
+                }
+                else{
+                    console.log("Username does not exists");
+                    alert("Username does not exist");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
+
+
+    creerStructureFormulaire(donneesFormulaire) {
+        var structureFormulaire = [];
+        for (var proprietes in donneesFormulaire) {
+            var encodedKey = encodeURIComponent(proprietes);
+            var encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
+            structureFormulaire.push(encodedKey + "=" + encodedValue);
+        }
+        structureFormulaire = structureFormulaire.join("&");
+        return structureFormulaire;
+    }
+
 }
 
 const style = {
