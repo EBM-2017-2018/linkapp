@@ -7,6 +7,42 @@ const serveStatic = require('serve-static');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const config = require('./database');
+/*
+const seeder = require('mongoose-seed');
+const configdb = require('./database');
+const User = require('../models/user');
+
+const data =
+  {
+    model: 'User',
+    user:
+      {
+        username: configdb.seedUsername,
+        password: configdb.seedPassword,
+        role: 'admin',
+        nom: 'root',
+        prenom: 'root',
+        email: 'root',
+      },
+  };
+seeder.disconnect();
+// Connect to MongoDB via Mongoose
+seeder.connect(configdb.database, () => {
+  console.log('Load Mongoose models');
+  //seeder.loadModel('../models/user');
+  User.findOne({
+    username: configdb.seedUsername,
+  }, (err, user) => {
+    if (err) throw err;
+    if (!user) {
+      seeder.populateModels(data);
+      console.log('seed added');
+    }
+    seeder.disconnect();
+    console.log('seeder disconnected');
+  });
+});
+*/
 
 mongoose.connect(config.database);
 
