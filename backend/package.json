@@ -17,7 +17,7 @@
   "license": "MIT",
   "apidoc": {
     "title": "ApiDoc pour le projet Linkapp",
-    "url": "/api",
+    "url": "/",
     "sampleUrl": "http://localhost:3000/api"
   },
   "dependencies": {

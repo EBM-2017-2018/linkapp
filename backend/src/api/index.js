@@ -12,7 +12,7 @@ const tokenUtils = require('../libs/tokenUtils');
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {post} /signin connection
+ * @api {post} /api/signin connection
  * @apiDescription connection à la plateforme linkapp
  * @apiName Signin
  * @apiGroup General
@@ -70,7 +70,7 @@ router.post('/signin', (req, res) => {
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {post} /signup inscription
+ * @api {post} /api/signup inscription
  * @apiDescription inscrit un nouvel utilisateur
  * @apiName Signup
  * @apiGroup General
@@ -152,7 +152,7 @@ router.post('/signup', (req, res) => {
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} /checktoken checkTokenValidity
+ * @api {get} /api/checktoken checkTokenValidity
  * @apiDescription vérifie le token d'un utilisateur
  * @apiName vérification
  * @apiGroup General
