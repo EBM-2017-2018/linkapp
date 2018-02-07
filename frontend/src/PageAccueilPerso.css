@@ -42,8 +42,7 @@ a
 }
 
 .blocApplication img {
-    max-width: 32%;
-    max-height: 32%;
+    max-width: 30%;
+    max-height: 30%;
     margin-top:3%;
-    margin-right:2px;
 }
