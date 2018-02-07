@@ -25,8 +25,7 @@ a
 #blocApplication
 {
     width: 70%;
-    display: flex;
-    justify-content: space-around;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -34,4 +33,17 @@ a
 {
 	font-size: 20px;
 	list-style:none;
+}
+
+#appAndMenuContainer {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.blocApplication img {
+    max-width: 32%;
+    max-height: 32%;
+    margin-top:3%;
+    margin-right:2px;
 }
