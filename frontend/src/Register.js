@@ -28,39 +28,39 @@ class Register extends Component {
                             title="Register"
                         />
                         <TextField
-                            hintText="Enter your First Name"
-                            floatingLabelText="First Name"
+                            hintText="Entrez le prenom"
+                            floatingLabelText="Prenom"
                             onChange={(event, newValue) => this.setState({first_name: newValue})}
                         />
                         <br/>
                         <TextField
-                            hintText="Enter your Last Name"
-                            floatingLabelText="Last Name"
+                            hintText="Enter le nom"
+                            floatingLabelText="Nom"
                             onChange={(event, newValue) => this.setState({last_name: newValue})}
                         />
                         <br/>
                         <TextField
-                            hintText="Enter your Email"
+                            hintText="Entrez l'email"
                             type="email"
                             floatingLabelText="Email"
                             onChange={(event, newValue) => this.setState({email: newValue})}
                         />
                         <br/>
                         <TextField
-                            hintText="Enter your Username"
+                            hintText="Entrez l'identifiant"
                             type="username"
-                            floatingLabelText="Username"
+                            floatingLabelText="Identifiant"
                             onChange={(event, newValue) => this.setState({username: newValue})}
                         />
                         <br/>
                         <TextField
                             type="password"
-                            hintText="Enter your Password"
-                            floatingLabelText="Password"
+                            hintText="Entrez le mot de passe"
+                            floatingLabelText="Mot de passe"
                             onChange={(event, newValue) => this.setState({password: newValue})}
                         />
                         <br/>
-                        <RaisedButton label="Submit" primary={true} style={style}
+                        <RaisedButton label="Valider" primary={true} style={style}
                                       onClick={(event) => this.handleClick(event)}/>
                     </div>
                 </MuiThemeProvider>
@@ -89,11 +89,12 @@ class Register extends Component {
         axios.post(apiBaseUrl+'/signup', donneesFormulaire, this.creerStructureFormulaire(donneesFormulaire))
             .then(function (response) {
                 console.log(response);
-                if(response.data.code == 200){
+                if(response.data.code === 200){
                     //  console.log("registration successfull");
                     var loginscreen=[];
+                    // TODO : changement d'ecran avec ReactDOM
                     loginscreen.push(<Login parentContext={this}/>);
-                    var loginmessage = "Not Registered yet.Go to registration";
+                    var loginmessage = "Pas encore inscrit. Inscrivez-vous";
                     self.props.parentContext.setState({loginscreen:loginscreen,
                         loginmessage:loginmessage,
                         buttonLabel:"Register",
