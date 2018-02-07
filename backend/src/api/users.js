@@ -6,7 +6,7 @@ const passport = require('passport');
 const tokenUtils = require('../libs/tokenUtils');
 
 /**
- * @apiVersion 1.0.0-SNAPSHOT
+* @apiVersion 1.0.0-SNAPSHOT
  * @api {get} /users/role/:username getUserRole
  * @apiDescription récupère le role de l'utilisateur
  * @apiName getUserRole
