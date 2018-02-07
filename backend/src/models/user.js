@@ -1,6 +1,7 @@
+/* eslint-disable consistent-return */
 const mongoose = require('mongoose');
 
-const { Schema } = mongoose;
+const { Schema } = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
 const validator = require('validator');
 
@@ -36,31 +37,32 @@ const UserSchema = new Schema({
 
 });
 
-UserSchema.pre('save', function pre(next) {
+UserSchema.pre('save', function hashPass(next) {
   const user = this;
   if (this.isModified('password') || this.isNew) {
-    return bcrypt.genSalt(10000, (err, salt) => {
+    bcrypt.genSalt(10, (err, salt) => {
       if (err) {
         return next(err);
       }
-      return bcrypt.hash(user.password, salt, null, (hash) => {
-        if (err) {
-          return next(err);
+      bcrypt.hash(user.password, salt, null, (error, hash) => {
+        if (error) {
+          return next(error);
         }
         user.password = hash;
-        return next();
+        console.log(hash);
+        next();
       });
     });
   }
-  return next();
 });
 
-UserSchema.methods.comparePassword = function compare(passw, cb) {
-  bcrypt.compare(passw, this.password, (err, isMatch) => {
+UserSchema.methods.comparePassword = function compare(password, hashedpassword, cb) {
+  bcrypt.compare(password, hashedpassword, (err, isMatch) => {
     if (err) {
       return cb(err);
     }
-    return cb(null, isMatch);
+    console.log(isMatch);
+    cb(false, isMatch);
   });
 };
 

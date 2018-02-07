@@ -19,3 +19,4 @@ Linkapp
 Ce dépot contient le code du projet projet Linkapp.
 
 [ApiDoc du backend](https://ebm-2017-2018.github.io/linkapp/)
+

@@ -22,16 +22,26 @@ a
     margin-right: 3px;
 }
 
-#blocApplication
-{
-    width: 70%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
 .lienMenu
 {
 	font-size: 20px;
 	list-style:none;
+}
+
+#appAndMenuContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.blocApplication .application {
+    max-width: 80%;
+    max-height: 80%;
+    margin-top:3%;
+    display: flex;
+    flex-direction: column;
+}
+
+.blocApplication {
+    display: flex;
+    flex-direction: row;
 }

@@ -1,20 +1,25 @@
 version: "3"
 services:
-  linkapp:
+  web:
     image: ebm1718travis/linkapp:latest
     environment:
       - MONGODB_URI=mongodb://mongodb/node-auth
-      - APP_PORT=4000
+      - SEED_USERNAME=root
+      - SEED_PASSWORD=root
     networks:
-      linkapp:
+      local:
       ebm-filrouge:
         aliases:
-          - linkapp-master
+          - linkapp
   mongodb:
     image: mongo
     networks:
       - linkapp
+    volume:
+      - mongo-volume:/data/db
 networks:
-  linkapp:
+  local:
   ebm-filrouge:
     external: true
+volumes:
+  mongo-volume:
