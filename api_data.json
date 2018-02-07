@@ -2,7 +2,7 @@
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "post",
-    "url": "/signin",
+    "url": "/api/signin",
     "title": "connection",
     "description": "<p>connection à la plateforme linkapp</p>",
     "name": "Signin",
@@ -58,14 +58,14 @@
     "groupTitle": "General",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/signin"
+        "url": "http://localhost:3000/api/api/signin"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "post",
-    "url": "/signup",
+    "url": "/api/signup",
     "title": "inscription",
     "description": "<p>inscrit un nouvel utilisateur</p>",
     "name": "Signup",
@@ -159,15 +159,73 @@
     "groupTitle": "General",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/signup"
+        "url": "http://localhost:3000/api/api/signup"
       }
     ]
   },
   {
-    "type": "get",
-    "url": "/user/role/:username",
-    "title": "getUserRole",
     "version": "1.0.0-SNAPSHOT",
+    "type": "get",
+    "url": "/api/checktoken",
+    "title": "checkTokenValidity",
+    "description": "<p>vérifie le token d'un utilisateur</p>",
+    "name": "v_rification",
+    "group": "General",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "JWT",
+            "description": "<p>token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n  \"success\": true\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "UnknownUser",
+            "description": ""
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "WrongToken",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/index.js",
+    "groupTitle": "General",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/api/checktoken"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
+    "url": "/users/role/:username",
+    "title": "getUserRole",
     "description": "<p>récupère le role de l'utilisateur</p>",
     "name": "getUserRole",
     "group": "User",
@@ -253,14 +311,14 @@
     "groupTitle": "User",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/user/role/:username"
+        "url": "http://localhost:3000/api/users/role/:username"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "/user/list/:role",
+    "url": "/users/list/:role",
     "title": "getUsersFromRole",
     "description": "<p>récupère la liste des utilisateurs pour un role donné</p>",
     "name": "getUsersFromRole",
@@ -341,7 +399,7 @@
     "groupTitle": "User",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/user/list/:role"
+        "url": "http://localhost:3000/api/users/list/:role"
       }
     ]
   }
