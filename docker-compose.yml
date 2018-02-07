@@ -14,7 +14,7 @@ services:
   mongodb:
     image: mongo
     networks:
-      - linkapp
+      - local
     volumes:
       - mongo-volume:/data/db
 networks:
