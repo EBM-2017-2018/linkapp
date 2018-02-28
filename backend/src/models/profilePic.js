@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
 
-var Item = new ItemSchema(
-  { img:
-      { data: Buffer, contentType: String }
-  }
-);
-var Item = mongoose.model('Clothes',ItemSchema);
+const { ItemSchema } = mongoose;
+
+const Item = new ItemSchema({
+  img:
+    {
+      data: Buffer,
+      contentType: String,
+    },
+});
+
+module.exports = mongoose.model('profilePics', Item);
