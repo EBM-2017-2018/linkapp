@@ -51,13 +51,12 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false }), 
         role: user.role,
       });
     });
-  } else {
-    return res.status(403)
-      .send({
-        success: false,
-        msg: 'Unauthorized.',
-      });
   }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Unauthorized.',
+    });
 });
 
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow,consistent-return */
 const configdb = require('./database');
 const User = require('../models/user');
 

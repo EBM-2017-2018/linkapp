@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt-nodejs');
 const validator = require('validator');
 
 
-
 const UserSchema = new Schema({
   username: {
     type: String,
