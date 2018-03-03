@@ -2,12 +2,13 @@ const express = require('express');
 
 const router = express.Router();
 const User = require('../models/user');
+
 const passport = require('passport');
 const tokenUtils = require('../libs/tokenUtils');
 
 /**
 * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} /users/role/:username getUserRole
+ * @api {get} /api/users/role/:username getUserRole
  * @apiDescription récupère le role de l'utilisateur
  * @apiName getUserRole
  * @apiGroup User
@@ -50,18 +51,19 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false }), 
         role: user.role,
       });
     });
+  } else {
+    return res.status(403)
+      .send({
+        success: false,
+        msg: 'Unauthorized.',
+      });
   }
-  return res.status(403)
-    .send({
-      success: false,
-      msg: 'Unauthorized.',
-    });
 });
 
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} /users/list/:role getUsersFromRole
+ * @api {get} /api/users/list/:role getUsersFromRole
  * @apiDescription récupère la liste des utilisateurs pour un role donné
  * @apiName getUsersFromRole
  * @apiGroup User
