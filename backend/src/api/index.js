@@ -140,6 +140,7 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
           email: req.body.email,
         });
         // ajout d'un user
+        // eslint-disable-next-line no-shadow
         newUser.save((err) => {
           if (err) {
             if (err.errors) {
@@ -190,11 +191,6 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
           .send({
             success: false,
             msg: 'Unauthorized.',
-            usr: user,
-            reqBody: req.body,
-            roleAdm: roleAdmin,
-            bodyrole: "",
-            userrole: user.role.localeCompare(roleAdmin),
           });
       }
     });

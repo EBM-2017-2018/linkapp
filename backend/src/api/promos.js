@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const express = require('express');
 
 const router = express.Router();
@@ -132,6 +133,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
       if (user.role === roleAdmin || user.role === roleIntervenant) {
         User.findOne({
           username: req.body.responsable,
+          // eslint-disable-next-line no-shadow
         }, (err, resp) => {
           if (err) throw err;
           if (!resp) {
@@ -147,7 +149,8 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
             membres: req.body.membres,
             responsable: req.body.responsable,
           });
-          // ajout d'une Promo
+          // ajout d'une Promo/
+          // eslint-disable-next-line no-shadow
           newPromo.save((err) => {
             if (err) {
               if (err.errors) {
@@ -262,6 +265,7 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
       if (user.role === roleAdmin || user.role === roleIntervenant) {
         User.findOne({
           username: req.body.responsable,
+          // eslint-disable-next-line no-shadow
         }, (err, resp) => {
           if (err) throw err;
           if (!resp) {
@@ -274,6 +278,7 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
           // maj d'une Promo
           Promo.update({
             nomPromo: req.body.nomPromo,
+          // eslint-disable-next-line no-shadow
           }, req.body, (err) => {
             if (err) {
               if (err.errors) {
