@@ -70,6 +70,34 @@
     "description": "<p>inscrit un nouvel utilisateur</p>",
     "name": "Signup",
     "group": "General",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "permission": [
+      {
+        "name": "'administrateur'"
+      },
+      {
+        "name": "'intervenant'"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
