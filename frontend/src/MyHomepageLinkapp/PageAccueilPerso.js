@@ -11,25 +11,6 @@ import AccountCircle from 'material-ui-icons/AccountCircle'
 import AccountCreation from '../AccountManagement/AccountCreation'
 import MyInformations from '../MyAccount/MyInformations'
 
-const styles = theme => ({
-  appAndMenuContainer: {
-    display: 'flex',
-  },
-
-  appBarLinkapp: {
-  flexGrow: 1,
-  },
-
-  nameApp: {
-    flex: 1,
-  },
-
-  myProfileIconButton: {
-    justifyContent: "flex-end",
-  }
-
-})
-
 
 class PageAccueilPerso extends Component {
 

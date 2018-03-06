@@ -4,16 +4,12 @@ import { MenuItem, MenuList } from 'material-ui'
 import ReactDOM from 'react-dom'
 import AccountCreation from '../AccountManagement/AccountCreation'
 
-const styles = theme => {
-  paper: {
-    marginRight: theme.spacing.unit * 2
-  }
-};
+
 
 class MenuNavigationLinkapp extends Component {
     render () {
         return (
-              <Paper className="paper">
+              <Paper>
                   <MenuList>
                     <MenuItem onClick={(event) => this.onClickMyApps(event)}>Mes applications</MenuItem>
                     <MenuItem onClick={(event) => this.props.onClick(event)}>Gestion des comptes</MenuItem>
