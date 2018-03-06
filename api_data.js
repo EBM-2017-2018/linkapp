@@ -2,7 +2,7 @@ define({ "api": [
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "post",
-    "url": "/api/signin",
+    "url": "api/signin",
     "title": "connection",
     "description": "<p>connection à la plateforme linkapp</p>",
     "name": "Signin",
@@ -58,14 +58,14 @@ define({ "api": [
     "groupTitle": "General",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/api/signin"
+        "url": "http://localhost:3000/apiapi/signin"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "post",
-    "url": "/api/signup",
+    "url": "api/signup",
     "title": "inscription",
     "description": "<p>inscrit un nouvel utilisateur</p>",
     "name": "Signup",
@@ -159,17 +159,17 @@ define({ "api": [
     "groupTitle": "General",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/api/signup"
+        "url": "http://localhost:3000/apiapi/signup"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "/api/checktoken",
+    "url": "api/checktoken",
     "title": "checkTokenValidity",
     "description": "<p>vérifie le token d'un utilisateur</p>",
-    "name": "v_rification",
+    "name": "verification",
     "group": "General",
     "parameter": {
       "fields": {
@@ -217,14 +217,329 @@ define({ "api": [
     "groupTitle": "General",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/api/checktoken"
+        "url": "http://localhost:3000/apiapi/checktoken"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "/users/role/:username",
+    "url": "api/promos/:promo",
+    "title": "getPromo",
+    "description": "<p>récupère la promo passée en paramètre</p>",
+    "name": "getPromo",
+    "group": "Promo",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "promo",
+            "description": "<p>le nom de la promo</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>succès</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Promo",
+            "optional": false,
+            "field": "promotion",
+            "description": "<p>la promo demandée</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": true,\n    \"promotion\": {\n        \"_id\": \"5a9aa79b687a689eba75a121\",\n        \"nomPromo\": \"EBM1\",\n        \"responsable\": \"root\",\n        \"__v\": 0,\n        \"membres\": [\n            \"root\",\n            \"test\",\n            \"test2\"\n        ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "wrongUser",
+            "description": ""
+          },
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/promos.js",
+    "groupTitle": "Promo",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/apiapi/promos/:promo"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "post",
+    "url": "api/promos",
+    "title": "setPromo",
+    "description": "<p>récupère la promo passée en paramètre</p>",
+    "name": "setPromo",
+    "group": "Promo",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "body:\n    {\n    \"nomPromo\":\"EBM\",\n    \"responsable\":\"root\",\n    \"membres\":[\"root\",\"test\"]\n    }",
+        "type": "json"
+      }
+    ],
+    "permission": [
+      {
+        "name": "'administrateur'"
+      },
+      {
+        "name": "'intervenant'"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "nomPromo",
+            "description": "<p>le nom de la promo</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "responsable",
+            "description": "<p>le username du responsable</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String[]",
+            "optional": true,
+            "field": "membres",
+            "description": "<p>les usernames des membres</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>succès</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": true,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "wrongUser",
+            "description": ""
+          },
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/promos.js",
+    "groupTitle": "Promo",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/apiapi/promos"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "put",
+    "url": "api/promos",
+    "title": "updatePromo",
+    "description": "<p>récupère la promo passée en paramètre</p>",
+    "name": "updatePromo",
+    "group": "Promo",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "body:\n    {\n    \"nomPromo\":\"EBM\",\n    \"responsable\":\"root\",\n    \"membres\":[\"root\",\"test\"]\n    }",
+        "type": "json"
+      }
+    ],
+    "permission": [
+      {
+        "name": "'administrateur'"
+      },
+      {
+        "name": "'intervenant'"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "nomPromo",
+            "description": "<p>le nom de la promo</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "responsable",
+            "description": "<p>le username du responsable</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String[]",
+            "optional": true,
+            "field": "membres",
+            "description": "<p>les usernames des membres * @apiSuccess {Boolean} success succès</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": true,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "wrongUser",
+            "description": ""
+          },
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/promos.js",
+    "groupTitle": "Promo",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/apiapi/promos"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
+    "url": "api/users/role/:username",
     "title": "getUserRole",
     "description": "<p>récupère le role de l'utilisateur</p>",
     "name": "getUserRole",
@@ -311,14 +626,14 @@ define({ "api": [
     "groupTitle": "User",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/users/role/:username"
+        "url": "http://localhost:3000/apiapi/users/role/:username"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "/users/list/:role",
+    "url": "api/users/list/:role",
     "title": "getUsersFromRole",
     "description": "<p>récupère la liste des utilisateurs pour un role donné</p>",
     "name": "getUsersFromRole",
@@ -399,7 +714,7 @@ define({ "api": [
     "groupTitle": "User",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/users/list/:role"
+        "url": "http://localhost:3000/apiapi/users/list/:role"
       }
     ]
   }
