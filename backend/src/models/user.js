@@ -1,9 +1,11 @@
 /* eslint-disable consistent-return */
 const mongoose = require('mongoose');
 
-const { Schema } = mongoose.Schema;
+
+const { Schema } = mongoose;
 const bcrypt = require('bcrypt-nodejs');
 const validator = require('validator');
+
 
 const UserSchema = new Schema({
   username: {
@@ -25,7 +27,7 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['etudiant', 'intervenant', 'admin'],
+    enum: ['etudiant', 'intervenant', 'administrateur'],
     default: 'etudiant',
     required: true,
   },
