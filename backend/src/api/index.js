@@ -13,7 +13,7 @@ const User = require('../models/user');
 const ProfilePic = require('../models/profilePic');
 const tokenUtils = require('../libs/tokenUtils');
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'uploads/' }).single('testProfilePic');
 
 const roleAdmin = 'administrateur';
 const roleIntervenant = 'intervenant';
@@ -198,26 +198,37 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
 });
 
 
-router.post('/profilepic', upload.any(), (req, res) => {
-  console.log(req.file);
+router.post('/profilepic', (req, res) => {
   console.log(req.headers);
-  const newItem = new ProfilePic({
-    img: {
-      data: fs.readFileSync(req.file.path),
-      contentType: 'image/png',
-    },
-    username: req.body.username,
-  });
-  newItem.save((err) => {
+  upload(req, res, (err) => {
+    console.log(req.file);
     if (err) {
-      return res.json({
-        success: false,
-        msg: err,
-      });
+      // An error occurred when uploading
+      console.log(err);
+      return res.status(422).send('an Error occured');
     }
-    return res.json({
-      success: true,
+    // -----
+    const newItem = new ProfilePic({
+      img: {
+        data: fs.readFileSync(req.file.path),
+        contentType: 'image/png',
+      },
+      username: req.body.username,
     });
+    newItem.save((err) => {
+      if (err) {
+        return res.json({
+          success: false,
+          msg: err,
+        });
+      }
+      return res.json({
+        success: true,
+      });
+    });
+    // ----
+    // No error occured.
+    //return res.send('Upload Completed ');
   });
 });
 
@@ -236,7 +247,7 @@ router.get('/profilepic/:username', (req, res) => {
     }
     console.log(profilePic.img.data);
     res.contentType(profilePic.img.contentType);
-    return res.send(profilePic.img.data);
+    return res.send({ fs });
   });
 });
 /**
