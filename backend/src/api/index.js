@@ -4,20 +4,11 @@ const config = require('../config/database');
 require('../config/passport')(passport);
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
-const fs = require('fs');
-const Grid = require('gridfs-stream');
-const mongoose = require('mongoose');
-
-Grid.mongo = mongoose.mongo;
 
 
 const router = express.Router();
 const User = require('../models/user');
-const ProfilePic = require('../models/profilePic');
 const tokenUtils = require('../libs/tokenUtils');
-
-const upload = multer({ dest: 'uploads/' }).single('testProfilePic');
 
 const roleAdmin = 'administrateur';
 const roleIntervenant = 'intervenant';
@@ -210,58 +201,6 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
 });
 
 
-router.post('/profilepic', (req, res) => {
-  console.log(req.headers);
-  upload(req, res, (err) => {
-    console.log(req.file);
-    if (err) {
-      // An error occurred when uploading
-      console.log(err);
-      return res.status(422).send('an Error occured');
-    }
-    // -----
-    const newItem = new ProfilePic({
-      img: {
-        data: fs.readFileSync(req.file.path),
-        contentType: 'image/png',
-      },
-      username: req.body.username,
-    });
-    newItem.save((err) => {
-      if (err) {
-        return res.json({
-          success: false,
-          msg: err,
-        });
-      }
-      return res.json({
-        success: true,
-      });
-    });
-    // ----
-    // No error occured.
-    return res.send('Upload Completed ');
-  });
-});
-
-router.get('/profilepic/:username', (req, res) => {
-  const userToFind = req.params.username;
-  return ProfilePic.findOne({
-    username: userToFind,
-  }, (err, profilePic) => {
-    if (err) throw err;
-    if (!profilePic) {
-      return res.status(401)
-        .send({
-          success: false,
-          msg: 'no profile pic',
-        });
-    }
-    console.log(profilePic.img.data);
-    res.contentType(profilePic.img.contentType);
-    return res.send({ fs });
-  });
-});
 /**
  * @apiVersion 1.0.0-SNAPSHOT
  * @api {get} checktoken checkTokenValidity
