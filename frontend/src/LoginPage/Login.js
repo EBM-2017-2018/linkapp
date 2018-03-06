@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import AppBar from 'material-ui/AppBar'
 import TextField from 'material-ui/TextField'
 import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
-import { Button } from 'material-ui'
+import { Button, MuiThemeProvider, Toolbar, Typography } from 'material-ui'
+import theme from '../theme'
+
 
 class Login extends Component {
     constructor(props){
@@ -18,45 +19,45 @@ class Login extends Component {
 
     render() {
         return (
-            <div>
-                <MuiThemeProvider>
-                    <div>
-                        <AppBar
-                            title="Page de connexion"
-                        />
-                      <TextField
-                        label="Entrez votre identifiant"
-                        placeholder="Identifiant"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        margin="normal"
-                        onChange={(event, newValue) => this.setState({username: newValue})}
-                      />
-                        <br/>
-                      <TextField
-                        label="Entrez votre mot de passe"
-                        placeholder="Mot de passe"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        margin="normal"
-                        onChange={(event, newValue) => this.setState({password: newValue})}
-                      />
-                        <br/>
-                        <Button primary={true} style={style} variant="raised"
-                                      onClick={(event) => this.handleClick(event)}>
-                          Envoyer
-                        </Button>
-                    </div>
-                </MuiThemeProvider>
+            <div className="root">
+                <AppBar position="static">
+                  <Toolbar>
+                    <Typography variant="title" color="inherit" className="titleAppBarLogin">
+                        Page Login Linkapp
+                    </Typography>
+                  </Toolbar>
+                </AppBar>
+              <TextField
+                label="Entrez votre identifiant"
+                placeholder="Identifiant"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin="normal"
+                onChange={(event, newValue) => this.setState({username: newValue})}
+              />
+                <br/>
+              <TextField
+                label="Entrez votre mot de passe"
+                placeholder="Mot de passe"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin="normal"
+                onChange={(event, newValue) => this.setState({password: newValue})}
+              />
+                <br/>
+                <Button primary={true} style={style} variant="raised" color="secondary"
+                              onClick={(event) => this.handleClick(event)}>
+                  Envoyer
+                </Button>
             </div>
         );
     }
 
     handleClick(event)
     {
-        console.log("event", event)
+        console.log("event", event) // TODO : delete this
         console.log(this.state.username, this.state.password);
 
         var apiBaseUrl = "https://linkapp.ebm.nymous.io/api/";
@@ -64,7 +65,11 @@ class Login extends Component {
             "username":this.state.username,
             "password":this.state.password
         }
-        ReactDOM.render(<PageAccueilPerso parentContext={this}/>, document.getElementById('root'));
+        ReactDOM.render(<MuiThemeProvider theme={theme}>
+          <PageAccueilPerso parentContext={this}/>
+        </MuiThemeProvider>,
+          document.getElementById('root'));
+          // TODO : delete when link with back done
         axios.post(apiBaseUrl+'signin', this.creerStructureFormulaire(donneesFormulaire), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
@@ -105,6 +110,13 @@ class Login extends Component {
 }
 
 const style = {
-    margin: 15,
+    //margin: 15,
+  root: {
+    flexGrow: 1,
+  },
+
+  titleAppBarLogin: {flex:1,
+    }
 };
+
 export default Login;
