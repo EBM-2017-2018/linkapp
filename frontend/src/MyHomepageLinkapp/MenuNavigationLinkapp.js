@@ -1,8 +1,8 @@
 import React from 'react';
 import { Component} from 'react';
 import Paper from 'material-ui/Paper';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
+import MenuItem from 'material-ui/es/Menu/MenuItem'
+import Menu from 'material-ui/es/Menu/Menu'
 
 const style = {
     display: 'inline-block',
@@ -15,10 +15,10 @@ class MenuNavigationLinkapp extends Component {
             <div>
                 <Paper style={style}>
                     <Menu>
-                        <MenuItem primaryText="Mes applications"/>
-                        <MenuItem primaryText="Gestion des comptes"/>
-                        <MenuItem primaryText="Gestion des promos"/>
-                        <MenuItem primaryText="Emploi du temps"/>
+                      <MenuItem>Mes applications</MenuItem>
+                      <MenuItem>Gestion des comptes</MenuItem>
+                      <MenuItem>Gestion des promos</MenuItem>
+                      <MenuItem>Emploi du temps</MenuItem>
                     </Menu>
                 </Paper>
             </div>

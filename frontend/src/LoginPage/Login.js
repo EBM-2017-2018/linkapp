@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import PageAccueilPerso from './PageAccueilPerso';
+import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso';
 import ReactDOM from "react-dom";
 import axios from 'axios';
+import { Button } from 'material-ui'
 
 
 class Login extends Component {
@@ -25,21 +25,30 @@ class Login extends Component {
                         <AppBar
                             title="Page de connexion"
                         />
-                        <TextField
-                            hintText="Entrez votre identifiant"
-                            floatingLabelText="Identifiant"
-                            onChange={(event, newValue) => this.setState({username: newValue})}
-                        />
+                      <TextField
+                        label="Entrez votre identifiant"
+                        placeholder="Identifiant"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        margin="normal"
+                        onChange={(event, newValue) => this.setState({username: newValue})}
+                      />
                         <br/>
-                        <TextField
-                            type="password"
-                            hintText="Entrez votre mot de passe"
-                            floatingLabelText="Mot de passe"
-                            onChange={(event, newValue) => this.setState({password: newValue})}
-                        />
+                      <TextField
+                        label="Entrez votre mot de passe"
+                        placeholder="Mot de passe"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        margin="normal"
+                        onChange={(event, newValue) => this.setState({password: newValue})}
+                      />
                         <br/>
-                        <RaisedButton label="Envoyer" primary={true} style={style}
-                                      onClick={(event) => this.handleClick(event)}/>
+                        <Button primary={true} style={style} variant="raised"
+                                      onClick={(event) => this.handleClick(event)}>
+                          Envoyer
+                        </Button>
                     </div>
                 </MuiThemeProvider>
             </div>
