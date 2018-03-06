@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import {Menu, MenuItem, Paper} from "material-ui";
+import React, { Component } from 'react'
+import { Menu, MenuItem, Paper } from 'material-ui'
 
 class MyProfileMenu extends Component {
 

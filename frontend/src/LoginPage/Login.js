@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
-import TextField from 'material-ui/TextField';
-import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso';
-import ReactDOM from "react-dom";
-import axios from 'axios';
+import React, { Component } from 'react'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import AppBar from 'material-ui/AppBar'
+import TextField from 'material-ui/TextField'
+import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso'
+import ReactDOM from 'react-dom'
+import axios from 'axios'
 import { Button } from 'material-ui'
-
 
 class Login extends Component {
     constructor(props){
