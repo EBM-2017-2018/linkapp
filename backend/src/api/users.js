@@ -8,7 +8,7 @@ const tokenUtils = require('../libs/tokenUtils');
 
 /**
 * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} api/users/role/:username getUserRole
+ * @api {get} users/role/:username getUserRole
  * @apiDescription récupère le role de l'utilisateur
  * @apiName getUserRole
  * @apiGroup User
@@ -62,7 +62,7 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false }), 
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} api/users/list/:role getUsersFromRole
+ * @api {get} users/list/:role getUsersFromRole
  * @apiDescription récupère la liste des utilisateurs pour un role donné
  * @apiName getUsersFromRole
  * @apiGroup User

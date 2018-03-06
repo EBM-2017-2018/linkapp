@@ -20,7 +20,7 @@ const roleIntervenant = 'intervenant';
 const roleEtudiant = 'etudiant';
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {post} api/signin connection
+ * @api {post} signin connection
  * @apiDescription connection à la plateforme linkapp
  * @apiName Signin
  * @apiGroup General
@@ -78,7 +78,7 @@ router.post('/signin', (req, res) => {
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {post} api/signup inscription
+ * @api {post} signup inscription
  * @apiDescription inscrit un nouvel utilisateur
  * @apiName Signup
  * @apiGroup General
@@ -252,7 +252,7 @@ router.get('/profilepic/:username', (req, res) => {
 });
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} api/checktoken checkTokenValidity
+ * @api {get} checktoken checkTokenValidity
  * @apiDescription vérifie le token d'un utilisateur
  * @apiName verification
  * @apiGroup General

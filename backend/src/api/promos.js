@@ -11,10 +11,87 @@ const tokenUtils = require('../libs/tokenUtils');
 const roleAdmin = 'administrateur';
 const roleIntervenant = 'intervenant';
 
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {get} promos/listpromos getListPromo
+ * @apiDescription récupère la liste des promotions
+ * @apiName getListPromo
+ * @apiGroup Promo
+ * @apiHeader {String} Authorization JWT token
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiSuccess {Boolean} success succès
+ * @apiSuccess {Promo} promotions la liste des promotions
+ * @apiSuccessExample {json} Success-Response:
+ *{
+    "success": true,
+    "promotions": [
+        {
+            "_id": "5a9aa79b687a689eba75a121",
+            "nomPromo": "EBM1",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root",
+                "test",
+                "test2"
+            ]
+        },
+        {
+            "_id": "5a9aab5e69e4d89f0e467b23",
+            "nomPromo": "EBM2",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root"
+            ]
+        },
+        {
+            "_id": "5a9aab6c69e4d89f0e467b24",
+            "nomPromo": "EBM",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root"
+            ]
+        }
+    ]
+}
+ *
+ * @apiError (4xx) Unauthorized
+ */
+router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (token) {
+    return Promo.find((err, listPromo) => {
+      if (err) throw err;
+      if (!listPromo) {
+        return res.status(401)
+          .send({
+            success: false,
+            msg: 'no promotion',
+          });
+      }
+      // check if password matches
+      // return the role of the user
+      return res.json({
+        success: true,
+        promotions: listPromo,
+      });
+    });
+  }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Unauthorized.',
+    });
+});
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} api/promos/:promo getPromo
+ * @api {get} promos/:promo getPromo
  * @apiDescription récupère la promo passée en paramètre
  * @apiName getPromo
  * @apiGroup Promo
@@ -42,7 +119,7 @@ const roleIntervenant = 'intervenant';
     }
 }
  *
- * @apiError (4xx) wrongUser
+ * @apiError (4xx) wrongPromo
  * @apiError (4xx) Unauthorized
  */
 router.get('/:promo', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -77,7 +154,7 @@ router.get('/:promo', passport.authenticate('jwt', { session: false }), (req, re
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {post} api/promos setPromo
+ * @api {post} promos setPromo
  * @apiDescription récupère la promo passée en paramètre
  * @apiName setPromo
  * @apiGroup Promo
@@ -210,7 +287,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {put} api/promos updatePromo
+ * @api {put} promos updatePromo
  * @apiDescription récupère la promo passée en paramètre
  * @apiName updatePromo
  * @apiGroup Promo
