@@ -71,6 +71,81 @@ router.post('/signin', (req, res) => {
   });
 });
 
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {post} updatePassword updatePassword
+ * @apiDescription connection à la plateforme linkapp
+ * @apiName updatePassword
+ * @apiGroup General
+ * @apiHeader {String} Authorization JWT token
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiParam {String} password
+ * @apiParam {String} newPassword
+ * @apiExample Example usage:
+ *     body:
+ * {
+     password: test,
+     newPassword: t3st,
+ * }
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ *  "success": true,
+ *  }
+ * @apiError (4xx) User not found
+ * @apiError (5xx) InternalError
+ * @apiError (4xx) Wrong password
+ */
+router.post('/updatepassword', (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (token) {
+    const decodedToken = tokenUtils.decodeToken(token);
+    const userToFind = decodedToken.username;
+    User.findOne({
+      username: userToFind,
+    }, (err, user) => {
+      if (err) throw err;
+
+      if (!user) {
+        res.status(401)
+          .send({
+            success: false,
+            msg: 'User not found.',
+          });
+      } else {
+        // check if password matches
+        user.comparePassword(req.body.password, user.password, (error, isMatch) => {
+          if (isMatch && !error) {
+            user.set({ password: req.body.newPassword });
+            user.save((err) => {
+              if (err) throw err;
+              console.log(err);
+              if (!err) {
+                return res.status(200).send({
+                  success: true,
+                });
+              }
+              return res.status(500)
+                .send({
+                  success: false,
+                  msg: 'server error',
+                });
+            });
+          } else {
+            res.status(401)
+              .send({
+                success: false,
+                msg: 'Wrong password.',
+              });
+          }
+        });
+      }
+    });
+  }
+});
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
@@ -123,7 +198,7 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
         (
           (
             req.body.role.localeCompare(roleAdmin) === 0
-          || req.body.role.localeCompare(roleIntervenant) === 0
+            || req.body.role.localeCompare(roleIntervenant) === 0
           )
           && user.role.localeCompare(roleAdmin) === 0
         )
