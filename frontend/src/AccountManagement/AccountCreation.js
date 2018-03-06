@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { TextField } from 'material-ui'
-
 
 class AccountCreation extends Component {
   constructor(props){

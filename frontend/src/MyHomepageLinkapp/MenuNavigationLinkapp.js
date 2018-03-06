@@ -4,7 +4,6 @@ import { MenuItem, MenuList } from 'material-ui'
 import ReactDOM from 'react-dom'
 import AccountCreation from '../AccountManagement/AccountCreation'
 
-
 const styles = theme => {
   paper: {
     marginRight: theme.spacing.unit * 2

@@ -8,10 +8,8 @@ import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
 import Menu from 'material-ui/Menu'
 import AccountCircle from 'material-ui-icons/AccountCircle'
-import ReactDOM from 'react-dom'
 import AccountCreation from '../AccountManagement/AccountCreation'
 import MyInformations from '../MyAccount/MyInformations'
-
 
 const styles = theme => ({
   appAndMenuContainer: {

@@ -4,7 +4,6 @@ import LoginScreen from './LoginPage/LoginScreen'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import theme from './theme'
 
-
 class App extends Component {
     constructor(props){
         super(props);

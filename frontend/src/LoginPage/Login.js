@@ -7,7 +7,6 @@ import axios from 'axios'
 import { Button, MuiThemeProvider, Toolbar, Typography } from 'material-ui'
 import theme from '../theme'
 
-
 class Login extends Component {
     constructor(props){
         super(props);
