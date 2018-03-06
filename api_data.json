@@ -193,6 +193,104 @@
   },
   {
     "version": "1.0.0-SNAPSHOT",
+    "type": "post",
+    "url": "updatePassword",
+    "title": "updatePassword",
+    "description": "<p>connection à la plateforme linkapp</p>",
+    "name": "updatePassword",
+    "group": "General",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "newPassword",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "    body:\n{\n     password: test,\n     newPassword: t3st,\n}",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n \"success\": true,\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "User",
+            "description": "<p>not found</p>"
+          },
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Wrong",
+            "description": "<p>password</p>"
+          }
+        ],
+        "5xx": [
+          {
+            "group": "5xx",
+            "optional": false,
+            "field": "InternalError",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/index.js",
+    "groupTitle": "General",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/updatePassword"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
     "type": "get",
     "url": "checktoken",
     "title": "checkTokenValidity",
@@ -642,6 +740,55 @@
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
+    "url": "file/:username",
+    "title": "getProfilePic",
+    "description": "<p>vérifie le token d'un utilisateur</p>",
+    "name": "getProfilePic",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>username de l'utilisateur dont on veut récupérer la photo</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "UnknownPicture",
+            "description": ""
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "WrongToken",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/pictures.js",
+    "groupTitle": "User",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/file/:username"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
     "url": "users/role/:username",
     "title": "getUserRole",
     "description": "<p>récupère le role de l'utilisateur</p>",
@@ -818,6 +965,69 @@
     "sampleRequest": [
       {
         "url": "http://localhost:3000/api/users/list/:role"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "post",
+    "url": "upload",
+    "title": "setProfilePic",
+    "description": "<p>upload d'une photo de profil</p>",
+    "name": "setProfilePic",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>multipart/form-data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n  \"Content-Type\": \"multipart/form-data\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "    body:\n{\n     username: test,\n     file: file to upload,\n}",
+        "type": "json"
+      }
+    ],
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n \"success\": true,\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Wrong",
+            "description": "<p>password</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/pictures.js",
+    "groupTitle": "User",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/upload"
       }
     ]
   }
