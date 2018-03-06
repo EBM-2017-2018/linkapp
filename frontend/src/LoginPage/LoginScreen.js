@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import Login from './Login';
-
+import React, { Component } from 'react'
+import Login from './Login'
 
 class LoginScreen extends Component {
     constructor(props){
