@@ -1,4 +1,4 @@
-/* eslint-disable consistent-return */
+/* eslint-disable consistent-return,no-shadow */
 const passport = require('passport');
 const config = require('../config/database');
 require('../config/passport')(passport);
@@ -228,7 +228,7 @@ router.post('/profilepic', (req, res) => {
     });
     // ----
     // No error occured.
-    //return res.send('Upload Completed ');
+    return res.send('Upload Completed ');
   });
 });
 
