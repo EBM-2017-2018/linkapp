@@ -18,7 +18,7 @@
   "apidoc": {
     "title": "ApiDoc pour le projet Linkapp",
     "url": "/",
-    "sampleUrl": "http://localhost:3000/api"
+    "sampleUrl": "http://localhost:3000/api/"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
