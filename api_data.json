@@ -2,7 +2,7 @@
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "post",
-    "url": "api/signin",
+    "url": "signin",
     "title": "connection",
     "description": "<p>connection à la plateforme linkapp</p>",
     "name": "Signin",
@@ -58,14 +58,14 @@
     "groupTitle": "General",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/apiapi/signin"
+        "url": "http://localhost:3000/api/signin"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "post",
-    "url": "api/signup",
+    "url": "signup",
     "title": "inscription",
     "description": "<p>inscrit un nouvel utilisateur</p>",
     "name": "Signup",
@@ -159,14 +159,14 @@
     "groupTitle": "General",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/apiapi/signup"
+        "url": "http://localhost:3000/api/signup"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "api/checktoken",
+    "url": "checktoken",
     "title": "checkTokenValidity",
     "description": "<p>vérifie le token d'un utilisateur</p>",
     "name": "verification",
@@ -217,14 +217,89 @@
     "groupTitle": "General",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/apiapi/checktoken"
+        "url": "http://localhost:3000/api/checktoken"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "api/promos/:promo",
+    "url": "promos/listpromos",
+    "title": "getListPromo",
+    "description": "<p>récupère la liste des promotions</p>",
+    "name": "getListPromo",
+    "group": "Promo",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>succès</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Promo",
+            "optional": false,
+            "field": "promotions",
+            "description": "<p>la liste des promotions</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": true,\n    \"promotions\": [\n        {\n            \"_id\": \"5a9aa79b687a689eba75a121\",\n            \"nomPromo\": \"EBM1\",\n            \"responsable\": \"root\",\n            \"__v\": 0,\n            \"membres\": [\n                \"root\",\n                \"test\",\n                \"test2\"\n            ]\n        },\n        {\n            \"_id\": \"5a9aab5e69e4d89f0e467b23\",\n            \"nomPromo\": \"EBM2\",\n            \"responsable\": \"root\",\n            \"__v\": 0,\n            \"membres\": [\n                \"root\"\n            ]\n        },\n        {\n            \"_id\": \"5a9aab6c69e4d89f0e467b24\",\n            \"nomPromo\": \"EBM\",\n            \"responsable\": \"root\",\n            \"__v\": 0,\n            \"membres\": [\n                \"root\"\n            ]\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/promos.js",
+    "groupTitle": "Promo",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/promos/listpromos"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
+    "url": "promos/:promo",
     "title": "getPromo",
     "description": "<p>récupère la promo passée en paramètre</p>",
     "name": "getPromo",
@@ -295,7 +370,7 @@
           {
             "group": "4xx",
             "optional": false,
-            "field": "wrongUser",
+            "field": "wrongPromo",
             "description": ""
           },
           {
@@ -311,14 +386,14 @@
     "groupTitle": "Promo",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/apiapi/promos/:promo"
+        "url": "http://localhost:3000/api/promos/:promo"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "post",
-    "url": "api/promos",
+    "url": "promos",
     "title": "setPromo",
     "description": "<p>récupère la promo passée en paramètre</p>",
     "name": "setPromo",
@@ -427,14 +502,14 @@
     "groupTitle": "Promo",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/apiapi/promos"
+        "url": "http://localhost:3000/api/promos"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "put",
-    "url": "api/promos",
+    "url": "promos",
     "title": "updatePromo",
     "description": "<p>récupère la promo passée en paramètre</p>",
     "name": "updatePromo",
@@ -532,14 +607,14 @@
     "groupTitle": "Promo",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/apiapi/promos"
+        "url": "http://localhost:3000/api/promos"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "api/users/role/:username",
+    "url": "users/role/:username",
     "title": "getUserRole",
     "description": "<p>récupère le role de l'utilisateur</p>",
     "name": "getUserRole",
@@ -626,14 +701,14 @@
     "groupTitle": "User",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/apiapi/users/role/:username"
+        "url": "http://localhost:3000/api/users/role/:username"
       }
     ]
   },
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "api/users/list/:role",
+    "url": "users/list/:role",
     "title": "getUsersFromRole",
     "description": "<p>récupère la liste des utilisateurs pour un role donné</p>",
     "name": "getUsersFromRole",
@@ -714,7 +789,7 @@
     "groupTitle": "User",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/apiapi/users/list/:role"
+        "url": "http://localhost:3000/api/users/list/:role"
       }
     ]
   }
