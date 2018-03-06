@@ -10,6 +10,7 @@ import Menu from 'material-ui/Menu'
 import AccountCircle from 'material-ui-icons/AccountCircle'
 import ReactDOM from 'react-dom'
 import AccountCreation from '../AccountManagement/AccountCreation'
+import MyInformations from '../MyAccount/MyInformations'
 
 
 const styles = theme => ({
@@ -45,6 +46,16 @@ class PageAccueilPerso extends Component {
 
   handleClose = () => {
     this.setState({ anchorEl: null });
+  };
+
+  handleClickPersonalMenu = (event) => {
+    this.setState({displayedScreen: 'MyInformations'});
+  };
+
+  handleClickMenuNav = (event) => {
+  console.log(event);
+  this.setState({displayedScreen: 'AccountMgt'});
+  // ReactDOM.render(<AccountCreation parentContext={this}/>, document.getElementById('blocApplication'));
   };
 
   render() {
@@ -83,7 +94,7 @@ class PageAccueilPerso extends Component {
                       open={open}
                       onClose={this.handleClose}
                     >
-                      <MenuItem onClick={this.handleClose}>Mon profil</MenuItem>
+                      <MenuItem onClick={(event) => {this.handleClickPersonalMenu(event)}}>Mon profil</MenuItem>
                       <MenuItem onClick={this.handleClose}>Mon emploi du temps</MenuItem>
                     </Menu>
                   </div>
@@ -92,7 +103,7 @@ class PageAccueilPerso extends Component {
             </div>
             <div id="appAndMenuContainer">
               <div>
-                <MenuNavigationLinkapp onClick={(event) => {this.handleClick(event)}} />
+                <MenuNavigationLinkapp onClick={(event) => {this.handleClickMenuNav(event)}} />
               </div>
               <div className="blocApplication">
                 {this.state.displayedScreen === 'app' && (
@@ -104,28 +115,22 @@ class PageAccueilPerso extends Component {
                     <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app5"/>
                   </div>)
                 }
+
                 {this.state.displayedScreen === 'AccountMgt' && (
                   <div>
                     <AccountCreation parentContext={this}/>
                   </div>
                 )
                 }
+
+                {this.state.displayedScreen === 'MyInformations' && (
+                  <MyInformations parentContext={this} />
+                )}
                 </div>
             </div>
           </div>
-      );
+      )
   }
-
-  handleClick(event) {
-    console.log('babar');
-    this.setState({displayedScreen: 'AccountMgt'});
-    // ReactDOM.render(<AccountCreation parentContext={this}/>, document.getElementById('blocApplication'));
   }
-
-  handleClickAccountManagement (event) {
-    ReactDOM.render(<AccountCreation parentContext={this}/>, document.getElementById('blocApplication'));
-  }
-
-}
 
 export default PageAccueilPerso;
