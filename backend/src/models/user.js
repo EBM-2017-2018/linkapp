@@ -58,6 +58,7 @@ UserSchema.pre('save', function hashPass(next) {
   }
 });
 
+
 UserSchema.methods.comparePassword = function compare(password, hashedpassword, cb) {
   bcrypt.compare(password, hashedpassword, (err, isMatch) => {
     if (err) {

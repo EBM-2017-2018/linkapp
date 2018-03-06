@@ -18,6 +18,7 @@ require('../config/seed');
 const api = require('../api/index');
 const users = require('../api/users');
 const promos = require('../api/promos');
+const pictures = require('../api/pictures');
 
 const app = express();
 
@@ -48,7 +49,7 @@ app.get('/', (req, res) => {
 app.use('/api', api);
 app.use('/api/users', users);
 app.use('/api/promos', promos);
-
+app.use('/api/pictures', pictures);
 app.use(serveStatic('./public'));
 
 // 404 errors should now be handled by the frontend, so we redirect everything
@@ -57,15 +58,5 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// error handler
-app.use((err, req, res) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
 
 module.exports = app;

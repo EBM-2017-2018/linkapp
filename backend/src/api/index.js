@@ -4,20 +4,11 @@ const config = require('../config/database');
 require('../config/passport')(passport);
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
-const fs = require('fs');
-const Grid = require('gridfs-stream');
-const mongoose = require('mongoose');
-
-Grid.mongo = mongoose.mongo;
 
 
 const router = express.Router();
 const User = require('../models/user');
-const ProfilePic = require('../models/profilePic');
 const tokenUtils = require('../libs/tokenUtils');
-
-const upload = multer({ dest: 'uploads/' }).single('testProfilePic');
 
 const roleAdmin = 'administrateur';
 const roleIntervenant = 'intervenant';
@@ -80,6 +71,81 @@ router.post('/signin', (req, res) => {
   });
 });
 
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {post} updatePassword updatePassword
+ * @apiDescription connection à la plateforme linkapp
+ * @apiName updatePassword
+ * @apiGroup General
+ * @apiHeader {String} Authorization JWT token
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiParam {String} password
+ * @apiParam {String} newPassword
+ * @apiExample Example usage:
+ *     body:
+ * {
+     password: test,
+     newPassword: t3st,
+ * }
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ *  "success": true,
+ *  }
+ * @apiError (4xx) User not found
+ * @apiError (5xx) InternalError
+ * @apiError (4xx) Wrong password
+ */
+router.post('/updatepassword', (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (token) {
+    const decodedToken = tokenUtils.decodeToken(token);
+    const userToFind = decodedToken.username;
+    User.findOne({
+      username: userToFind,
+    }, (err, user) => {
+      if (err) throw err;
+
+      if (!user) {
+        res.status(401)
+          .send({
+            success: false,
+            msg: 'User not found.',
+          });
+      } else {
+        // check if password matches
+        user.comparePassword(req.body.password, user.password, (error, isMatch) => {
+          if (isMatch && !error) {
+            user.set({ password: req.body.newPassword });
+            user.save((err) => {
+              if (err) throw err;
+              console.log(err);
+              if (!err) {
+                return res.status(200).send({
+                  success: true,
+                });
+              }
+              return res.status(500)
+                .send({
+                  success: false,
+                  msg: 'server error',
+                });
+            });
+          } else {
+            res.status(401)
+              .send({
+                success: false,
+                msg: 'Wrong password.',
+              });
+          }
+        });
+      }
+    });
+  }
+});
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
@@ -132,7 +198,7 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
         (
           (
             req.body.role.localeCompare(roleAdmin) === 0
-          || req.body.role.localeCompare(roleIntervenant) === 0
+            || req.body.role.localeCompare(roleIntervenant) === 0
           )
           && user.role.localeCompare(roleAdmin) === 0
         )
@@ -210,58 +276,6 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
 });
 
 
-router.post('/profilepic', (req, res) => {
-  console.log(req.headers);
-  upload(req, res, (err) => {
-    console.log(req.file);
-    if (err) {
-      // An error occurred when uploading
-      console.log(err);
-      return res.status(422).send('an Error occured');
-    }
-    // -----
-    const newItem = new ProfilePic({
-      img: {
-        data: fs.readFileSync(req.file.path),
-        contentType: 'image/png',
-      },
-      username: req.body.username,
-    });
-    newItem.save((err) => {
-      if (err) {
-        return res.json({
-          success: false,
-          msg: err,
-        });
-      }
-      return res.json({
-        success: true,
-      });
-    });
-    // ----
-    // No error occured.
-    return res.send('Upload Completed ');
-  });
-});
-
-router.get('/profilepic/:username', (req, res) => {
-  const userToFind = req.params.username;
-  return ProfilePic.findOne({
-    username: userToFind,
-  }, (err, profilePic) => {
-    if (err) throw err;
-    if (!profilePic) {
-      return res.status(401)
-        .send({
-          success: false,
-          msg: 'no profile pic',
-        });
-    }
-    console.log(profilePic.img.data);
-    res.contentType(profilePic.img.contentType);
-    return res.send({ fs });
-  });
-});
 /**
  * @apiVersion 1.0.0-SNAPSHOT
  * @api {get} checktoken checkTokenValidity
