@@ -6,6 +6,10 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const fs = require('fs');
+const Grid = require('gridfs-stream');
+const mongoose = require('mongoose');
+
+Grid.mongo = mongoose.mongo;
 
 
 const router = express.Router();
@@ -18,6 +22,7 @@ const upload = multer({ dest: 'uploads/' }).single('testProfilePic');
 const roleAdmin = 'administrateur';
 const roleIntervenant = 'intervenant';
 const roleEtudiant = 'etudiant';
+
 /**
  * @apiVersion 1.0.0-SNAPSHOT
  * @api {post} signin connection
@@ -82,6 +87,13 @@ router.post('/signin', (req, res) => {
  * @apiDescription inscrit un nouvel utilisateur
  * @apiName Signup
  * @apiGroup General
+ * @apiHeader {String} Authorization JWT token
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiPermission 'administrateur'
+ * @apiPermission 'intervenant'
  * @apiParam {String} username
  * @apiParam {String} password
  * @apiParam {String="etudiant","intervenant","administrateur"} role
