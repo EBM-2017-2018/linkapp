@@ -312,7 +312,7 @@ router.get('/checkandrefreshtoken', passport.authenticate('jwt', { session: fals
         // return the role of the user
         return res.json({
           success: true,
-          token: token,
+          newToken: token,
         });
       });
     }
