@@ -193,6 +193,64 @@ define({ "api": [
   },
   {
     "version": "1.0.0-SNAPSHOT",
+    "type": "get",
+    "url": "checkandrefreshtoken",
+    "title": "checkAndRefreshToken",
+    "description": "<p>vérifie le token d'un utilisateur et renvoie un nouveau token</p>",
+    "name": "checkAndRefreshToken",
+    "group": "General",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "JWT",
+            "description": "<p>token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n  \"success\": true\n  \"token\": \"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "UnknownUser",
+            "description": ""
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "WrongToken",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/index.js",
+    "groupTitle": "General",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/checkandrefreshtoken"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
     "type": "post",
     "url": "updatePassword",
     "title": "updatePassword",
@@ -286,64 +344,6 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:3000/api/updatePassword"
-      }
-    ]
-  },
-  {
-    "version": "1.0.0-SNAPSHOT",
-    "type": "get",
-    "url": "checktoken",
-    "title": "checkTokenValidity",
-    "description": "<p>vérifie le token d'un utilisateur</p>",
-    "name": "verification",
-    "group": "General",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "JWT",
-            "description": "<p>token</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "{\n  \"success\": true\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "401": [
-          {
-            "group": "401",
-            "optional": false,
-            "field": "UnknownUser",
-            "description": ""
-          }
-        ],
-        "403": [
-          {
-            "group": "403",
-            "optional": false,
-            "field": "WrongToken",
-            "description": ""
-          }
-        ]
-      }
-    },
-    "filename": "src/api/index.js",
-    "groupTitle": "General",
-    "sampleRequest": [
-      {
-        "url": "http://localhost:3000/api/checktoken"
       }
     ]
   },
@@ -513,6 +513,94 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:3000/api/promos/:promo"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
+    "url": "listpromosof/:username",
+    "title": "listPromosOf",
+    "description": "<p>récupère la liste des promos dont l'utilisateur est membre</p>",
+    "name": "listPromosf",
+    "group": "Promo",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "promo",
+            "description": "<p>le nom de la promo</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>succès</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Promo",
+            "optional": false,
+            "field": "promotion",
+            "description": "<p>la promo demandée</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": true,\n    \"promotions\": [\n        {\n            \"_id\": \"5a9aa79b687a689eba75a121\",\n            \"nomPromo\": \"EBM1\",\n            \"responsable\": \"root\",\n            \"__v\": 0,\n            \"membres\": [\n                \"root\",\n                \"test\",\n                \"test2\"\n            ]\n        },\n        {\n            \"_id\": \"5a9aab5e69e4d89f0e467b23\",\n            \"nomPromo\": \"EBM2\",\n            \"responsable\": \"root\",\n            \"__v\": 0,\n            \"membres\": [\n                \"root\"\n            ]\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/promos.js",
+    "groupTitle": "Promo",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/listpromosof/:username"
       }
     ]
   },
@@ -740,6 +828,70 @@ define({ "api": [
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
+    "url": "users/allusers",
+    "title": "getAllUsers",
+    "description": "<p>récupère la liste des utilisateurs</p>",
+    "name": "getAllUsers",
+    "group": "User",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>succès</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "users[]",
+            "optional": false,
+            "field": "users",
+            "description": "<p>liste d'utilisateur</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n \"success\": true,\n \"users\": [\n     {\n         \"username\": \"eleve\",\n         \"nom\": \"test\",\n         \"prenom\": \"test\",\n         \"role\": \"etudiant\"\n     },\n     {\n         \"username\": \"petitpoucet\",\n         \"nom\": \"test\",\n        \"prenom\": \"test\",\n        \"role\": \"etudiant\"\n     }\n ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/users.js",
+    "groupTitle": "User",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/users/allusers"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
     "url": "file/:username",
     "title": "getProfilePic",
     "description": "<p>vérifie le token d'un utilisateur</p>",
@@ -909,8 +1061,8 @@ define({ "api": [
               "\"administrateur\""
             ],
             "optional": false,
-            "field": "le",
-            "description": "<p>role dont on cherche les utilisateurs</p>"
+            "field": "role",
+            "description": "<p>le role dont on cherche les utilisateurs</p>"
           }
         ]
       }
@@ -965,6 +1117,83 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:3000/api/users/list/:role"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
+    "url": "users/getusersstartingwith/:name",
+    "title": "getUsersStartingWith",
+    "description": "<p>récupère la liste des utilisateurs dont le nom commence par</p>",
+    "name": "getUsersStartingWith",
+    "group": "User",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>le début du nom des utilisateurs que l'on cherche</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>succès</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "users[]",
+            "optional": false,
+            "field": "users",
+            "description": "<p>liste d'utilisateur</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n \"success\": true,\n \"users\": [\n     {\n         \"username\": \"eleve\",\n         \"nom\": \"test\",\n         \"prenom\": \"test\",\n         \"role\": \"etudiant\"\n     },\n     {\n         \"username\": \"petitpoucet\",\n         \"nom\": \"test\",\n        \"prenom\": \"test\",\n        \"role\": \"etudiant\"\n     }\n ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/users.js",
+    "groupTitle": "User",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/users/getusersstartingwith/:name"
       }
     ]
   },
