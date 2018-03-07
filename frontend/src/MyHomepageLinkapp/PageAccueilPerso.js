@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './Style/PageAccueilPerso.css'
 import MenuNavigationLinkapp from './MenuNavigationLinkapp'
 import logo from './Images/IconeApp.png'
-import { AppBar, IconButton, MenuItem } from 'material-ui'
+import { AppBar, IconButton, MenuItem, withStyles } from 'material-ui'
 import ApplicationIcon from './ApplicationIcon'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
@@ -10,14 +10,27 @@ import Menu from 'material-ui/Menu'
 import AccountCircle from 'material-ui-icons/AccountCircle'
 import AccountCreation from '../AccountManagement/AccountCreation'
 import MyInformations from '../MyAccount/MyInformations'
+import PropTypes from 'prop-types'
 
+const styles = {
+  root: {
+    flexGrow: 1,
+  },
+  flex: {
+    flex: 1,
+  },
+};
 
 class PageAccueilPerso extends Component {
 
-  state = {
-    anchorEl: null,
-    displayedScreen: 'app'
-  };
+  constructor (props) {
+    super(props);
+    this.token = props.token;
+    this.state = {
+      anchorEl: null,
+      displayedScreen: 'Mes applications'
+    };
+  }
 
   handleMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -32,21 +45,20 @@ class PageAccueilPerso extends Component {
   };
 
   handleClickMenuNav = (event) => {
-  console.log(event);
-  this.setState({displayedScreen: 'AccountMgt'});
-  // ReactDOM.render(<AccountCreation parentContext={this}/>, document.getElementById('blocApplication'));
+  this.setState({displayedScreen: event.target.textContent});
   };
 
   render() {
+    const { classes } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
       return (
           <div className="pageAccueilPerso">
-            <div className="appBarLinkapp">
+            <div className={classes.root}>
               <AppBar position="static">
                 <Toolbar>
-                  <Typography variant="title" color="inherit" className="nameApp">
+                  <Typography variant="title" color="inherit" className={classes.flex}>
                     Linkapp
                   </Typography>
                   <div>
@@ -82,20 +94,20 @@ class PageAccueilPerso extends Component {
             </div>
             <div id="appAndMenuContainer">
               <div>
-                <MenuNavigationLinkapp onClick={(event) => {this.handleClickMenuNav(event)}} />
+                <MenuNavigationLinkapp menuClick={this.handleClickMenuNav.bind(this)} />
               </div>
-              <div className="blocApplication">
-                {this.state.displayedScreen === 'app' && (
-                  <div>
+              <div className="centralBloc">
+                {this.state.displayedScreen === 'Mes applications' && (
+                  <div className="myApplications">
                     <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app1"/>
-                    < ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app2"/>
+                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app2"/>
                     <ApplicationIcon link="https://www.eurosport.fr" srcImg={logo} nameApp="app3"/>
                     <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app4"/>
                     <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app5"/>
                   </div>)
                 }
 
-                {this.state.displayedScreen === 'AccountMgt' && (
+                {this.state.displayedScreen === 'Gestion des comptes' && (
                   <div>
                     <AccountCreation parentContext={this}/>
                   </div>
@@ -112,4 +124,8 @@ class PageAccueilPerso extends Component {
   }
   }
 
-export default PageAccueilPerso;
+PageAccueilPerso.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(PageAccueilPerso);

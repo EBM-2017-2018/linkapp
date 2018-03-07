@@ -5,7 +5,6 @@ import Button from 'material-ui/Button'
 import { FormControl, IconButton, Input, InputAdornment, InputLabel, withStyles } from 'material-ui'
 import { Visibility, VisibilityOff } from 'material-ui-icons'
 
-
 const styles = ({
   Prenom: {
     backgroundColor: 'red',

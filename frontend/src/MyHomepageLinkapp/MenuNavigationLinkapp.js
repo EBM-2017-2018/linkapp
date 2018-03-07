@@ -4,17 +4,15 @@ import { MenuItem, MenuList } from 'material-ui'
 import ReactDOM from 'react-dom'
 import AccountCreation from '../AccountManagement/AccountCreation'
 
-
-
 class MenuNavigationLinkapp extends Component {
     render () {
         return (
               <Paper>
                   <MenuList>
-                    <MenuItem onClick={(event) => this.onClickMyApps(event)}>Mes applications</MenuItem>
-                    <MenuItem onClick={(event) => this.props.onClick(event)}>Gestion des comptes</MenuItem>
-                    <MenuItem onClick={(event) => this.handleClickPromsManagement(event)}>Gestion des promos</MenuItem>
-                    <MenuItem onClick={(event) => this.handleClickAgenda(event)}>Emploi du temps</MenuItem>
+                    <MenuItem value='app' onClick={this.props.menuClick}>Mes applications</MenuItem>
+                    <MenuItem value='AccountMgt' onClick={this.props.menuClick}>Gestion des comptes</MenuItem>
+                    <MenuItem value='PromsMgt' onClick={this.props.menuClick}>Gestion des promos</MenuItem>
+                    <MenuItem value='Agenda' onClick={this.props.menuClick}>Emploi du temps</MenuItem>
                   </MenuList>
               </Paper>
         );
