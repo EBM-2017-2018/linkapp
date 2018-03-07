@@ -2,10 +2,6 @@ import React, { Component } from 'react'
 import '../Style/PromsCreation.css'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
-import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List'
-import Checkbox from 'material-ui/Checkbox'
-import Avatar from 'material-ui/Avatar'
-import imageTest from '../Images/IconeApp.png'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
 import TablesSelectStudents from './TablesSelectStudents'
@@ -53,6 +49,11 @@ class CreerNouveauGroupe extends Component {
   }
 
   render() {
+    //var apiBaseUrl = "http://localhost:3000/api/";
+    /* var dataToProceed = axios.get(apiBaseUrl + 'users/allusers', {
+      headers: {'Authorization': this.state.token}
+    }); */
+
     return (
       <div className="AppNouveaugroupe">
         <div>
@@ -80,7 +81,7 @@ class CreerNouveauGroupe extends Component {
           </form>
         </div>
         <div classname = "listesUtilisateurs">
-          <TablesSelectStudents parentContext={this}/>
+          <TablesSelectStudents parentContext={this} />
         </div>
 
       </div>
@@ -88,5 +89,7 @@ class CreerNouveauGroupe extends Component {
   }
 
 }
+
+/* TODO : faire passer dataToProceed dans props */
 
 export default CreerNouveauGroupe;

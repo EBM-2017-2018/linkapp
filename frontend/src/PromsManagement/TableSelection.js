@@ -177,6 +177,7 @@ class TableSelection extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    // dataToProceed = props.dataToProceed
     this.state = {
       order: 'asc',
       orderBy: 'nom',
