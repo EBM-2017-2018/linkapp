@@ -149,6 +149,7 @@ class MyInformations extends Component {
               }
             />
           </FormControl>
+          <br/>
 
           <Button onClick={(event) => this.handleClickChangePassword(event)}>Modifier le mot de passe</Button>
 

@@ -8,6 +8,7 @@ import Avatar from 'material-ui/Avatar'
 import imageTest from '../Images/IconeApp.png'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
+import TablesSelectStudents from './TablesSelectStudents'
 
 class CreerNouveauGroupe extends Component {
   constructor(props){
@@ -30,7 +31,7 @@ class CreerNouveauGroupe extends Component {
       "responsable": this.state.responsable
     }
 
-    axios.post(apiBaseUrl+'promos', this.creerStructureFormulaire(donneesFormulaire), {
+    axios.post(apiBaseUrl+'promos', donneesFormulaire, {
       headers: { 'Content-Type': 'application/json',
         'Authorization': this.state.token}
     })
@@ -63,14 +64,14 @@ class CreerNouveauGroupe extends Component {
                 id="nomPromo"
                 label="Nom de la promo"
                 margin="normal"
-              onChange={(event) => this.handleChange('nomPromo')}/>
+              onChange={this.handleChange('nomPromo')}/>
             </div>
             <div>
               <TextField
                 id="pseudoResponsable"
                 label="Pseudo du responsable"
                 margin="normal"
-                onChange={(event) => this.handleChange('responsable')}/>
+                onChange={this.handleChange('responsable')}/>
             </div>
             <Button color="primary"
             onClick={(event) => this.handleClickCreateProm(event)}>
@@ -78,35 +79,14 @@ class CreerNouveauGroupe extends Component {
             </Button>
           </form>
         </div>
-        <div classname = "listeUtilisateurs">
-          <List>
-            {[0, 1, 2, 3].map(value => (
-              <ListItem key={value} dense button>
-                <Avatar src={imageTest} />
-                <ListItemText primary={`Etudiant ${value + 1}`} />
-                <ListItemSecondaryAction>
-                  <Checkbox
-                  />
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
+        <div classname = "listesUtilisateurs">
+          <TablesSelectStudents parentContext={this}/>
         </div>
 
       </div>
     );
   }
 
-  creerStructureFormulaire(donneesFormulaire) {
-    var structureFormulaire = [];
-    for (var proprietes in donneesFormulaire) {
-      var encodedKey = encodeURIComponent(proprietes);
-      var encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
-      structureFormulaire.push(encodedKey + "=" + encodedValue);
-    }
-    structureFormulaire = structureFormulaire.join("&");
-    return structureFormulaire;
-  }
 }
 
 export default CreerNouveauGroupe;
