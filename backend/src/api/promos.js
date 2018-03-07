@@ -413,4 +413,83 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
   }
 });
 
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {get} listpromosof/:username listPromosOf
+ * @apiDescription récupère la liste des promos dont l'utilisateur est membre
+ * @apiName listPromosf
+ * @apiGroup Promo
+ * @apiHeader {String} Authorization JWT token
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiParam {String} promo le nom de la promo
+ * @apiSuccess {Boolean} success succès
+ * @apiSuccess {Promo} promotion la promo demandée
+ * @apiSuccessExample {json} Success-Response:
+ *{
+    "success": true,
+    "promotions": [
+        {
+            "_id": "5a9aa79b687a689eba75a121",
+            "nomPromo": "EBM1",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root",
+                "test",
+                "test2"
+            ]
+        },
+        {
+            "_id": "5a9aab5e69e4d89f0e467b23",
+            "nomPromo": "EBM2",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root"
+            ]
+        }
+    ]
+}
+ *
+ * @apiError (403) Unauthorized
+ */
+router.get('/listpromosof/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (token) {
+    const usernameToFind = req.params.username;
+    return Promo.find({
+      membres: usernameToFind,
+    }, (err, listPromo) => {
+      if (err) throw err;
+      if (!listPromo) {
+        return res.status(401)
+          .send({
+            success: false,
+            msg: 'no promos',
+          });
+      }
+      const outputPromos = [];
+      listPromo.forEach((promo) => {
+        outputPromos.push({
+          responsable: promo.responsable,
+          nomPromo: promo.nomPromo,
+          membres: promo.membres,
+        });
+      });
+      return res.json({
+        success: true,
+        promotions: listPromo,
+      });
+    });
+  }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Unauthorized.',
+    });
+});
+
 module.exports = router;
