@@ -1,0 +1,9 @@
+.AppNouveaugroupe {
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+}
+
+.listeUtilisateurs{
+    margin-top: 10px;
+}

@@ -23,7 +23,6 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import cookie from 'react-cookies'
 
-
 const styles = theme => ({
   margin: {
     margin: theme.spacing.unit,

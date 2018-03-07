@@ -202,7 +202,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
           });
       }
       if (!req.body.nomPromo || !req.body.responsable) {
-        res.json({
+        return res.json({
           success: false,
           msg: 'erreur paramètre nomPromo ou responsable manquant',
         });

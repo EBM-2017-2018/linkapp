@@ -11,6 +11,7 @@ import AccountCircle from 'material-ui-icons/AccountCircle'
 import AccountCreation from '../AccountManagement/AccountCreation'
 import MyInformations from '../MyAccount/MyInformations'
 import PropTypes from 'prop-types'
+import PromsCreation from '../PromsManagement/PromsCreation'
 
 const styles = {
   root: {
@@ -116,6 +117,9 @@ class PageAccueilPerso extends Component {
 
                 {this.state.displayedScreen === 'MyInformations' && (
                   <MyInformations parentContext={this} />
+                )}
+                {this.state.displayedScreen === 'Gestion des promos' && (
+                  <PromsCreation parentContext={this} />
                 )}
                 </div>
             </div>
