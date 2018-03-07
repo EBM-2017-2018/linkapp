@@ -21,6 +21,7 @@ import Visibility from 'material-ui-icons/Visibility'
 import VisibilityOff from 'material-ui-icons/VisibilityOff'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import cookie from 'react-cookies'
 
 
 const styles = theme => ({
@@ -37,7 +38,8 @@ class Login extends Component {
         super(props);
         this.state={
             username:'',
-            password:''
+            password:'',
+            showPassword: false,
         }
     }
 
@@ -72,7 +74,7 @@ class Login extends Component {
                   shrink: true,
                 }}
                 margin="normal"
-                onChange={(event, newValue) => this.setState({username: newValue})}
+                onChange={this.handleChange('username')}
               />
                 <br/>
               <FormControl className={classNames(classes.margin, classes.textField)}>
@@ -108,16 +110,12 @@ class Login extends Component {
         console.log("event", event) // TODO : delete this
         console.log(this.state.username, this.state.password);
 
-        var apiBaseUrl = "https://linkapp.ebm.nymous.io/api/";
+        var apiBaseUrl = "http://localhost:3000/api/";
         var donneesFormulaire={
             "username":this.state.username,
             "password":this.state.password
         }
-        ReactDOM.render(<MuiThemeProvider theme={theme}>
-          <PageAccueilPerso parentContext={this} token="abssssss"/>
-        </MuiThemeProvider>,
-          document.getElementById('root'));
-          // TODO : delete when link with back done
+
         axios.post(apiBaseUrl+'signin', this.creerStructureFormulaire(donneesFormulaire), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
@@ -126,8 +124,14 @@ class Login extends Component {
                 console.log("barbapapa");
 
                 if(response.status === 200){
+                  var token = response.data.token;
+                  cookie.save('token', token, {path: '/'});
                     console.log("Login successfull");
-                    ReactDOM.render(<PageAccueilPerso parentContext={this}/>, document.getElementById('root'));
+                    ReactDOM.render(<MuiThemeProvider theme={theme}>
+                      <PageAccueilPerso parentContext={this} token={token}/>
+                    </MuiThemeProvider>,
+                      document.getElementById('root'));
+                    console.log(response.data.token);
                     // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
                 }
                 else if(response.status === 401){

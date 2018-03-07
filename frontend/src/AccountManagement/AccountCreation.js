@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, TextField, withStyles } from 'material-ui'
 import PropTypes from 'prop-types'
 import axios from 'axios/index'
+import cookie from 'react-cookies'
 
 const styles = theme => ({
   container: {
@@ -39,10 +40,12 @@ class AccountCreation extends Component {
     this.state={
       username:'',
       password:'',
-      role:'',
+      role:'etudiant',
       nom:'',
       prenom:'',
-      email:''
+      email:'',
+      displayedComponent:'addAccount',
+      token: cookie.load('token')
     }
   }
 
@@ -54,7 +57,8 @@ class AccountCreation extends Component {
 
   handleClick(event)
   {
-    var apiBaseUrl = "https://linkapp.ebm.nymous.io/api/";
+
+    var apiBaseUrl = "http://localhost:3000/api/";
     var donneesFormulaire={
       "username":this.state.username,
       "password":this.state.password,
@@ -66,7 +70,7 @@ class AccountCreation extends Component {
 
     axios.post(apiBaseUrl+'signup', this.creerStructureFormulaire(donneesFormulaire), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': this.props.token } // TODO : checker que l'appel au token fonctionne
+      'Authorization': this.state.token } // TODO : checker que l'appel au token fonctionne
     })
       .then(function (response) {
         console.log(response);
@@ -105,7 +109,7 @@ class AccountCreation extends Component {
           shrink: true,
         }}
         margin="normal"
-        onChange={(event, newValue) => this.setState({username: newValue})}
+        onChange={this.handleChange('username')}
         />
         <br/>
         <TextField
@@ -115,7 +119,7 @@ class AccountCreation extends Component {
             shrink: true,
           }}
           margin="normal"
-          onChange={(event, newValue) => this.setState({password: newValue})}
+          onChange={this.handleChange('password')}
         />
         <br/>
           <TextField
@@ -147,7 +151,7 @@ class AccountCreation extends Component {
               shrink: true,
             }}
             margin="normal"
-            onChange={(event, newValue) => this.setState({nom: newValue})}
+            onChange={this.handleChange('nom')}
           />
           <br/>
           <TextField
@@ -157,7 +161,7 @@ class AccountCreation extends Component {
               shrink: true,
             }}
             margin="normal"
-            onChange={(event, newValue) => this.setState({prenom: newValue})}
+            onChange={this.handleChange('prenom')}
           />
           <br/>
           <TextField
@@ -167,12 +171,12 @@ class AccountCreation extends Component {
               shrink: true,
             }}
             margin="normal"
-            onChange={(event, newValue) => this.setState({email: newValue})}
+            onChange={this.handleChange('email')}
           />
           <br/>
           <Button primary={true} variant="raised" color="secondary"
                   onClick={(event) => this.handleClick(event)}>
-            Envoyer
+            Valider l'ajout
           </Button>
         </div>
       </div>
