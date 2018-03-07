@@ -4,19 +4,59 @@ import TextField from 'material-ui/TextField'
 import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
-import { Button, MuiThemeProvider, Toolbar, Typography } from 'material-ui'
+import {
+  Button,
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  MuiThemeProvider,
+  Toolbar,
+  Typography,
+  withStyles
+} from 'material-ui'
 import theme from '../theme'
+import Visibility from 'material-ui-icons/Visibility'
+import VisibilityOff from 'material-ui-icons/VisibilityOff'
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+import cookie from 'react-cookies'
+
+const styles = theme => ({
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  textField: {
+    flexBasis: 200,
+  },
+});
 
 class Login extends Component {
     constructor(props){
         super(props);
         this.state={
             username:'',
-            password:''
+            password:'',
+            showPassword: false,
         }
     }
 
+  handleChange = prop => event => {
+    this.setState({ [prop]: event.target.value });
+  };
+
+  handleMouseDownPassword = event => {
+    event.preventDefault();
+  };
+
+  handleClickShowPassword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
+
     render() {
+      const { classes } = this.props;
+
         return (
             <div className="root">
                 <AppBar position="static">
@@ -33,20 +73,30 @@ class Login extends Component {
                   shrink: true,
                 }}
                 margin="normal"
-                onChange={(event, newValue) => this.setState({username: newValue})}
+                onChange={this.handleChange('username')}
               />
                 <br/>
-              <TextField
-                label="Entrez votre mot de passe"
-                placeholder="Mot de passe"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                margin="normal"
-                onChange={(event, newValue) => this.setState({password: newValue})}
-              />
+              <FormControl className={classNames(classes.margin, classes.textField)}>
+                <InputLabel htmlFor="password">Mot de Passe</InputLabel>
+                <Input
+                  id="adornment-password"
+                  type={this.state.showPassword ? 'text' : 'password'}
+                  value={this.state.password}
+                  onChange={this.handleChange('password')}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={this.handleClickShowPassword}
+                        onMouseDown={this.handleMouseDownPassword}
+                      >
+                        {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
                 <br/>
-                <Button primary={true} style={style} variant="raised" color="secondary"
+                <Button primary={true} variant="raised" color="secondary"
                               onClick={(event) => this.handleClick(event)}>
                   Envoyer
                 </Button>
@@ -59,25 +109,28 @@ class Login extends Component {
         console.log("event", event) // TODO : delete this
         console.log(this.state.username, this.state.password);
 
-        var apiBaseUrl = "https://linkapp.ebm.nymous.io/api/";
+        var apiBaseUrl = "http://localhost:3000/api/";
         var donneesFormulaire={
             "username":this.state.username,
             "password":this.state.password
         }
-        ReactDOM.render(<MuiThemeProvider theme={theme}>
-          <PageAccueilPerso parentContext={this}/>
-        </MuiThemeProvider>,
-          document.getElementById('root'));
-          // TODO : delete when link with back done
+
         axios.post(apiBaseUrl+'signin', this.creerStructureFormulaire(donneesFormulaire), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
             .then(function (response) {
                 console.log(response);
+                console.log("barbapapa");
 
                 if(response.status === 200){
+                  var token = response.data.token;
+                  cookie.save('token', token, {path: '/'});
                     console.log("Login successfull");
-                    ReactDOM.render(<PageAccueilPerso parentContext={this}/>, document.getElementById('root'));
+                    ReactDOM.render(<MuiThemeProvider theme={theme}>
+                      <PageAccueilPerso parentContext={this} token={token}/>
+                    </MuiThemeProvider>,
+                      document.getElementById('root'));
+                    console.log(response.data.token);
                     // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
                 }
                 else if(response.status === 401){
@@ -108,14 +161,8 @@ class Login extends Component {
 
 }
 
-const style = {
-    //margin: 15,
-  root: {
-    flexGrow: 1,
-  },
-
-  titleAppBarLogin: {flex:1,
-    }
+Login.propTypes = {
+  classes: PropTypes.object.isRequired,
 };
 
-export default Login;
+export default withStyles(styles)(Login);

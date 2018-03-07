@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import './Style/MyInfoStyle.css'
+import '../Style/MyInfoStyle.css'
 import imageTest from './photoCentrale.jpg'
 import Button from 'material-ui/Button'
 import { FormControl, IconButton, Input, InputAdornment, InputLabel, withStyles } from 'material-ui'
 import { Visibility, VisibilityOff } from 'material-ui-icons'
-
+import cookie from 'react-cookies'
+import axios from 'axios/index'
 
 const styles = ({
   Prenom: {
@@ -24,6 +25,7 @@ class MyInformations extends Component {
     showPassword2: false,
     password3: '',
     showPassword3: false,
+    token: cookie.load("token")
   };
 
   handleChange = prop => event => {
@@ -147,8 +149,9 @@ class MyInformations extends Component {
               }
             />
           </FormControl>
+          <br/>
 
-          <Button>Modifier le mot de passe</Button>
+          <Button onClick={(event) => this.handleClickChangePassword(event)}>Modifier le mot de passe</Button>
 
 
         </div>
@@ -159,6 +162,44 @@ class MyInformations extends Component {
 
   }
 
+  handleClickChangePassword (event) {
+    var apiBaseUrl = "http://localhost:3000/api/";
+    var donneesFormulaire={
+      "password":this.state.password,
+      "newPassword": this.state.password2
+    }
+
+    axios.post(apiBaseUrl+'updatePassword', this.creerStructureFormulaire(donneesFormulaire), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': this.state.token}
+    })
+      .then(function (response) {
+        console.log(response);
+
+        if(response.status === 200){
+          var token = response.data.token;
+          cookie.save('token', token, {path: '/'});
+          console.log("Password changed");
+          console.log(response.data.token);
+          // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+  }
+
+  creerStructureFormulaire(donneesFormulaire) {
+    var structureFormulaire = [];
+    for (var proprietes in donneesFormulaire) {
+      var encodedKey = encodeURIComponent(proprietes);
+      var encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
+      structureFormulaire.push(encodedKey + "=" + encodedValue);
+    }
+    structureFormulaire = structureFormulaire.join("&");
+    return structureFormulaire;
+  }
 }
 
 export default withStyles(styles)(MyInformations);

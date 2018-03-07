@@ -70,7 +70,7 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false }), 
  * {
  * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
  * }
- * @apiParam {String= "etudiant","intervenant","administrateur"} le role dont on cherche les
+ * @apiParam {String= "etudiant","intervenant","administrateur"} role le role dont on cherche les
  * utilisateurs
  *
  * @apiSuccess {Boolean} success succès
@@ -138,5 +138,152 @@ router.get('/list/:role', passport.authenticate('jwt', { session: false }), (req
     });
 });
 
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {get} users/getusersstartingwith/:name getUsersStartingWith
+ * @apiDescription récupère la liste des utilisateurs dont le nom commence par
+ * @apiName getUsersStartingWith
+ * @apiGroup User
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiParam {String} name le début du nom des utilisateurs que l'on cherche
+ *
+ * @apiSuccess {Boolean} success succès
+ * @apiSuccess {users[]} users liste d'utilisateur
+ * @apiSuccessExample {json} Success-Response:
+ *{
+ *  "success": true,
+ *  "users": [
+ *      {
+ *          "username": "eleve",
+ *          "nom": "test",
+ *          "prenom": "test",
+ *          "role": "etudiant"
+ *      },
+ *      {
+ *          "username": "petitpoucet",
+ *          "nom": "test",
+ *         "prenom": "test",
+ *         "role": "etudiant"
+ *      }
+ *  ]
+ *}
+ *
+ * @apiError (403) Unauthorized
+ */
+router.get('/getusersstartingwith/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (token) {
+    const nameToFind = req.params.name;
+    return User.find({
+      nom: new RegExp(`^ ${nameToFind}`),
+    }, (err, users) => {
+      if (err) throw err;
+
+      if (!users) {
+        return res.status(200)
+          .send({
+            success: true,
+            msg: 'no users found',
+          });
+      }
+      // check if password matches
+      // return the information including token as JSON
+      const outputUsers = [];
+      users.forEach((user) => {
+        outputUsers.push({
+          username: user.username,
+          nom: user.nom,
+          prenom: user.prenom,
+          role: user.role,
+
+        });
+      });
+      return res.json({
+        success: true,
+        users: outputUsers,
+      });
+    });
+  }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Unauthorized.',
+    });
+});
+
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {get} users/allusers getAllUsers
+ * @apiDescription récupère la liste des utilisateurs
+ * @apiName getAllUsers
+ * @apiGroup User
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ *
+ * @apiSuccess {Boolean} success succès
+ * @apiSuccess {users[]} users liste d'utilisateur
+ * @apiSuccessExample {json} Success-Response:
+ *{
+ *  "success": true,
+ *  "users": [
+ *      {
+ *          "username": "eleve",
+ *          "nom": "test",
+ *          "prenom": "test",
+ *          "role": "etudiant"
+ *      },
+ *      {
+ *          "username": "petitpoucet",
+ *          "nom": "test",
+ *         "prenom": "test",
+ *         "role": "etudiant"
+ *      }
+ *  ]
+ *}
+ *
+ * @apiError (403) Unauthorized
+ */
+router.get('/allusers', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (token) {
+    return User.find((err, users) => {
+      if (err) throw err;
+
+      if (!users) {
+        return res.status(200)
+          .send({
+            success: true,
+            msg: 'no users found',
+          });
+      }
+      // check if password matches
+      // return the information including token as JSON
+      const outputUsers = [];
+      users.forEach((user) => {
+        outputUsers.push({
+          username: user.username,
+          nom: user.nom,
+          prenom: user.prenom,
+          role: user.role,
+
+        });
+      });
+      return res.json({
+        success: true,
+        users: outputUsers,
+      });
+    });
+  }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Unauthorized.',
+    });
+});
 
 module.exports = router;

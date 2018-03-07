@@ -189,7 +189,7 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
           });
       }
       if (!req.body.username || !req.body.password) {
-        res.json({
+        res.status(401).json({
           success: false,
           msg: 'Please pass username and password.',
         });
@@ -278,19 +278,20 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} checktoken checkTokenValidity
- * @apiDescription vérifie le token d'un utilisateur
- * @apiName verification
+ * @api {get} checkandrefreshtoken checkAndRefreshToken
+ * @apiDescription vérifie le token d'un utilisateur et renvoie un nouveau token
+ * @apiName checkAndRefreshToken
  * @apiGroup General
  * @apiParam {String} JWT token
  * @apiSuccessExample {json} Success-Response:
  *{
  *   "success": true
+ *   "token": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
  *}
  * @apiError (401) UnknownUser
  * @apiError (403) WrongToken
  */
-router.get('/checktoken', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/checkandrefreshtoken', passport.authenticate('jwt', { session: false }), (req, res) => {
   const token = tokenUtils.getToken(req.headers);
   if (token) {
     const decodedToken = tokenUtils.decodeToken(token);
@@ -311,6 +312,7 @@ router.get('/checktoken', passport.authenticate('jwt', { session: false }), (req
         // return the role of the user
         return res.json({
           success: true,
+          newToken: token,
         });
       });
     }

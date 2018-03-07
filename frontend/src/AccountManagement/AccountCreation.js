@@ -1,19 +1,106 @@
 import React, { Component } from 'react'
-import { TextField } from 'material-ui'
+import { Button, TextField, withStyles } from 'material-ui'
+import PropTypes from 'prop-types'
+import axios from 'axios/index'
+import cookie from 'react-cookies'
+
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200,
+  },
+  menu: {
+    width: 200,
+  },
+});
+
+const roles = [
+  {
+    value: 'etudiant',
+    label: 'Etudiant',
+  },
+  {
+    value: 'intervenant',
+    label: 'Intervenant',
+  },
+  {
+    value: 'administrateur',
+    label: 'Administrateur',
+  },
+];
 
 class AccountCreation extends Component {
   constructor(props){
     super(props);
     this.state={
       username:'',
-      password:''
+      password:'',
+      role:'etudiant',
+      nom:'',
+      prenom:'',
+      email:'',
+      displayedComponent:'addAccount',
+      token: cookie.load('token')
     }
   }
 
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
+
+  handleClick(event)
+  {
+
+    var apiBaseUrl = "http://localhost:3000/api/";
+    var donneesFormulaire={
+      "username":this.state.username,
+      "password":this.state.password,
+      "role":this.state.role,
+      "nom": this.state.nom,
+      "prenom": this.state.prenom,
+      "email": this.state.email
+    }
+
+    axios.post(apiBaseUrl+'signup', this.creerStructureFormulaire(donneesFormulaire), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': this.state.token } // TODO : checker que l'appel au token fonctionne
+    })
+      .then(function (response) {
+        console.log(response);
+
+        if(response.status === 200){
+          console.log("Signup successfull");
+        }
+        else if(response.status === 11000){
+          alert("Username Already exists");
+        }
+        else if(response.status === 401){
+          console.log("Wrong role");
+          alert("Wrong role")
+        }
+        else{
+          console.log("Username does not exists");
+          alert("Username does not exist");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   render () {
+    const { classes } = this.props;
+
     return(
       <div>
-        <h1>Pour ajouter un utilisateur, remplissez le formulaire ci-dessous</h1>
+        <h2>Pour ajouter un utilisateur, remplissez le formulaire ci-dessous</h2>
         <div className="addUserForm">
           <TextField
         label="Identifiant"
@@ -22,7 +109,7 @@ class AccountCreation extends Component {
           shrink: true,
         }}
         margin="normal"
-        onChange={(event, newValue) => this.setState({username: newValue})}
+        onChange={this.handleChange('username')}
         />
         <br/>
         <TextField
@@ -32,14 +119,84 @@ class AccountCreation extends Component {
             shrink: true,
           }}
           margin="normal"
-          onChange={(event, newValue) => this.setState({password: newValue})}
+          onChange={this.handleChange('password')}
         />
         <br/>
+          <TextField
+            id="select-role"
+            select
+            label="Role"
+            className={classes.textField}
+            value="etudiant"
+            onChange={this.handleChange('role')}
+            SelectProps={{
+              native: true,
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+            margin="normal"
+          >
+            {roles.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </TextField>
+        <br/>
+          <TextField
+            label="Nom"
+            placeholder="Nom"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin="normal"
+            onChange={this.handleChange('nom')}
+          />
           <br/>
+          <TextField
+            label="Prenom"
+            placeholder="Prenom"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin="normal"
+            onChange={this.handleChange('prenom')}
+          />
+          <br/>
+          <TextField
+            label="Email"
+            placeholder="Email"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin="normal"
+            onChange={this.handleChange('email')}
+          />
+          <br/>
+          <Button primary={true} variant="raised" color="secondary"
+                  onClick={(event) => this.handleClick(event)}>
+            Valider l'ajout
+          </Button>
         </div>
       </div>
     );
   }
+
+  creerStructureFormulaire(donneesFormulaire) {
+    var structureFormulaire = [];
+    for (var proprietes in donneesFormulaire) {
+      var encodedKey = encodeURIComponent(proprietes);
+      var encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
+      structureFormulaire.push(encodedKey + "=" + encodedValue);
+    }
+    structureFormulaire = structureFormulaire.join("&");
+    return structureFormulaire;
+  }
 }
 
-export default AccountCreation;
+AccountCreation.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(AccountCreation);

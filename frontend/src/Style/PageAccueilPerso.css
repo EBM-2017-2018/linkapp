@@ -33,7 +33,7 @@ a
     flex-direction: row;
 }
 
-.blocApplication .application {
+.centralBloc .application {
     max-width: 80%;
     max-height: 80%;
     margin-top:3%;
@@ -42,7 +42,14 @@ a
     flex-direction: column;
 }
 
-.blocApplication {
+.centralBloc {
    display: flex;
+    flex-direction: row;
+    margin: 1%;
+    margin-top: 1%;
+}
+
+.myApplications {
+    display: flex;
     flex-direction: row;
 }
