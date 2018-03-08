@@ -282,7 +282,7 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
  * @apiDescription vérifie le token d'un utilisateur et renvoie un nouveau token
  * @apiName checkAndRefreshToken
  * @apiGroup General
- * @apiParam {String} JWT token
+ * @apiParam {String} Authorization JWT token
  * @apiSuccessExample {json} Success-Response:
  *{
  *   "success": true
