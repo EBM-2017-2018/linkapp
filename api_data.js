@@ -206,8 +206,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "JWT",
-            "description": "<p>token</p>"
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
           }
         ]
       }
