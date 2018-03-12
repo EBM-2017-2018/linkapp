@@ -47,7 +47,7 @@ app.use('/api', api);
 app.use('/api/users', users);
 app.use('/api/promos', promos);
 app.use('/api/pictures', pictures);
-app.use(serveStatic('./public'));
+app.use(serveStatic('../../public'));
 
 // 404 errors should now be handled by the frontend, so we redirect everything
 // to index.html
