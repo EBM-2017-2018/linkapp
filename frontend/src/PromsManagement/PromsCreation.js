@@ -7,7 +7,7 @@ import axios from 'axios/index'
 import TablesSelectStudents from './TablesSelectStudents'
 import { ToastContainer, toast } from 'react-toastify';
 
-class CreerNouveauGroupe extends Component {
+class PromsCreation extends Component {
   constructor(props){
     super(props);
   this.state = {
@@ -103,4 +103,4 @@ class CreerNouveauGroupe extends Component {
   }
 }
 
-export default CreerNouveauGroupe;
+export default PromsCreation;
