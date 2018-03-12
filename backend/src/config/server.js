@@ -49,11 +49,5 @@ app.use('/api/promos', promos);
 app.use('/api/pictures', pictures);
 app.use(serveStatic('../../public'));
 
-// 404 errors should now be handled by the frontend, so we redirect everything
-// to index.html
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 
 module.exports = app;
