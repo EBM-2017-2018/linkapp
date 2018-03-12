@@ -41,9 +41,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
-app.get('/', (req, res) => {
-  res.send('Page under construction.');
-});
 
 // chemin des routes
 app.use('/api', api);

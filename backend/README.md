@@ -19,7 +19,7 @@ Linkapp
 Ce dépot contient le code du projet projet Linkapp 
 
 
-#Vérifier et Rafraichir le token
+# Vérifier et Rafraichir le token
 
 pour vérifier le token, il faut envoyer une requête à https://linkapp.ebm.nymous.io/api/checkadnrefreshtoken avec un header 
 `Authorization` ayant comme valeur le token, si le token est valide la réponse est de la forme :
