@@ -13,7 +13,8 @@ class CreerNouveauGroupe extends Component {
   this.state = {
     'token': cookie.load('token'),
     'nomPromo':'',
-    'responsable':''
+    'responsable':'',
+    'dataForTableOne': []
   }
 }
 
@@ -57,11 +58,14 @@ class CreerNouveauGroupe extends Component {
 
   }
 
-  render() {
-    //var apiBaseUrl = "http://localhost:3000/api/";
-    /* var dataToProceed = axios.get(apiBaseUrl + 'users/allusers', {
+  componentDidMount () {
+    let apiBaseUrl = "http://localhost:3000/api/";
+    axios.get(apiBaseUrl + 'users/allusers', {
       headers: {'Authorization': this.state.token}
-    }); */
+    }).then(response => this.setState({dataForTableOne: response.data.users}));
+  }
+
+  render() {
 
     return (
       <div className="AppNouveaugroupe">
@@ -90,16 +94,13 @@ class CreerNouveauGroupe extends Component {
             </Button>
           </form>
         </div>
-        <div classname = "listesUtilisateurs">
-          <TablesSelectStudents parentContext={this} />
+        <div className = "listesUtilisateurs">
+          {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ? <TablesSelectStudents dataForTableOne={this.state.dataForTableOne} /> : "Pas d'utilisateur"}
         </div>
 
       </div>
     );
   }
-
 }
-
-/* TODO : faire passer dataToProceed dans props */
 
 export default CreerNouveauGroupe;
