@@ -41,22 +41,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
-app.get('/', (req, res) => {
-  res.send('Page under construction.');
-});
 
 // chemin des routes
 app.use('/api', api);
 app.use('/api/users', users);
 app.use('/api/promos', promos);
 app.use('/api/pictures', pictures);
-app.use(serveStatic('./public'));
-
-// 404 errors should now be handled by the frontend, so we redirect everything
-// to index.html
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use(serveStatic('../../public'));
 
 
 module.exports = app;
