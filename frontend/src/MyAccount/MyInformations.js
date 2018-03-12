@@ -6,6 +6,7 @@ import { FormControl, IconButton, Input, InputAdornment, InputLabel, withStyles 
 import { Visibility, VisibilityOff } from 'material-ui-icons'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
+import { ToastContainer, toast } from 'react-toastify';
 
 const styles = ({
   Prenom: {
@@ -67,13 +68,12 @@ class MyInformations extends Component {
   importerPhoto = () => {
     console.log("Ecrire la fonction qui permet de changer sa photo");
   };
-
   render() {
 
     return (
 
       <div className="App" style = {styles}>
-
+        <ToastContainer />
 
 
         <div className="App-header">
@@ -179,6 +179,10 @@ class MyInformations extends Component {
         if(response.status === 200){
           var token = response.data.token;
           cookie.save('token', token, {path: '/'});
+          toast.success("Mot de passe modifié", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
           console.log("Password changed");
           console.log(response.data.token);
           // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})

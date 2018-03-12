@@ -3,6 +3,8 @@ import { Button, TextField, withStyles } from 'material-ui'
 import PropTypes from 'prop-types'
 import axios from 'axios/index'
 import cookie from 'react-cookies'
+import { ToastContainer, toast } from 'react-toastify'
+
 
 const styles = theme => ({
   container: {
@@ -77,6 +79,10 @@ class AccountCreation extends Component {
 
         if(response.status === 200){
           console.log("Signup successfull");
+          toast.success("utilisateur ajouté", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
         }
         else if(response.status === 11000){
           alert("Username Already exists");
@@ -100,6 +106,7 @@ class AccountCreation extends Component {
 
     return(
       <div>
+        <ToastContainer/>
         <h2>Pour ajouter un utilisateur, remplissez le formulaire ci-dessous</h2>
         <div className="addUserForm">
           <TextField

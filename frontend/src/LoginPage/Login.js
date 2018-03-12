@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import AppBar from 'material-ui/AppBar'
 import TextField from 'material-ui/TextField'
+import { ToastContainer, toast } from "react-toastify";
 import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
@@ -59,6 +60,7 @@ class Login extends Component {
 
         return (
             <div className="root">
+              <ToastContainer/>
                 <AppBar position="static">
                   <Toolbar>
                     <Typography variant="title" color="inherit" className="titleAppBarLogin">
@@ -97,7 +99,13 @@ class Login extends Component {
               </FormControl>
                 <br/>
                 <Button primary={true} variant="raised" color="secondary"
-                              onClick={(event) => this.handleClick(event)}>
+                              onClick={(event) => this.handleClick(event)}
+                        onChange={event => {this.setState({query: event.target.value})}}
+                        onKeyPress={ (event) => {
+                          if (event.key === 'Enter') {
+                            this.handleClick(event)}
+                        }
+                        }>
                   Envoyer
                 </Button>
             </div>
@@ -143,7 +151,12 @@ class Login extends Component {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+              if(error.response.status === 401) toast.error(
+                "Nom d'utilisateur ou mot de passe erroné", {
+                position: toast.POSITION.TOP_LEFT,
+                autoClose: 3000,
+              });
+                console.log(error.response);
             });
     }
 

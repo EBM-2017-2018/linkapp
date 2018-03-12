@@ -5,6 +5,7 @@ import Button from 'material-ui/Button'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
 import TablesSelectStudents from './TablesSelectStudents'
+import { ToastContainer, toast } from 'react-toastify';
 
 class CreerNouveauGroupe extends Component {
   constructor(props){
@@ -37,12 +38,20 @@ class CreerNouveauGroupe extends Component {
         if(response.status === 200){
           var token = response.data.token;
           cookie.save('token', token, {path: '/'});
+          toast.success("Promotion crée", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
           console.log("Prom created");
           console.log(response.data.token);
           // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
         }
       })
       .catch(function (error) {
+        if(error.response.code === 403) toast.error("Vous n'avez pas les droits pour cette opération", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
         console.log(error);
       });
 
@@ -56,6 +65,7 @@ class CreerNouveauGroupe extends Component {
 
     return (
       <div className="AppNouveaugroupe">
+        <ToastContainer />
         <div>
           <h1>Créer un nouveau groupe</h1>
 
