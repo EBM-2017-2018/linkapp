@@ -1,7 +1,7 @@
-import React from 'react';
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import React from 'react'
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
+import { withStyles } from 'material-ui/styles'
 import Table, {
   TableBody,
   TableCell,
@@ -10,16 +10,16 @@ import Table, {
   TablePagination,
   TableRow,
   TableSortLabel,
-} from 'material-ui/Table';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
-import Checkbox from 'material-ui/Checkbox';
-import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/Tooltip';
-import DeleteIcon from 'material-ui-icons/Delete';
-import FilterListIcon from 'material-ui-icons/FilterList';
-import { lighten } from 'material-ui/styles/colorManipulator';
+} from 'material-ui/Table'
+import Toolbar from 'material-ui/Toolbar'
+import Typography from 'material-ui/Typography'
+import Paper from 'material-ui/Paper'
+import Checkbox from 'material-ui/Checkbox'
+import IconButton from 'material-ui/IconButton'
+import Tooltip from 'material-ui/Tooltip'
+import DeleteIcon from 'material-ui-icons/Delete'
+import FilterListIcon from 'material-ui-icons/FilterList'
+import { lighten } from 'material-ui/styles/colorManipulator'
 
 let counter = 0;
 function createData(nom, prenom, role) {
@@ -174,19 +174,21 @@ const styles = theme => ({
 });
 
 class TableSelection extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
+    console.log(this.props.dataToDisplay);
+    console.log('in TableSelection');
 
-    // dataToProceed = props.dataToProceed
+    let dataToProceed = this.props.dataToDisplay;
+    let finalDataTable = [];
+    for (var i=0; i<dataToProceed.length; i++)
+    {finalDataTable.push(createData(dataToProceed[i]['nom'], dataToProceed[i]['prenom'], dataToProceed[i]['role']))}
+
     this.state = {
       order: 'asc',
       orderBy: 'nom',
       selected: [],
-      data: [
-        createData('Yazid', 'Smahi', 'Etudiant'),
-        createData('Thomas', 'Bdh', 'Administrateur'),
-        createData('Momo', 'Bkd', 'Intervenant'),
-      ].sort((a, b) => (a.nom < b.nom ? -1 : 1)),
+      data: finalDataTable.sort((a, b) => (a.nom < b.nom ? -1 : 1)),
       page: 0,
       rowsPerPage: 5,
     };
