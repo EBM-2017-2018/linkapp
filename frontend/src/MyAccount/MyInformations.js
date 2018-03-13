@@ -6,7 +6,8 @@ import { FormControl, IconButton, Input, InputAdornment, InputLabel, withStyles 
 import { Visibility, VisibilityOff } from 'material-ui-icons'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify'
+import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
 
 const styles = ({
   Prenom: {
@@ -163,13 +164,14 @@ class MyInformations extends Component {
   }
 
   handleClickChangePassword (event) {
-    var apiBaseUrl = "http://localhost:3000/api/";
-    var donneesFormulaire={
+    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+    let updatePasswordUrl = GlobalVarHandler.updatePasswordUrl;
+    let donneesFormulaire={
       "password":this.state.password,
       "newPassword": this.state.password2
     }
 
-    axios.post(apiBaseUrl+'updatePassword', this.creerStructureFormulaire(donneesFormulaire), {
+    axios.post(apiBaseUrl+updatePasswordUrl, creerStructureFormulaire(donneesFormulaire), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': this.state.token}
     })
@@ -192,17 +194,6 @@ class MyInformations extends Component {
         console.log(error);
       });
 
-  }
-
-  creerStructureFormulaire(donneesFormulaire) {
-    var structureFormulaire = [];
-    for (var proprietes in donneesFormulaire) {
-      var encodedKey = encodeURIComponent(proprietes);
-      var encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
-      structureFormulaire.push(encodedKey + "=" + encodedValue);
-    }
-    structureFormulaire = structureFormulaire.join("&");
-    return structureFormulaire;
   }
 }
 

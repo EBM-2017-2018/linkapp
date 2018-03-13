@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles'
 import Select from 'react-select'
-import Typography from 'material-ui/Typography';
-import Input from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import ArrowDropDownIcon from 'material-ui-icons/ArrowDropDown';
-import CancelIcon from 'material-ui-icons/Cancel';
-import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp';
-import ClearIcon from 'material-ui-icons/Clear';
-import Chip from 'material-ui/Chip';
+import Typography from 'material-ui/Typography'
+import Input from 'material-ui/Input'
+import { MenuItem } from 'material-ui/Menu'
+import ArrowDropDownIcon from 'material-ui-icons/ArrowDropDown'
+import CancelIcon from 'material-ui-icons/Cancel'
+import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
+import ClearIcon from 'material-ui-icons/Clear'
+import Chip from 'material-ui/Chip'
 import axios from 'axios/index'
 import cookie from 'react-cookies'
 import { Button } from 'material-ui'
-
+import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 
 class Option extends React.Component {
   handleClick = event => {
@@ -208,8 +208,9 @@ class PromsManagement extends Component {
   }
 
   componentDidMount() {
-    let apiBaseUrl = "http://localhost:3000/api/";
-    axios.get(apiBaseUrl + 'promos/listpromos', {
+    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+    let getAllPromosUrl = GlobalVarHandler.getAllPromosUrl
+    axios.get(apiBaseUrl + getAllPromosUrl, {
       headers: {'Authorization': this.state.token}
     }).then(response => {
       let valuesToDisplay = response.data.promotions.map(receivedPromInfo => ({

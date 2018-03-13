@@ -3,8 +3,8 @@ import { Button, TextField, withStyles } from 'material-ui'
 import PropTypes from 'prop-types'
 import axios from 'axios/index'
 import cookie from 'react-cookies'
-import { ToastContainer, toast } from 'react-toastify'
-
+import { toast, ToastContainer } from 'react-toastify'
+import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
 
 const styles = theme => ({
   container: {
@@ -60,7 +60,8 @@ class AccountCreation extends Component {
   handleClick(event)
   {
 
-    var apiBaseUrl = "http://localhost:3000/api/";
+    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+    let signupUrl = GlobalVarHandler.signupUrl;
     var donneesFormulaire={
       "username":this.state.username,
       "password":this.state.password,
@@ -70,9 +71,9 @@ class AccountCreation extends Component {
       "email": this.state.email
     }
 
-    axios.post(apiBaseUrl+'signup', this.creerStructureFormulaire(donneesFormulaire), {
+    axios.post(apiBaseUrl+signupUrl, creerStructureFormulaire(donneesFormulaire), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': this.state.token } // TODO : checker que l'appel au token fonctionne
+      'Authorization': this.state.token }
     })
       .then(function (response) {
         console.log(response);
@@ -188,17 +189,6 @@ class AccountCreation extends Component {
         </div>
       </div>
     );
-  }
-
-  creerStructureFormulaire(donneesFormulaire) {
-    var structureFormulaire = [];
-    for (var proprietes in donneesFormulaire) {
-      var encodedKey = encodeURIComponent(proprietes);
-      var encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
-      structureFormulaire.push(encodedKey + "=" + encodedValue);
-    }
-    structureFormulaire = structureFormulaire.join("&");
-    return structureFormulaire;
   }
 }
 

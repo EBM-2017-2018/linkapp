@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import AppBar from 'material-ui/AppBar'
 import TextField from 'material-ui/TextField'
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from 'react-toastify'
 import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
@@ -23,6 +23,7 @@ import VisibilityOff from 'material-ui-icons/VisibilityOff'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import cookie from 'react-cookies'
+import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
 
 const styles = theme => ({
   margin: {
@@ -114,21 +115,19 @@ class Login extends Component {
 
     handleClick(event)
     {
-        console.log("event", event) // TODO : delete this
-        console.log(this.state.username, this.state.password);
-
-        var apiBaseUrl = "http://localhost:3000/api/";
-        var donneesFormulaire={
+        let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+        let signinUrl = GlobalVarHandler.signinUrl;
+        let donneesFormulaire={
             "username":this.state.username,
             "password":this.state.password
         }
 
-        axios.post(apiBaseUrl+'signin', this.creerStructureFormulaire(donneesFormulaire), {
+        console.log(apiBaseUrl);
+
+        axios.post(apiBaseUrl+signinUrl, creerStructureFormulaire(donneesFormulaire), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
             .then(function (response) {
-                console.log(response);
-                console.log("barbapapa");
 
                 if(response.status === 200){
                   var token = response.data.token;
@@ -159,19 +158,6 @@ class Login extends Component {
                 console.log(error.response);
             });
     }
-
-
-    creerStructureFormulaire(donneesFormulaire) {
-        var structureFormulaire = [];
-        for (var proprietes in donneesFormulaire) {
-            var encodedKey = encodeURIComponent(proprietes);
-            var encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
-            structureFormulaire.push(encodedKey + "=" + encodedValue);
-        }
-        structureFormulaire = structureFormulaire.join("&");
-        return structureFormulaire;
-    }
-
 }
 
 Login.propTypes = {

@@ -5,16 +5,17 @@ import Button from 'material-ui/Button'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
 import TablesSelectStudents from './TablesSelectStudents'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify'
+import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 
 class PromsCreation extends Component {
   constructor(props){
     super(props);
   this.state = {
-    'token': cookie.load('token'),
-    'nomPromo':'',
-    'responsable':'',
-    'dataForTableOne': []
+    token: cookie.load('token'),
+    nomPromo:'',
+    responsable:'',
+    dataForTableOne: []
   }
 }
 
@@ -23,13 +24,14 @@ class PromsCreation extends Component {
   };
 
   handleClickCreateProm (event) {
-    var apiBaseUrl = "http://localhost:3000/api/";
+    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+    let setPromoUrl = GlobalVarHandler.setPromosUrl;
     var donneesFormulaire={
       "nomPromo":this.state.nomPromo,
       "responsable": this.state.responsable
     }
 
-    axios.post(apiBaseUrl+'promos', donneesFormulaire, {
+    axios.post(apiBaseUrl+setPromoUrl, donneesFormulaire, {
       headers: { 'Content-Type': 'application/json',
         'Authorization': this.state.token}
     })
@@ -43,9 +45,6 @@ class PromsCreation extends Component {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
           });
-          console.log("Prom created");
-          console.log(response.data.token);
-          // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
         }
       })
       .catch(function (error) {
@@ -59,8 +58,9 @@ class PromsCreation extends Component {
   }
 
   componentDidMount () {
-    let apiBaseUrl = "http://localhost:3000/api/";
-    axios.get(apiBaseUrl + 'users/allusers', {
+    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+    let getAllUsersUrl = GlobalVarHandler.getAllUsersUrl;
+    axios.get(apiBaseUrl + getAllUsersUrl, {
       headers: {'Authorization': this.state.token}
     }).then(response => this.setState({dataForTableOne: response.data.users}));
   }
@@ -71,7 +71,7 @@ class PromsCreation extends Component {
       <div className="AppNouveaugroupe">
         <ToastContainer />
         <div>
-          <h1>Créer un nouveau groupe</h1>
+          <h1>Créer une nouvelle promo</h1>
 
           <form noValidate autoComplete="off">
             <div>
@@ -94,7 +94,7 @@ class PromsCreation extends Component {
             </Button>
           </form>
         </div>
-        <div className = "listesUtilisateurs">
+        <div className = "blocsUtilisateurs">
           {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ? <TablesSelectStudents dataForTableOne={this.state.dataForTableOne} /> : "Pas d'utilisateur"}
         </div>
 
