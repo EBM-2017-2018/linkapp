@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../Style/MyInfoStyle.css'
-import imageTest from './photoCentrale.jpg'
+import imageTest from './photoProfil.jpg'
 import Button from 'material-ui/Button'
 import { FormControl, IconButton, Input, InputAdornment, InputLabel, withStyles } from 'material-ui'
 import { Visibility, VisibilityOff } from 'material-ui-icons'
@@ -9,25 +9,18 @@ import axios from 'axios/index'
 import { toast, ToastContainer } from 'react-toastify'
 import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
 
-const styles = ({
-  Prenom: {
-    backgroundColor: 'red',
-  },
-
-  root: {
-    backgroundColor: 'red',
-  },
-});
-
 class MyInformations extends Component {
   state = {
+    prenom:'Prénom1',
+    nom: 'Nom1',
     password: '',
     showPassword: false,
     password2: '',
     showPassword2: false,
     password3: '',
     showPassword3: false,
-    token: cookie.load("token")
+    token: cookie.load("token"),
+    profilePic: imageTest,
   };
 
   handleChange = prop => event => {
@@ -66,23 +59,59 @@ class MyInformations extends Component {
     this.setState({ showPassword3: !this.state.showPassword3 });
   };
 
-  importerPhoto = () => {
-    console.log("Ecrire la fonction qui permet de changer sa photo");
-  };
+    importerNom = () => {
+        console.log("Ecrire la fonction qui permet d'importer le nom");
+    };
+
+    importerPrenom = () => {
+        console.log("Ecrire la fonction qui permet d'importer le prenom");
+    };
+ 
+	componentDidMount(){
+    //TODO modifier en fct de l'username
+    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/test', {
+      headers: {
+        'Authorization': this.state.token,
+        'Content-Type':'multipart/form-data',
+      }
+    })
+      .then((data) => {
+        console.log(data);
+        if( data.status === 200) {
+         /* this.setState({
+            profilePic: `data:${data.headers["content-type"]};base64,${data.data}`,
+          });*/
+          this.setState({
+            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/test'})
+        }
+      });
+  }
   render() {
 
     return (
+        <div>
 
-      <div className="App" style = {styles}>
+      <div className="App">
         <ToastContainer />
 
+          <h1>  {this.state.prenom+" "+this.state.nom} </h1>
+          <div className= "BlocPrincipalAppMyInformations" >
 
         <div className="App-header">
-
-          <img src={imageTest} className="App-logo" alt="logo" />
-          <div><Button className="BouttonImporterPhoto" onClick={this.importerPhoto}>Importer photo</Button></div>
-          <div><h2 className="Nom" > Nom </h2>
-            <h2 className="Prenom"> Prénom </h2></div>
+            <div className="BlocPhoto">
+          <div><img src={this.state.profilePic} className="App-logo" alt="logo" /></div>
+            <input
+                accept="image/*"
+                className="BouttonImporterPhoto"
+                id="raised-button-file"
+                type="file"
+            />
+            <label htmlFor="raised-button-file" className="BouttonChangementPhotoProfil">
+                <Button variant="raised" component="span" className="BouttonChangementPhotoProfil" onClick={this.importerPhoto} >
+                    Changer sa photo de profil
+                </Button>
+            </label>
+            </div>
 
         </div>
 
@@ -153,9 +182,10 @@ class MyInformations extends Component {
           <br/>
 
           <Button onClick={(event) => this.handleClickChangePassword(event)}>Modifier le mot de passe</Button>
-
+            </div>
 
         </div>
+          </div>
 
       </div>
 
@@ -193,8 +223,7 @@ class MyInformations extends Component {
       .catch(function (error) {
         console.log(error);
       });
-
   }
 }
 
-export default withStyles(styles)(MyInformations);
+export default MyInformations;

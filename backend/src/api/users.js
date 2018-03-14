@@ -36,12 +36,11 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false }), 
     return User.findOne({
       username: userToFind,
     }, (err, user) => {
-      if (err) throw err;
       if (!user) {
         return res.status(401)
           .send({
             success: false,
-            msg: 'Wrong user',
+            msg: 'Utilisateur inconnu',
           });
       }
       // check if password matches
@@ -55,7 +54,7 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false }), 
   return res.status(403)
     .send({
       success: false,
-      msg: 'Unauthorized.',
+      msg: 'Opération non autorisée.',
     });
 });
 
@@ -104,8 +103,6 @@ router.get('/list/:role', passport.authenticate('jwt', { session: false }), (req
     return User.find({
       role: roleToFind,
     }, (err, users) => {
-      if (err) throw err;
-
       if (!users) {
         return res.status(401)
           .send({
@@ -134,7 +131,7 @@ router.get('/list/:role', passport.authenticate('jwt', { session: false }), (req
   return res.status(403)
     .send({
       success: false,
-      msg: 'Unauthorized.',
+      msg: 'Opération non autorisée.',
     });
 });
 
@@ -180,13 +177,11 @@ router.get('/getusersstartingwith/:name', passport.authenticate('jwt', { session
     return User.find({
       nom: new RegExp(`^ ${nameToFind}`),
     }, (err, users) => {
-      if (err) throw err;
-
       if (!users) {
-        return res.status(200)
+        return res.status(404)
           .send({
             success: true,
-            msg: 'no users found',
+            msg: 'utilisateur non trouvé',
           });
       }
       // check if password matches
@@ -210,7 +205,7 @@ router.get('/getusersstartingwith/:name', passport.authenticate('jwt', { session
   return res.status(403)
     .send({
       success: false,
-      msg: 'Unauthorized.',
+      msg: 'Opération non autorisée.',
     });
 });
 
@@ -252,13 +247,11 @@ router.get('/allusers', passport.authenticate('jwt', { session: false }), (req, 
   const token = tokenUtils.getToken(req.headers);
   if (token) {
     return User.find((err, users) => {
-      if (err) throw err;
-
       if (!users) {
         return res.status(200)
           .send({
             success: true,
-            msg: 'no users found',
+            msg: 'Aucun utilisateur trouvé',
           });
       }
       // check if password matches
@@ -282,7 +275,7 @@ router.get('/allusers', passport.authenticate('jwt', { session: false }), (req, 
   return res.status(403)
     .send({
       success: false,
-      msg: 'Unauthorized.',
+      msg: 'opération non autorisée.',
     });
 });
 

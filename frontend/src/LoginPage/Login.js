@@ -77,7 +77,7 @@ class Login extends Component {
                 onChange={this.handleChange('username')}
               />
                 <br/>
-              <FormControl className={classNames(classes.margin, classes.textField)}>
+              <FormControl className={classNames(classes.margin, classes.textField)} autoComplete="on">
                 <InputLabel htmlFor="password">Mot de Passe</InputLabel>
                 <Input
                   id="adornment-password"
@@ -134,22 +134,15 @@ class Login extends Component {
                   this.props.appOnSuccessLogin(token);
 
                 }
-                else if(response.status === 401){
-                    console.log("Username password do not match");
-                    alert("username password do not match")
-                }
-                else{
-                    console.log("Username does not exists");
-                    alert("Username does not exist");
-                }
             })
             .catch(function (error) {
-              if(error.response.status === 401) toast.error(
-                "Nom d'utilisateur ou mot de passe erroné", {
+
+              if(error.response.status && error.response.status === 401) toast.error(
+                (error.response.data.msg ? error.response.data.msg : "connection impossible"), {
                 position: toast.POSITION.TOP_LEFT,
                 autoClose: 3000,
               });
-                console.log(error.response);
+
             });
     }
 }

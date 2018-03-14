@@ -48,7 +48,7 @@ class PromsCreation extends Component {
         }
       })
       .catch(function (error) {
-        if(error.response.code === 403) toast.error("Vous n'avez pas les droits pour cette opération", {
+        if(error.response.status === 403) toast.error("Vous n'avez pas les droits pour cette opération", {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
         });
