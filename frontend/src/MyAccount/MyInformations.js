@@ -1,24 +1,16 @@
 import React, { Component } from 'react'
 import '../Style/MyInfoStyle.css'
-import imageTest from './photoCentrale.jpg'
+import imageTest from './photoProfil.jpg'
 import Button from 'material-ui/Button'
 import { FormControl, IconButton, Input, InputAdornment, InputLabel, withStyles } from 'material-ui'
 import { Visibility, VisibilityOff } from 'material-ui-icons'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
 
-const styles = ({
-  Prenom: {
-    backgroundColor: 'red',
-  },
-
-  root: {
-    backgroundColor: 'red',
-  },
-});
-
 class MyInformations extends Component {
   state = {
+    prenom:'Prénom1',
+    nom: 'Nom1',
     password: '',
     showPassword: false,
     password2: '',
@@ -66,22 +58,41 @@ class MyInformations extends Component {
 
   importerPhoto = () => {
     console.log("Ecrire la fonction qui permet de changer sa photo");
+      //var selectedFile = document.getElementById('input').files[0];
   };
+
+    importerNom = () => {
+        console.log("Ecrire la fonction qui permet d'importer le nom");
+    };
+
+    importerPrenom = () => {
+        console.log("Ecrire la fonction qui permet d'importer le prenom");
+    };
 
   render() {
 
     return (
 
-      <div className="App" style = {styles}>
+      <div className="App">
 
-
+          <h1>  {this.state.prenom+" "+this.state.nom} </h1>
+          <div className= "BlocPrincipalAppMyInformations" >
 
         <div className="App-header">
-
-          <img src={imageTest} className="App-logo" alt="logo" />
-          <div><Button className="BouttonImporterPhoto" onClick={this.importerPhoto}>Importer photo</Button></div>
-          <div><h2 className="Nom" > Nom </h2>
-            <h2 className="Prenom"> Prénom </h2></div>
+            <div className="BlocPhoto">
+          <div><img src={imageTest} className="App-logo" alt="logo" /></div>
+            <input
+                accept="image/*"
+                className="BouttonImporterPhoto"
+                id="raised-button-file"
+                type="file"
+            />
+            <label htmlFor="raised-button-file" className="BouttonChangementPhotoProfil">
+                <Button variant="raised" component="span" className="BouttonChangementPhotoProfil" onClick={this.importerPhoto} >
+                    Changer sa photo de profil
+                </Button>
+            </label>
+            </div>
 
         </div>
 
@@ -149,11 +160,12 @@ class MyInformations extends Component {
               }
             />
           </FormControl>
-
+            <div>
           <Button onClick={(event) => this.handleClickChangePassword(event)}>Modifier le mot de passe</Button>
-
+            </div>
 
         </div>
+          </div>
 
       </div>
 
@@ -201,4 +213,4 @@ class MyInformations extends Component {
   }
 }
 
-export default withStyles(styles)(MyInformations);
+export default MyInformations;
