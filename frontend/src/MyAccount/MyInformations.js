@@ -89,8 +89,9 @@ class MyInformations extends Component {
   render() {
 
     return (
+        <div>
 
-      <div className="App" style = {styles}>
+      <div className="App">
         <ToastContainer />
 
           <h1>  {this.state.prenom+" "+this.state.nom} </h1>
