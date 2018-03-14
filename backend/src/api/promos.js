@@ -66,7 +66,6 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
   const token = tokenUtils.getToken(req.headers);
   if (token) {
     return Promo.find((err, listPromo) => {
-      if (err) throw err;
       if (!listPromo) {
         return res.status(401)
           .send({
@@ -129,7 +128,6 @@ router.get('/:promo', passport.authenticate('jwt', { session: false }), (req, re
     return Promo.findOne({
       nomPromo: promoToFind,
     }, (err, promo) => {
-      if (err) throw err;
       if (!promo) {
         return res.status(401)
           .send({
@@ -193,7 +191,6 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
     return User.findOne({
       username: userToFind,
     }, (err, user) => {
-      if (err) throw err;
       if (!user) {
         return res.status(401)
           .send({
@@ -212,7 +209,6 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
           username: req.body.responsable,
           // eslint-disable-next-line no-shadow
         }, (err, resp) => {
-          if (err) throw err;
           if (!resp) {
             return res.status(401)
               .send({
@@ -325,18 +321,17 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     return User.findOne({
       username: userToFind,
     }, (err, user) => {
-      if (err) throw err;
       if (!user) {
         return res.status(401)
           .send({
             success: false,
-            msg: 'Wrong user',
+            msg: 'Utilisateur inconnu',
           });
       }
       if (!req.body.nomPromo || !req.body.responsable) {
         res.json({
           success: false,
-          msg: 'erreur paramètre nomPromo ou responsable manquant',
+          msg: 'erreur paramètre Promo ou responsable manquant',
         });
       }
       if (user.role === roleAdmin || user.role === roleIntervenant) {
@@ -344,7 +339,6 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
           username: req.body.responsable,
           // eslint-disable-next-line no-shadow
         }, (err, resp) => {
-          if (err) throw err;
           if (!resp) {
             return res.status(401)
               .send({
@@ -377,28 +371,27 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
                 switch (err.code) {
                   // username deja pris
                   case 11000: {
-                    return res.json({
+                    return res.status(400).json({
                       success: false,
-                      msg: 'Username already exists.',
+                      msg: 'Non d\'utilisateur existant',
                     });
                   }
                   default:
-                    return res.json({
+                    return res.status(400).json({
                       success: false,
-                      // error: err ,
-                      msg: 'Unknown error',
+                      msg: 'erreur',
                     });
                 }
               }
             } else {
-              return res.json({
+              return res.status(400).json({
                 success: true,
                 msg: 'promo mise à jour',
               });
             }
-            return res.json({
+            return res.status(400).json({
               success: false,
-              msg: 'unknown error',
+              msg: 'erreur',
             });
           });
         });
@@ -406,11 +399,89 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         return res.status(403)
           .send({
             success: false,
-            msg: 'Unauthorized.',
+            msg: 'Opération non autorisée.',
           });
       }
     });
   }
+});
+
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {get} listpromosof/:username listPromosOf
+ * @apiDescription récupère la liste des promos dont l'utilisateur est membre
+ * @apiName listPromosf
+ * @apiGroup Promo
+ * @apiHeader {String} Authorization JWT token
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiParam {String} promo le nom de la promo
+ * @apiSuccess {Boolean} success succès
+ * @apiSuccess {Promo} promotion la promo demandée
+ * @apiSuccessExample {json} Success-Response:
+ *{
+    "success": true,
+    "promotions": [
+        {
+            "_id": "5a9aa79b687a689eba75a121",
+            "nomPromo": "EBM1",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root",
+                "test",
+                "test2"
+            ]
+        },
+        {
+            "_id": "5a9aab5e69e4d89f0e467b23",
+            "nomPromo": "EBM2",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root"
+            ]
+        }
+    ]
+}
+ *
+ * @apiError (403) Unauthorized
+ */
+router.get('/listpromosof/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (token) {
+    const usernameToFind = req.params.username;
+    return Promo.find({
+      membres: usernameToFind,
+    }, (err, listPromo) => {
+      if (!listPromo) {
+        return res.status(401)
+          .send({
+            success: false,
+            msg: `Pas de promos associée à ${req.params.username}` ,
+          });
+      }
+      const outputPromos = [];
+      listPromo.forEach((promo) => {
+        outputPromos.push({
+          responsable: promo.responsable,
+          nomPromo: promo.nomPromo,
+          membres: promo.membres,
+        });
+      });
+      return res.json({
+        success: true,
+        promotions: listPromo,
+      });
+    });
+  }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Opération non autorisée.',
+    });
 });
 
 module.exports = router;

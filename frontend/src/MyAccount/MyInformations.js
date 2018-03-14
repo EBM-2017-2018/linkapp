@@ -6,6 +6,8 @@ import { FormControl, IconButton, Input, InputAdornment, InputLabel, withStyles 
 import { Visibility, VisibilityOff } from 'material-ui-icons'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
+import { toast, ToastContainer } from 'react-toastify'
+import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
 
 class MyInformations extends Component {
   state = {
@@ -61,7 +63,6 @@ class MyInformations extends Component {
       //var selectedFile = document.getElementById('input').files[0];
       var file = this.get(0).files
   };
-
     importerNom = () => {
         console.log("Ecrire la fonction qui permet d'importer le nom");
     };
@@ -74,7 +75,8 @@ class MyInformations extends Component {
 
     return (
 
-      <div className="App">
+      <div className="App" style = {styles}>
+        <ToastContainer />
 
           <h1>  {this.state.prenom+" "+this.state.nom} </h1>
           <div className= "BlocPrincipalAppMyInformations" >
@@ -161,7 +163,8 @@ class MyInformations extends Component {
               }
             />
           </FormControl>
-            <div>
+          <br/>
+
           <Button onClick={(event) => this.handleClickChangePassword(event)}>Modifier le mot de passe</Button>
             </div>
 
@@ -175,13 +178,14 @@ class MyInformations extends Component {
   }
 
   handleClickChangePassword (event) {
-    var apiBaseUrl = "http://localhost:3000/api/";
-    var donneesFormulaire={
+    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+    let updatePasswordUrl = GlobalVarHandler.updatePasswordUrl;
+    let donneesFormulaire={
       "password":this.state.password,
       "newPassword": this.state.password2
     }
 
-    axios.post(apiBaseUrl+'updatePassword', this.creerStructureFormulaire(donneesFormulaire), {
+    axios.post(apiBaseUrl+updatePasswordUrl, creerStructureFormulaire(donneesFormulaire), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': this.state.token}
     })
@@ -191,6 +195,10 @@ class MyInformations extends Component {
         if(response.status === 200){
           var token = response.data.token;
           cookie.save('token', token, {path: '/'});
+          toast.success("Mot de passe modifié", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
           console.log("Password changed");
           console.log(response.data.token);
           // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
@@ -199,17 +207,6 @@ class MyInformations extends Component {
       .catch(function (error) {
         console.log(error);
       });
-  }
-
-  creerStructureFormulaire(donneesFormulaire) {
-    var structureFormulaire = [];
-    for (var proprietes in donneesFormulaire) {
-      var encodedKey = encodeURIComponent(proprietes);
-      var encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
-      structureFormulaire.push(encodedKey + "=" + encodedValue);
-    }
-    structureFormulaire = structureFormulaire.join("&");
-    return structureFormulaire;
   }
 }
 
