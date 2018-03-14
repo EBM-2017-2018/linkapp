@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import AppBar from 'material-ui/AppBar'
 import TextField from 'material-ui/TextField'
 import { toast, ToastContainer } from 'react-toastify'
-import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso'
-import ReactDOM from 'react-dom'
 import axios from 'axios'
 import {
   Button,
@@ -12,12 +10,10 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  MuiThemeProvider,
   Toolbar,
   Typography,
   withStyles
 } from 'material-ui'
-import theme from '../theme'
 import Visibility from 'material-ui-icons/Visibility'
 import VisibilityOff from 'material-ui-icons/VisibilityOff'
 import PropTypes from 'prop-types'
@@ -33,6 +29,8 @@ const styles = theme => ({
     flexBasis: 200,
   },
 });
+
+// TODO : document.location.pass à regarder pour connaître l'url de redirection
 
 class Login extends Component {
     constructor(props){
@@ -127,18 +125,14 @@ class Login extends Component {
         axios.post(apiBaseUrl+signinUrl, creerStructureFormulaire(donneesFormulaire), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
-            .then(function (response) {
+            .then((response) => {
 
                 if(response.status === 200){
-                  var token = response.data.token;
+                  let token = response.data.token;
                   cookie.save('token', token, {path: '/'});
-                    console.log("Login successfull");
-                    ReactDOM.render(<MuiThemeProvider theme={theme}>
-                      <PageAccueilPerso parentContext={this} token={token}/>
-                    </MuiThemeProvider>,
-                      document.getElementById('root'));
-                    console.log(response.data.token);
-                    // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
+
+                  this.props.appOnSuccessLogin(token);
+
                 }
                 else if(response.status === 401){
                     console.log("Username password do not match");
