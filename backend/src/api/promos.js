@@ -66,7 +66,6 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
   const token = tokenUtils.getToken(req.headers);
   if (token) {
     return Promo.find((err, listPromo) => {
-      if (err) throw err;
       if (!listPromo) {
         return res.status(401)
           .send({
@@ -129,7 +128,6 @@ router.get('/:promo', passport.authenticate('jwt', { session: false }), (req, re
     return Promo.findOne({
       nomPromo: promoToFind,
     }, (err, promo) => {
-      if (err) throw err;
       if (!promo) {
         return res.status(401)
           .send({
@@ -193,7 +191,6 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
     return User.findOne({
       username: userToFind,
     }, (err, user) => {
-      if (err) throw err;
       if (!user) {
         return res.status(401)
           .send({
@@ -212,7 +209,6 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
           username: req.body.responsable,
           // eslint-disable-next-line no-shadow
         }, (err, resp) => {
-          if (err) throw err;
           if (!resp) {
             return res.status(401)
               .send({
@@ -325,7 +321,6 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     return User.findOne({
       username: userToFind,
     }, (err, user) => {
-      if (err) throw err;
       if (!user) {
         return res.status(401)
           .send({
@@ -344,7 +339,6 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
           username: req.body.responsable,
           // eslint-disable-next-line no-shadow
         }, (err, resp) => {
-          if (err) throw err;
           if (!resp) {
             return res.status(401)
               .send({
@@ -463,7 +457,6 @@ router.get('/listpromosof/:username', passport.authenticate('jwt', { session: fa
     return Promo.find({
       membres: usernameToFind,
     }, (err, listPromo) => {
-      if (err) throw err;
       if (!listPromo) {
         return res.status(401)
           .send({

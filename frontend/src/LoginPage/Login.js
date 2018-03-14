@@ -142,12 +142,13 @@ class Login extends Component {
                 }
             })
             .catch(function (error) {
-              if(error.response.status === 401) toast.error(
-                "Nom d'utilisateur ou mot de passe erroné", {
+
+              if(error.response.status && error.response.status === 401) toast.error(
+                (error.response.data.msg ? error.response.data.msg : "connection impossible"), {
                 position: toast.POSITION.TOP_LEFT,
                 autoClose: 3000,
               });
-                console.log(error.response);
+
             });
     }
 }

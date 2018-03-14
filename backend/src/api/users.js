@@ -36,7 +36,6 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false }), 
     return User.findOne({
       username: userToFind,
     }, (err, user) => {
-      if (err) throw err;
       if (!user) {
         return res.status(401)
           .send({
@@ -104,8 +103,6 @@ router.get('/list/:role', passport.authenticate('jwt', { session: false }), (req
     return User.find({
       role: roleToFind,
     }, (err, users) => {
-      if (err) throw err;
-
       if (!users) {
         return res.status(401)
           .send({
@@ -180,8 +177,6 @@ router.get('/getusersstartingwith/:name', passport.authenticate('jwt', { session
     return User.find({
       nom: new RegExp(`^ ${nameToFind}`),
     }, (err, users) => {
-      if (err) throw err;
-
       if (!users) {
         return res.status(200)
           .send({
@@ -252,8 +247,6 @@ router.get('/allusers', passport.authenticate('jwt', { session: false }), (req, 
   const token = tokenUtils.getToken(req.headers);
   if (token) {
     return User.find((err, users) => {
-      if (err) throw err;
-
       if (!users) {
         return res.status(200)
           .send({
