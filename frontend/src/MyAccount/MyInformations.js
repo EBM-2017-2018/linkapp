@@ -109,8 +109,9 @@ class MyInformations extends Component {
   render() {
 
     return (
+        <div>
 
-      <div className="App" style = {styles}>
+      <div className="App">
         <ToastContainer />
 
 
