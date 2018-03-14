@@ -59,6 +59,7 @@ class MyInformations extends Component {
   importerPhoto = () => {
     console.log("Ecrire la fonction qui permet de changer sa photo");
       //var selectedFile = document.getElementById('input').files[0];
+      var file = this.get(0).files
   };
 
     importerNom = () => {
@@ -198,7 +199,6 @@ class MyInformations extends Component {
       .catch(function (error) {
         console.log(error);
       });
-
   }
 
   creerStructureFormulaire(donneesFormulaire) {
