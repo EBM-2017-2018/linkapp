@@ -100,7 +100,7 @@ class PageAccueilPerso extends Component {
               </div>
               <div className="centralBloc">
                 {this.state.displayedScreen === 'Mes applications' && (
-                  <div className="myApplications">>
+                  <div className="myApplications">
                     <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="OKLM"/>
                     <ApplicationIcon link="https://www.eurosport.fr" srcImg={logo} nameApp="Sagg"/>
                     <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="Redline"/>

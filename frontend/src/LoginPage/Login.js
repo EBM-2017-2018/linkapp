@@ -78,7 +78,7 @@ class Login extends Component {
                 onChange={this.handleChange('username')}
               />
                 <br/>
-              <FormControl className={classNames(classes.margin, classes.textField)}>
+              <FormControl className={classNames(classes.margin, classes.textField)} autoComplete="on">
                 <InputLabel htmlFor="password">Mot de Passe</InputLabel>
                 <Input
                   id="adornment-password"

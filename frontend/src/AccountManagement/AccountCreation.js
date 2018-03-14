@@ -5,7 +5,6 @@ import axios from 'axios/index'
 import cookie from 'react-cookies'
 import { ToastContainer, toast } from 'react-toastify'
 
-
 const styles = theme => ({
   container: {
     display: 'flex',
