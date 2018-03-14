@@ -27,7 +27,8 @@ class MyInformations extends Component {
     showPassword2: false,
     password3: '',
     showPassword3: false,
-    token: cookie.load("token")
+    token: cookie.load("token"),
+    profilePic: imageTest,
   };
 
   handleChange = prop => event => {
@@ -66,9 +67,45 @@ class MyInformations extends Component {
     this.setState({ showPassword3: !this.state.showPassword3 });
   };
 
-  importerPhoto = () => {
-    console.log("Ecrire la fonction qui permet de changer sa photo");
+  importerPhoto = (event) => {
+      const data = new FormData();
+      data.append('username', 'root');
+      data.append('file', event.target.files[0]);
+      //TODO récupérer username
+      axios.post(GlobalVarHandler.apiBaseUrl+'pictures/upload', data).then((response) => {
+        if( response.status === 200) {
+          toast.success("photo mise en ligne", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+        }
+        else {
+          toast.error("erreur durant la mise en ligne de la photo", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+        }
+      });
   };
+  componentDidMount(){
+    //TODO modifier en fct de l'username
+    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/test', {
+      headers: {
+        'Authorization': this.state.token,
+        'Content-Type':'multipart/form-data',
+      }
+    })
+      .then((data) => {
+        console.log(data);
+        if( data.status === 200) {
+         /* this.setState({
+            profilePic: `data:${data.headers["content-type"]};base64,${data.data}`,
+          });*/
+          this.setState({
+            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/test'})
+        }
+      });
+  }
   render() {
 
     return (
@@ -79,8 +116,12 @@ class MyInformations extends Component {
 
         <div className="App-header">
 
-          <img src={imageTest} className="App-logo" alt="logo" />
-          <div><Button className="BouttonImporterPhoto" onClick={this.importerPhoto}>Importer photo</Button></div>
+          <img  src={this.state.profilePic} className="App-logo" alt="logo" />
+          <div>
+            <Input type="file" className="BouttonImporterPhoto" onClick={this.importerPhoto}>
+              Importer photo
+            </Input>
+          </div>
           <div><h2 className="Nom" > Nom </h2>
             <h2 className="Prenom"> Prénom </h2></div>
 
