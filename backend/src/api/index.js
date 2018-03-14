@@ -140,7 +140,7 @@ router.post('/updatepassword', (req, res) => {
               return res.status(500)
                 .send({
                   success: false,
-                  msg: 'server error',
+                  msg: 'erreur serveur',
                 });
             });
           } else {

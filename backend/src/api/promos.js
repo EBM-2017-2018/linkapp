@@ -325,13 +325,13 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         return res.status(401)
           .send({
             success: false,
-            msg: 'Wrong user',
+            msg: 'Utilisateur inconnu',
           });
       }
       if (!req.body.nomPromo || !req.body.responsable) {
         res.json({
           success: false,
-          msg: 'erreur paramètre nomPromo ou responsable manquant',
+          msg: 'erreur paramètre Promo ou responsable manquant',
         });
       }
       if (user.role === roleAdmin || user.role === roleIntervenant) {
@@ -371,28 +371,27 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
                 switch (err.code) {
                   // username deja pris
                   case 11000: {
-                    return res.json({
+                    return res.status(400).json({
                       success: false,
-                      msg: 'Username already exists.',
+                      msg: 'Non d\'utilisateur existant',
                     });
                   }
                   default:
-                    return res.json({
+                    return res.status(400).json({
                       success: false,
-                      // error: err ,
-                      msg: 'Unknown error',
+                      msg: 'erreur',
                     });
                 }
               }
             } else {
-              return res.json({
+              return res.status(400).json({
                 success: true,
                 msg: 'promo mise à jour',
               });
             }
-            return res.json({
+            return res.status(400).json({
               success: false,
-              msg: 'unknown error',
+              msg: 'erreur',
             });
           });
         });
@@ -400,7 +399,7 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         return res.status(403)
           .send({
             success: false,
-            msg: 'Unauthorized.',
+            msg: 'Opération non autorisée.',
           });
       }
     });
@@ -461,7 +460,7 @@ router.get('/listpromosof/:username', passport.authenticate('jwt', { session: fa
         return res.status(401)
           .send({
             success: false,
-            msg: 'no promos',
+            msg: `Pas de promos associée à ${req.params.username}` ,
           });
       }
       const outputPromos = [];
@@ -481,7 +480,7 @@ router.get('/listpromosof/:username', passport.authenticate('jwt', { session: fa
   return res.status(403)
     .send({
       success: false,
-      msg: 'Unauthorized.',
+      msg: 'Opération non autorisée.',
     });
 });
 
