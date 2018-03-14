@@ -460,7 +460,7 @@ router.get('/listpromosof/:username', passport.authenticate('jwt', { session: fa
         return res.status(401)
           .send({
             success: false,
-            msg: `Pas de promos associée à ${req.params.username}` ,
+            msg: `Pas de promos associée à ${req.params.username}`,
           });
       }
       const outputPromos = [];

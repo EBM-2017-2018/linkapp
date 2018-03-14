@@ -284,8 +284,8 @@ class TableSelection extends React.Component {
                       <Checkbox checked={isSelected} />
                     </TableCell>
                     <TableCell padding="none">{n.nom}</TableCell>
-                    <TableCell numeric>{n.prenom}</TableCell>
-                    <TableCell numeric>{n.role}</TableCell>
+                    <TableCell padding="none">{n.prenom}</TableCell>
+                    <TableCell padding="none">{n.role}</TableCell>
                   </TableRow>
                 );
               })}

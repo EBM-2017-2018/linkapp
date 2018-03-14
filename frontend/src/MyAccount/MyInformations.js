@@ -19,7 +19,8 @@ class MyInformations extends Component {
     showPassword2: false,
     password3: '',
     showPassword3: false,
-    token: cookie.load("token")
+    token: cookie.load("token"),
+    profilePic: imageTest,
   };
 
   handleChange = prop => event => {
@@ -58,11 +59,6 @@ class MyInformations extends Component {
     this.setState({ showPassword3: !this.state.showPassword3 });
   };
 
-  importerPhoto = () => {
-    console.log("Ecrire la fonction qui permet de changer sa photo");
-      //var selectedFile = document.getElementById('input').files[0];
-      var file = this.get(0).files
-  };
     importerNom = () => {
         console.log("Ecrire la fonction qui permet d'importer le nom");
     };
@@ -70,7 +66,26 @@ class MyInformations extends Component {
     importerPrenom = () => {
         console.log("Ecrire la fonction qui permet d'importer le prenom");
     };
-
+ 
+	componentDidMount(){
+    //TODO modifier en fct de l'username
+    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/test', {
+      headers: {
+        'Authorization': this.state.token,
+        'Content-Type':'multipart/form-data',
+      }
+    })
+      .then((data) => {
+        console.log(data);
+        if( data.status === 200) {
+         /* this.setState({
+            profilePic: `data:${data.headers["content-type"]};base64,${data.data}`,
+          });*/
+          this.setState({
+            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/test'})
+        }
+      });
+  }
   render() {
 
     return (
@@ -83,7 +98,7 @@ class MyInformations extends Component {
 
         <div className="App-header">
             <div className="BlocPhoto">
-          <div><img src={imageTest} className="App-logo" alt="logo" /></div>
+          <div><img src={this.state.profilePic} className="App-logo" alt="logo" /></div>
             <input
                 accept="image/*"
                 className="BouttonImporterPhoto"

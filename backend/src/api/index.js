@@ -26,7 +26,8 @@ const verifUsername = new RegExp('^[a-z0-9]+$');
  * @apiSuccessExample {json} Success-Response:
  * {
  *  "success": true,
- *  "token": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMmJ"
+ *  "token": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMmJ",
+ *  "username: "kevin"
  *  }
  * @apiError (4xx) User not found code
  * @apiError (4xx) Wrong password
@@ -71,6 +72,7 @@ router.post('/signin', (req, res) => {
         res.json({
           success: true,
           token: `JWT ${token}`,
+          username: user.username,
         });
       } else {
         res.status(401)
