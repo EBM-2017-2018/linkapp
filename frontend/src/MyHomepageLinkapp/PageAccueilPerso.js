@@ -12,7 +12,7 @@ import AccountCircle from 'material-ui-icons/AccountCircle'
 import AccountCreation from '../AccountManagement/AccountCreation'
 import MyInformations from '../MyAccount/MyInformations'
 import PropTypes from 'prop-types'
-import PromsCreation from '../PromsManagement/PromsCreation'
+import PromsManagementPage from '../PromsManagement/PromsManagementPage'
 
 const styles = {
   root: {
@@ -120,7 +120,7 @@ class PageAccueilPerso extends Component {
                   <MyInformations parentContext={this} />
                 )}
                 {this.state.displayedScreen === 'Gestion des promos' && (
-                  <PromsCreation parentContext={this} />
+                  <PromsManagementPage parentContext={this} />
                 )}
                 </div>
             </div>
