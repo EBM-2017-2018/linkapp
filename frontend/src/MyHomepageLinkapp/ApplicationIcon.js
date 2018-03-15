@@ -8,9 +8,9 @@ class ApplicationIcon extends Component {
       var nameApp = this.props.nameApp;
 
       return(
-      <a href={link}>
+      <a href={link} className="logoApplication">
         <img src={srcImg} className="application" id={nameApp} alt={nameApp}/>
-        <div>{nameApp}</div>
+        <h2 className= "nomApplication">{nameApp}</h2>
       </a>
     )
   }

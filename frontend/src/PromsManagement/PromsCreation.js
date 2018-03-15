@@ -5,14 +5,17 @@ import Button from 'material-ui/Button'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
 import TablesSelectStudents from './TablesSelectStudents'
+import { toast, ToastContainer } from 'react-toastify'
+import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 
-class CreerNouveauGroupe extends Component {
+class PromsCreation extends Component {
   constructor(props){
     super(props);
   this.state = {
-    'token': cookie.load('token'),
-    'nomPromo':'',
-    'responsable':''
+    token: cookie.load('token'),
+    nomPromo:'',
+    responsable:'',
+    dataForTableOne: []
   }
 }
 
@@ -21,13 +24,14 @@ class CreerNouveauGroupe extends Component {
   };
 
   handleClickCreateProm (event) {
-    var apiBaseUrl = "http://localhost:3000/api/";
+    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+    let setPromoUrl = GlobalVarHandler.setPromosUrl;
     var donneesFormulaire={
       "nomPromo":this.state.nomPromo,
       "responsable": this.state.responsable
     }
 
-    axios.post(apiBaseUrl+'promos', donneesFormulaire, {
+    axios.post(apiBaseUrl+setPromoUrl, donneesFormulaire, {
       headers: { 'Content-Type': 'application/json',
         'Authorization': this.state.token}
     })
@@ -37,27 +41,37 @@ class CreerNouveauGroupe extends Component {
         if(response.status === 200){
           var token = response.data.token;
           cookie.save('token', token, {path: '/'});
-          console.log("Prom created");
-          console.log(response.data.token);
-          // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
+          toast.success("Promotion crée", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
         }
       })
       .catch(function (error) {
+        if(error.response.status === 403) toast.error("Vous n'avez pas les droits pour cette opération", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
         console.log(error);
       });
 
   }
 
-  render() {
-    //var apiBaseUrl = "http://localhost:3000/api/";
-    /* var dataToProceed = axios.get(apiBaseUrl + 'users/allusers', {
+  componentDidMount () {
+    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+    let getAllUsersUrl = GlobalVarHandler.getAllUsersUrl;
+    axios.get(apiBaseUrl + getAllUsersUrl, {
       headers: {'Authorization': this.state.token}
-    }); */
+    }).then(response => this.setState({dataForTableOne: response.data.users}));
+  }
+
+  render() {
 
     return (
       <div className="AppNouveaugroupe">
+        <ToastContainer />
         <div>
-          <h1>Créer un nouveau groupe</h1>
+          <h1>Créer une nouvelle promo</h1>
 
           <form noValidate autoComplete="off">
             <div>
@@ -80,16 +94,13 @@ class CreerNouveauGroupe extends Component {
             </Button>
           </form>
         </div>
-        <div classname = "listesUtilisateurs">
-          <TablesSelectStudents parentContext={this} />
+        <div className = "blocsUtilisateurs">
+          {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ? <TablesSelectStudents dataForTableOne={this.state.dataForTableOne} /> : "Pas d'utilisateur"}
         </div>
 
       </div>
     );
   }
-
 }
 
-/* TODO : faire passer dataToProceed dans props */
-
-export default CreerNouveauGroupe;
+export default PromsCreation;

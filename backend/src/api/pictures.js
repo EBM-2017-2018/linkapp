@@ -32,7 +32,7 @@ const upload = multer({ // multer settings for single upload
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {post} upload setProfilePic
+ * @api {post} pictures/upload setProfilePic
  * @apiDescription upload d'une photo de profil
  * @apiName setProfilePic
  * @apiGroup User
@@ -88,7 +88,7 @@ router.post('/upload', (req, res) => {
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} file/:username getProfilePic
+ * @api {get} pictures/file/:username getProfilePic
  * @apiDescription vérifie le token d'un utilisateur
  * @apiName getProfilePic
  * @apiGroup User
@@ -116,6 +116,5 @@ router.get('/file/:filename', (req, res) => {
     return readstream.pipe(res);
   });
 });
-
 
 module.exports = router;

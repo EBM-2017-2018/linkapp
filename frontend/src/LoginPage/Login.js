@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import AppBar from 'material-ui/AppBar'
 import TextField from 'material-ui/TextField'
-import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso'
-import ReactDOM from 'react-dom'
+import { toast, ToastContainer } from 'react-toastify'
 import axios from 'axios'
 import {
   Button,
@@ -11,17 +10,16 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  MuiThemeProvider,
   Toolbar,
   Typography,
   withStyles
 } from 'material-ui'
-import theme from '../theme'
 import Visibility from 'material-ui-icons/Visibility'
 import VisibilityOff from 'material-ui-icons/VisibilityOff'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import cookie from 'react-cookies'
+import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
 
 const styles = theme => ({
   margin: {
@@ -31,6 +29,8 @@ const styles = theme => ({
     flexBasis: 200,
   },
 });
+
+// TODO : document.location.pass à regarder pour connaître l'url de redirection
 
 class Login extends Component {
     constructor(props){
@@ -59,6 +59,7 @@ class Login extends Component {
 
         return (
             <div className="root">
+              <ToastContainer/>
                 <AppBar position="static">
                   <Toolbar>
                     <Typography variant="title" color="inherit" className="titleAppBarLogin">
@@ -76,7 +77,7 @@ class Login extends Component {
                 onChange={this.handleChange('username')}
               />
                 <br/>
-              <FormControl className={classNames(classes.margin, classes.textField)}>
+              <FormControl className={classNames(classes.margin, classes.textField)} autoComplete="on">
                 <InputLabel htmlFor="password">Mot de Passe</InputLabel>
                 <Input
                   id="adornment-password"
@@ -97,7 +98,13 @@ class Login extends Component {
               </FormControl>
                 <br/>
                 <Button primary={true} variant="raised" color="secondary"
-                              onClick={(event) => this.handleClick(event)}>
+                              onClick={(event) => this.handleClick(event)}
+                        onChange={event => {this.setState({query: event.target.value})}}
+                        onKeyPress={ (event) => {
+                          if (event.key === 'Enter') {
+                            this.handleClick(event)}
+                        }
+                        }>
                   Envoyer
                 </Button>
             </div>
@@ -106,59 +113,35 @@ class Login extends Component {
 
     handleClick(event)
     {
-        console.log("event", event) // TODO : delete this
-        console.log(this.state.username, this.state.password);
+      let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+      let signinUrl = GlobalVarHandler.signinUrl;
+      let donneesFormulaire={
+        "username":this.state.username,
+        "password":this.state.password
+      }
 
-        var apiBaseUrl = "http://localhost:3000/api/";
-        var donneesFormulaire={
-            "username":this.state.username,
-            "password":this.state.password
-        }
+      axios.post(apiBaseUrl+signinUrl, creerStructureFormulaire(donneesFormulaire), {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      })
+        .then((response) => {
 
-        axios.post(apiBaseUrl+'signin', this.creerStructureFormulaire(donneesFormulaire), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
-            .then(function (response) {
-                console.log(response);
-                console.log("barbapapa");
+          if(response.status === 200){
+            let token = response.data.token;
+            cookie.save('token', token, {path: '/'});
+            this.props.appOnSuccessLogin(token);
 
-                if(response.status === 200){
-                  var token = response.data.token;
-                  cookie.save('token', token, {path: '/'});
-                    console.log("Login successfull");
-                    ReactDOM.render(<MuiThemeProvider theme={theme}>
-                      <PageAccueilPerso parentContext={this} token={token}/>
-                    </MuiThemeProvider>,
-                      document.getElementById('root'));
-                    console.log(response.data.token);
-                    // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
-                }
-                else if(response.status === 401){
-                    console.log("Username password do not match");
-                    alert("username password do not match")
-                }
-                else{
-                    console.log("Username does not exists");
-                    alert("Username does not exist");
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
+          }
+        })
+        .catch(function (error) {
+
+          if(error.response.status && error.response.status === 401) toast.error(
+            (error.response.data.msg ? error.response.data.msg : "connection impossible"), {
+              position: toast.POSITION.TOP_LEFT,
+              autoClose: 3000,
             });
+
+        });
     }
-
-
-    creerStructureFormulaire(donneesFormulaire) {
-        var structureFormulaire = [];
-        for (var proprietes in donneesFormulaire) {
-            var encodedKey = encodeURIComponent(proprietes);
-            var encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
-            structureFormulaire.push(encodedKey + "=" + encodedValue);
-        }
-        structureFormulaire = structureFormulaire.join("&");
-        return structureFormulaire;
-    }
-
 }
 
 Login.propTypes = {

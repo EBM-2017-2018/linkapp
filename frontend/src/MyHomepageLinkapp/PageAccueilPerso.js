@@ -2,16 +2,17 @@ import React, { Component } from 'react'
 import '../Style/PageAccueilPerso.css'
 import MenuNavigationLinkapp from './MenuNavigationLinkapp'
 import logo from '../Images/IconeApp.png'
+import logoClock from '../Images/logo-clock.png'
 import { AppBar, IconButton, MenuItem, withStyles } from 'material-ui'
 import ApplicationIcon from './ApplicationIcon'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
 import Menu from 'material-ui/Menu'
 import AccountCircle from 'material-ui-icons/AccountCircle'
-import AccountCreation from '../AccountManagement/AccountCreation'
 import MyInformations from '../MyAccount/MyInformations'
 import PropTypes from 'prop-types'
-import PromsCreation from '../PromsManagement/PromsCreation'
+import PromsManagementPage from '../PromsManagement/PromsManagementPage'
+import AccountManagementPage from '../AccountManagement/AccountManagementPage'
 
 const styles = {
   root: {
@@ -100,17 +101,17 @@ class PageAccueilPerso extends Component {
               <div className="centralBloc">
                 {this.state.displayedScreen === 'Mes applications' && (
                   <div className="myApplications">
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app1"/>
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app2"/>
-                    <ApplicationIcon link="https://www.eurosport.fr" srcImg={logo} nameApp="app3"/>
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app4"/>
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="app5"/>
+                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="OKLM"/>
+                    <ApplicationIcon link="https://www.eurosport.fr" srcImg={logo} nameApp="Sagg"/>
+                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="Redline"/>
+                    <ApplicationIcon link="https://clock-livecoding.ebm.nymous.io/" srcImg={logoClock} nameApp="CLOCK"/>
+                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="MarkUs"/>
                   </div>)
                 }
 
                 {this.state.displayedScreen === 'Gestion des comptes' && (
                   <div>
-                    <AccountCreation parentContext={this}/>
+                    <AccountManagementPage parentContext={this}/>
                   </div>
                 )
                 }
@@ -119,7 +120,7 @@ class PageAccueilPerso extends Component {
                   <MyInformations parentContext={this} />
                 )}
                 {this.state.displayedScreen === 'Gestion des promos' && (
-                  <PromsCreation parentContext={this} />
+                  <PromsManagementPage parentContext={this} />
                 )}
                 </div>
             </div>

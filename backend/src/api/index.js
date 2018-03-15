@@ -14,6 +14,7 @@ const roleAdmin = 'administrateur';
 const roleIntervenant = 'intervenant';
 const roleEtudiant = 'etudiant';
 
+const verifUsername = new RegExp('^[a-z0-9]+$');
 /**
  * @apiVersion 1.0.0-SNAPSHOT
  * @api {post} signin connection
@@ -25,49 +26,62 @@ const roleEtudiant = 'etudiant';
  * @apiSuccessExample {json} Success-Response:
  * {
  *  "success": true,
- *  "token": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMmJ"
+ *  "token": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMmJ",
+ *  "username: "kevin"
  *  }
  * @apiError (4xx) User not found code
  * @apiError (4xx) Wrong password
  */
 router.post('/signin', (req, res) => {
+  if (!req.body.username) {
+    res.status(401)
+      .send({
+        success: false,
+        msg: 'nom d\'utilisateur manquant',
+      });
+  }
+  if (!req.body.password) {
+    res.status(401)
+      .send({
+        success: false,
+        msg: 'mot de passe manquant',
+      });
+  }
   User.findOne({
     username: req.body.username,
   }, (err, user) => {
-    if (err) throw err;
-
     if (!user) {
-      res.status(401)
+      return res.status(401)
         .send({
           success: false,
-          msg: 'Authentication failed. User not found.',
+          msg: 'Utilisateur non trouvé',
         });
-    } else {
-      // check if password matches
-      user.comparePassword(req.body.password, user.password, (error, isMatch) => {
-        if (isMatch && !error) {
-          // if user is found and password is right create a token
-          const token = jwt.sign({
-            username: user.username,
-            role: user.role,
-            nom: user.nom,
-            prenom: user.prenom,
-            email: user.email,
-          }, config.secret);
-          // return the information including token as JSON
-          res.json({
-            success: true,
-            token: `JWT ${token}`,
-          });
-        } else {
-          res.status(401)
-            .send({
-              success: false,
-              msg: 'Authentication failed. Wrong password.',
-            });
-        }
-      });
     }
+    // check if password matches
+    user.comparePassword(req.body.password, user.password, (error, isMatch) => {
+      if (isMatch && !error) {
+        // if user is found and password is right create a token
+        const token = jwt.sign({
+          username: user.username,
+          role: user.role,
+          nom: user.nom,
+          prenom: user.prenom,
+          email: user.email,
+        }, config.secret);
+          // return the information including token as JSON
+        res.json({
+          success: true,
+          token: `JWT ${token}`,
+          username: user.username,
+        });
+      } else {
+        res.status(401)
+          .send({
+            success: false,
+            msg: 'mot de passe invalide',
+          });
+      }
+    });
   });
 });
 
@@ -107,8 +121,6 @@ router.post('/updatepassword', (req, res) => {
     User.findOne({
       username: userToFind,
     }, (err, user) => {
-      if (err) throw err;
-
       if (!user) {
         res.status(401)
           .send({
@@ -121,7 +133,6 @@ router.post('/updatepassword', (req, res) => {
           if (isMatch && !error) {
             user.set({ password: req.body.newPassword });
             user.save((err) => {
-              if (err) throw err;
               console.log(err);
               if (!err) {
                 return res.status(200).send({
@@ -131,7 +142,7 @@ router.post('/updatepassword', (req, res) => {
               return res.status(500)
                 .send({
                   success: false,
-                  msg: 'server error',
+                  msg: 'erreur serveur',
                 });
             });
           } else {
@@ -146,6 +157,7 @@ router.post('/updatepassword', (req, res) => {
     });
   }
 });
+
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
@@ -180,19 +192,25 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
     return User.findOne({
       username: userToFind,
     }, (err, user) => {
-      if (err) throw err;
       if (!user) {
         return res.status(401)
           .send({
             success: false,
-            msg: 'Wrong user',
+            msg: 'Mauvais utilisateur',
           });
       }
       if (!req.body.username || !req.body.password) {
-        res.status(401).json({
+        return res.status(401).json({
           success: false,
-          msg: 'Please pass username and password.',
+          msg: 'Merci d\'entrer un nom d\'utilisateur et un mot de passe',
         });
+      }
+      if (!verifUsername.test(req.body.username)) {
+        return res.status(401)
+          .send({
+            success: false,
+            msg: 'Nom d\'utilisateur invalide',
+          });
       }
       if (
         (
@@ -242,33 +260,33 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
                 case 11000: {
                   return res.json({
                     success: false,
-                    msg: 'Username already exists.',
+                    msg: 'Le nom d\'utilisateur est déjà pris',
                   });
                 }
                 default:
                   return res.json({
                     success: false,
                     // error: err ,
-                    msg: 'Unknown error',
+                    msg: 'Erreur inconnue',
                   });
               }
             }
           } else {
             return res.json({
               success: true,
-              msg: 'Successful created new user.',
+              msg: 'Nouvel utilisateur créé',
             });
           }
           return res.json({
             success: false,
-            msg: 'unknown error',
+            msg: 'Erreur inconnue',
           });
         });
       } else {
         return res.status(403)
           .send({
             success: false,
-            msg: 'Unauthorized.',
+            msg: 'Vous n\'êtes pas authorisé à réaliser cette opération',
           });
       }
     });
@@ -300,26 +318,25 @@ router.get('/checkandrefreshtoken', passport.authenticate('jwt', { session: fals
       return User.findOne({
         username: userToFind,
       }, (err, user) => {
-        if (err) throw err;
         if (!user) {
           return res.status(401)
             .send({
               success: false,
-              msg: 'Valid token but unknown user',
+              msg: 'token valide mais utilisateur inconnu',
             });
         }
         // check if password matches
         // return the role of the user
         return res.json({
           success: true,
-          newToken: token,
+          newToken: `JWT ${token}`,
         });
       });
     }
     return res.status(403)
       .send({
         success: false,
-        msg: 'Wrong token.',
+        msg: 'token invalide',
       });
   }
 });

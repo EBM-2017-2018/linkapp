@@ -1,8 +1,25 @@
-.App {
-
+.App-header {
+    display: flex;
 }
 
-.App-header {
+input {
+    display: none;
+}
 
+.BouttonChangementPhotoProfil {
+    margin: 20%;
+}
+
+.BlocPhoto {
     display: flex;
+    flex-direction: column;
+}
+
+.BlocPrincipalAppMyInformations{
+    display: flex;
+}
+
+.App-logo{
+    width:300px;
+    height: 300px;
 }

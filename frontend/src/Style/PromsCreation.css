@@ -2,8 +2,14 @@
     text-align: center;
     display: flex;
     justify-content: space-around;
+    flex-direction: column;
 }
 
 .listeUtilisateurs{
     margin-top: 10px;
+}
+
+.tablesContainer {
+    display: flex;
+    flex-direction: row;
 }

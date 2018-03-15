@@ -13,7 +13,7 @@ User.findOne({
     if (err) {
       return console.error(err);
     } else if (user) {
-      return console.log('Already seeded');
+      return console.log('Admin already seeded');
     }
     const adminUser = new User({
       username: configdb.seedAdminUsername,
@@ -41,7 +41,7 @@ User.findOne({
     if (err) {
       return console.error(err);
     } else if (user) {
-      return console.log('Already seeded');
+      return console.log('Student already seeded');
     }
     const adminUser = new User({
       username: configdb.seedStudentUsername,
@@ -53,6 +53,34 @@ User.findOne({
 
     });
     adminUser.save((err, seeded) => {
+      if (err) {
+        return console.error(err);
+      }
+      return console.log('Seeded', seeded);
+    });
+  });
+
+const interUserToFind = configdb.seedInterUsername;
+
+User.findOne({
+  username: interUserToFind,
+})
+  .exec((err, user) => {
+    if (err) {
+      return console.error(err);
+    } else if (user) {
+      return console.log('Intervenant Already seeded');
+    }
+    const interUser = new User({
+      username: configdb.seedInterUsername,
+      password: configdb.seedInterPassword,
+      role: 'etudiant',
+      nom: 'root',
+      prenom: 'root',
+      email: 'root@etudiant.fr',
+
+    });
+    interUser.save((err, seeded) => {
       if (err) {
         return console.error(err);
       }

@@ -10,11 +10,13 @@ class LoginScreen extends Component {
             loginScreen:[],
             isLogin: true
         }
+
     }
 
     componentWillMount(){
         var loginScreen=[];
-        loginScreen.push(<Login parentContext={this} appContext={this.props.parentContext}/>);
+        loginScreen.push(<Login parentContext={this}
+                                appOnSuccessLogin={this.props.appOnSuccessLogin}/>);
         this.setState({
             loginScreen:loginScreen,
         })
