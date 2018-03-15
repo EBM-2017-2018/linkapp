@@ -120,8 +120,6 @@ class Login extends Component {
             "password":this.state.password
         }
 
-        console.log(apiBaseUrl);
-
         axios.post(apiBaseUrl+signinUrl, creerStructureFormulaire(donneesFormulaire), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })

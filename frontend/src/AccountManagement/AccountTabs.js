@@ -1,9 +1,10 @@
-import React from 'react';
-import {Tabs, Tab} from 'material-ui/Tabs';
-import cookie from "react-cookies";
+import React from 'react'
+import { Tab, Tabs } from 'material-ui/Tabs'
+import cookie from 'react-cookies'
 // From https://github.com/oliviertassinari/react-swipeable-views
-import SwipeableViews from 'react-swipeable-views';
-import { AccountCreation } from './AccountCreation';
+import SwipeableViews from 'react-swipeable-views'
+import { AccountCreation } from './AccountCreation'
+
 const styles = {
   headline: {
     fontSize: 24,

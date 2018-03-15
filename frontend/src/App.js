@@ -25,8 +25,8 @@ class App extends Component {
 
       if (parsedQuery.redirect) {
         parsedQuery.token = token;
-        let newUrl = queryString.stringify(parsedQuery);
-        document.location.replace(newUrl);
+        let queryToken = queryString.stringify({token: token});
+        document.location.replace(parsedQuery.redirect + '?' + queryToken);
       }
 
       else {
