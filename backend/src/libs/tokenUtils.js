@@ -1,7 +1,7 @@
 const db = require('../config/database');
 const jwt = require('jsonwebtoken');
 
-const verifTokenInUrl = new RegExp('JWT%20')
+const verifTokenInUrl = new RegExp('JWT%20');
 
 module.exports = {
   getToken(headers) {
