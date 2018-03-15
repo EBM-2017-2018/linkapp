@@ -13,6 +13,7 @@ import MyInformations from '../MyAccount/MyInformations'
 import PropTypes from 'prop-types'
 import PromsManagementPage from '../PromsManagement/PromsManagementPage'
 import AccountManagementPage from '../AccountManagement/AccountManagementPage'
+import cookie from 'react-cookies'
 
 const styles = {
   root: {
@@ -30,7 +31,8 @@ class PageAccueilPerso extends Component {
     this.token = props.token;
     this.state = {
       anchorEl: null,
-      displayedScreen: 'Mes applications'
+      displayedScreen: 'Mes applications',
+      query:'?token='+cookie.load('token')+'&username='+cookie.load('username'),
     };
   }
 
@@ -101,11 +103,21 @@ class PageAccueilPerso extends Component {
               <div className="centralBloc">
                 {this.state.displayedScreen === 'Mes applications' && (
                   <div className="myApplications">
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="OKLM"/>
-                    <ApplicationIcon link="https://www.eurosport.fr" srcImg={logo} nameApp="Sagg"/>
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="Redline"/>
-                    <ApplicationIcon link="https://clock-livecoding.ebm.nymous.io/" srcImg={logoClock} nameApp="CLOCK"/>
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="MarkUs"/>
+                    <ApplicationIcon link={"https://oklm.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logo}
+                                     nameApp="OKLM"/>
+                    <ApplicationIcon link={"https://sagg.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logo}
+                                     nameApp="Sagg"/>
+                    <ApplicationIcon link={"https://redline.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logo}
+                                     nameApp="Redline"/>
+                    <ApplicationIcon link={"https://clock-livecoding.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logoClock}
+                                     nameApp="CLOCK"/>
+                    <ApplicationIcon link={"https://markus.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logo}
+                                     nameApp="MarkUs"/>
                   </div>)
                 }
 
