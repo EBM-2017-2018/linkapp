@@ -130,8 +130,10 @@ class Login extends Component {
             .then(function (response) {
 
                 if(response.status === 200){
-                  var token = response.data.token;
+                  const token = response.data.token;
+                  const username = response.data.username;
                   cookie.save('token', token, {path: '/'});
+                  cookie.save('username', username, {path: '/'});
                     console.log("Login successfull");
                     ReactDOM.render(<MuiThemeProvider theme={theme}>
                       <PageAccueilPerso parentContext={this} token={token}/>
