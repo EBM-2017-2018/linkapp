@@ -58,6 +58,68 @@ router.get('/role/:username', passport.authenticate('jwt', { session: false }), 
     });
 });
 
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {get} users/userinfos/:username getUserInfos
+ * @apiDescription récupère les informations l'utilisateur
+ * @apiName getUserInfos
+ * @apiGroup User
+ * @apiHeader {String} Authorization JWT token
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiParam {String} username le nom d'utilisateur de l'utilisateur
+ * @apiSuccess {Boolean} success succès
+ * @apiSuccess {String} role role de l'utilisateur
+ * @apiSuccess {String} nom nom de l'utilisateur
+ * @apiSuccess {String} prenom prenom de l'utilisateur
+ * @apiSuccess {String} email email de l'utilisateur
+ * @apiSuccess {String} username pseudo de l'utilisateur
+ * @apiSuccessExample {json} Success-Response:
+ *{
+    "success": true,
+    "role": "admin",
+    "nom": "test",
+    "prenom": "test",
+    "email": "test@ebm.fr",
+  }
+ *
+ * @apiError (4xx) wrongUser
+ * @apiError (4xx) Unauthorized
+ */
+router.get('/userinfos/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (token) {
+    const userToFind = req.params.username;
+    return User.findOne({
+      username: userToFind,
+    }, (err, user) => {
+      if (!user) {
+        return res.status(401)
+          .send({
+            success: false,
+            msg: 'Utilisateur inconnu',
+          });
+      }
+      // check if password matches
+      // return the role of the user
+      return res.json({
+        success: true,
+        username: user.username,
+        role: user.role,
+        nom: user.nom,
+        prenom: user.prenom,
+        email: user.email,
+      });
+    });
+  }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Opération non autorisée.',
+    });
+});
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
