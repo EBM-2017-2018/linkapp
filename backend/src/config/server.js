@@ -38,7 +38,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 
@@ -47,7 +46,12 @@ app.use('/api', api);
 app.use('/api/users', users);
 app.use('/api/promos', promos);
 app.use('/api/pictures', pictures);
-app.use(serveStatic('../../public'));
+app.use(serveStatic(path.join(__dirname, '../../public')));
+
+// 404 errors should now be handled by the frontend, so we redirect everything to index.html
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public/index.html'));
+});
 
 
 module.exports = app;
