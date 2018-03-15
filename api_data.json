@@ -31,7 +31,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n \"success\": true,\n \"token\": \"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMmJ\"\n }",
+          "content": "{\n \"success\": true,\n \"token\": \"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMmJ\",\n \"username: \"kevin\"\n }",
           "type": "json"
         }
       ]
@@ -892,7 +892,7 @@
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "file/:username",
+    "url": "pictures/file/:username",
     "title": "getProfilePic",
     "description": "<p>vérifie le token d'un utilisateur</p>",
     "name": "getProfilePic",
@@ -934,7 +934,7 @@
     "groupTitle": "User",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/file/:username"
+        "url": "http://localhost:3000/api/pictures/file/:username"
       }
     ]
   },
@@ -1200,7 +1200,7 @@
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "post",
-    "url": "upload",
+    "url": "pictures/upload",
     "title": "setProfilePic",
     "description": "<p>upload d'une photo de profil</p>",
     "name": "setProfilePic",
@@ -1256,7 +1256,7 @@
     "groupTitle": "User",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/upload"
+        "url": "http://localhost:3000/api/pictures/upload"
       }
     ]
   }
