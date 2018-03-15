@@ -3,7 +3,7 @@ import axios from 'axios/index'
 import cookie from 'react-cookies'
 import { toast } from 'react-toastify'
 
-const apiBaseUrl = "http://localhost:3000/api/";
+const apiBaseUrl = "/api/";
 const signinUrl = "signin";
 
 export var signinLinkapp = (username, password) => {
