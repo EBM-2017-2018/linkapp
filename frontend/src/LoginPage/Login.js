@@ -113,35 +113,34 @@ class Login extends Component {
 
     handleClick(event)
     {
-        let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-        let signinUrl = GlobalVarHandler.signinUrl;
-        let donneesFormulaire={
-            "username":this.state.username,
-            "password":this.state.password
-        }
+      let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+      let signinUrl = GlobalVarHandler.signinUrl;
+      let donneesFormulaire={
+        "username":this.state.username,
+        "password":this.state.password
+      }
 
-        axios.post(apiBaseUrl+signinUrl, creerStructureFormulaire(donneesFormulaire), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
-            .then((response) => {
+      axios.post(apiBaseUrl+signinUrl, creerStructureFormulaire(donneesFormulaire), {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      })
+        .then((response) => {
 
-                if(response.status === 200){
-                  let token = response.data.token;
-                  cookie.save('token', token, {path: '/'});
+          if(response.status === 200){
+            let token = response.data.token;
+            cookie.save('token', token, {path: '/'});
+            this.props.appOnSuccessLogin(token);
 
-                  this.props.appOnSuccessLogin(token);
+          }
+        })
+        .catch(function (error) {
 
-                }
-            })
-            .catch(function (error) {
-
-              if(error.response.status && error.response.status === 401) toast.error(
-                (error.response.data.msg ? error.response.data.msg : "connection impossible"), {
-                position: toast.POSITION.TOP_LEFT,
-                autoClose: 3000,
-              });
-
+          if(error.response.status && error.response.status === 401) toast.error(
+            (error.response.data.msg ? error.response.data.msg : "connection impossible"), {
+              position: toast.POSITION.TOP_LEFT,
+              autoClose: 3000,
             });
+
+        });
     }
 }
 

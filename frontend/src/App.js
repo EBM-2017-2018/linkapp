@@ -4,7 +4,7 @@ import LoginScreen from './LoginPage/LoginScreen'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import theme from './theme'
 import PageAccueilPerso from './MyHomepageLinkapp/PageAccueilPerso'
-import * as queryString from 'query-string'
+import * as qs from 'qs'
 
 class App extends Component {
     constructor(props){
@@ -21,11 +21,11 @@ class App extends Component {
     }
 
     appOnSuccessLogin = (token) => {
-      const parsedQuery = queryString.parse(document.location.search);
+      const parsedQuery = qs.parse(document.location.search.slice(1));
 
       if (parsedQuery.redirect) {
         parsedQuery.token = token;
-        let queryToken = queryString.stringify({token: token});
+        let queryToken = qs.stringify({token: token});
         document.location.replace(parsedQuery.redirect + '?' + queryToken);
       }
 
