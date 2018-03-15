@@ -9,10 +9,10 @@ import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
 import Menu from 'material-ui/Menu'
 import AccountCircle from 'material-ui-icons/AccountCircle'
-import AccountCreation from '../AccountManagement/AccountCreation'
 import MyInformations from '../MyAccount/MyInformations'
 import PropTypes from 'prop-types'
 import PromsManagementPage from '../PromsManagement/PromsManagementPage'
+import AccountManagementPage from '../AccountManagement/AccountManagementPage'
 
 const styles = {
   root: {
@@ -111,7 +111,7 @@ class PageAccueilPerso extends Component {
 
                 {this.state.displayedScreen === 'Gestion des comptes' && (
                   <div>
-                    <AccountCreation parentContext={this}/>
+                    <AccountManagementPage parentContext={this}/>
                   </div>
                 )
                 }

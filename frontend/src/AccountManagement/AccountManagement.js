@@ -186,12 +186,12 @@ const styles = theme => ({
 });
 
 
-class PromsManagement extends Component {
+class AccountManagement extends Component {
   constructor (props) {
     super(props);
 
     this.state = {
-      nameProms: [],
+      nameAllUsers: [],
       single: null,
       token: cookie.load('token'),
     }
@@ -209,17 +209,17 @@ class PromsManagement extends Component {
 
   componentDidMount() {
     let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let getAllPromosUrl = GlobalVarHandler.getAllPromosUrl;
+    let getAllPromosUrl = GlobalVarHandler.getAllUsersUrl;
     axios.get(apiBaseUrl + getAllPromosUrl, {
       headers: {'Authorization': this.state.token}
     }).then(response => {
-      let valuesToDisplay = response.data.promotions.map(receivedPromInfo => ({
-        value: receivedPromInfo.nomPromo,
-        label: receivedPromInfo.nomPromo,
+      let valuesToDisplay = response.data.users.map(receivedUsersInfo => ({
+        value: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
+        label: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
       }));
 
       console.log(valuesToDisplay);
-      this.setState({nameProms: valuesToDisplay})
+      this.setState({nameAllUsers: valuesToDisplay})
     });
   }
 
@@ -228,30 +228,30 @@ class PromsManagement extends Component {
     const { single } = this.state;
 
     return(<div>
-      {((Array.isArray(this.state.nameProms) && this.state.nameProms.length)) ?
-        <div className='root'>
-          <Input
-            fullWidth
-            inputComponent={SelectWrapped}
-            inputProps={{
-              classes,
-              value: single,
-              onChange: this.handleChangeSingle,
-              placeholder: 'Rechercher une promo',
-              instanceId: 'select-promo',
-              id: 'select-promo',
-              name: 'select-promo',
-              simpleValue: true,
-              options: this.state.nameProms,
-            }}
-          />
-        </div> :
-        "No existing prom available for now"
+        {((Array.isArray(this.state.nameAllUsers) && this.state.nameAllUsers.length)) ?
+          <div className='root'>
+            <Input
+              fullWidth
+              inputComponent={SelectWrapped}
+              inputProps={{
+                classes,
+                value: single,
+                onChange: this.handleChangeSingle,
+                placeholder: 'Rechercher un utilisateur',
+                instanceId: 'select-user',
+                id: 'select-user',
+                name: 'select-user',
+                simpleValue: true,
+                options: this.state.nameAllUsers,
+              }}
+            />
+          </div> :
+          "No existing account available for now"
         }
-        <div className='createPromButtonDiv'>
-          <Button variant="raised" className='createPromButton' color="secondary"
-                  onClick={event => this.props.displayedScreenHandler(event, 'Proms Creation')}>
-            Créer une promo
+        <div className='createAccountButtonDiv'>
+          <Button variant="raised" className='createAccountButton' color="secondary"
+                  onClick={event => this.props.displayedScreenHandler(event, 'Account Creation')}>
+            Créer un compte
           </Button>
         </div>
       </div>
@@ -259,8 +259,8 @@ class PromsManagement extends Component {
   }
 }
 
-PromsManagement.propTypes = {
+AccountManagement.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PromsManagement);
+export default withStyles(styles)(AccountManagement);

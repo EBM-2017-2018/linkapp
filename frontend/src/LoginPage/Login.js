@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import AppBar from 'material-ui/AppBar'
 import TextField from 'material-ui/TextField'
 import { toast, ToastContainer } from 'react-toastify'
-import PageAccueilPerso from '../MyHomepageLinkapp/PageAccueilPerso'
-import ReactDOM from 'react-dom'
 import axios from 'axios'
 import {
   Button,
@@ -12,12 +10,10 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  MuiThemeProvider,
   Toolbar,
   Typography,
   withStyles
 } from 'material-ui'
-import theme from '../theme'
 import Visibility from 'material-ui-icons/Visibility'
 import VisibilityOff from 'material-ui-icons/VisibilityOff'
 import PropTypes from 'prop-types'
@@ -33,6 +29,8 @@ const styles = theme => ({
     flexBasis: 200,
   },
 });
+
+// TODO : document.location.pass à regarder pour connaître l'url de redirection
 
 class Login extends Component {
     constructor(props){
@@ -115,43 +113,34 @@ class Login extends Component {
 
     handleClick(event)
     {
-        let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-        let signinUrl = GlobalVarHandler.signinUrl;
-        let donneesFormulaire={
-            "username":this.state.username,
-            "password":this.state.password
-        }
+      let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+      let signinUrl = GlobalVarHandler.signinUrl;
+      let donneesFormulaire={
+        "username":this.state.username,
+        "password":this.state.password
+      }
 
-        console.log(apiBaseUrl);
+      axios.post(apiBaseUrl+signinUrl, creerStructureFormulaire(donneesFormulaire), {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      })
+        .then((response) => {
 
-        axios.post(apiBaseUrl+signinUrl, creerStructureFormulaire(donneesFormulaire), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
-            .then(function (response) {
+          if(response.status === 200){
+            let token = response.data.token;
+            cookie.save('token', token, {path: '/'});
+            this.props.appOnSuccessLogin(token);
 
-                if(response.status === 200){
-                  const token = response.data.token;
-                  const username = response.data.username;
-                  cookie.save('token', token, {path: '/'});
-                  cookie.save('username', username, {path: '/'});
-                    console.log("Login successfull");
-                    ReactDOM.render(<MuiThemeProvider theme={theme}>
-                      <PageAccueilPerso parentContext={this} token={token}/>
-                    </MuiThemeProvider>,
-                      document.getElementById('root'));
-                    console.log(response.data.token);
-                    // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
-                }
-            })
-            .catch(function (error) {
+          }
+        })
+        .catch(function (error) {
 
-              if(error.response.status && error.response.status === 401) toast.error(
-                (error.response.data.msg ? error.response.data.msg : "connection impossible"), {
-                position: toast.POSITION.TOP_LEFT,
-                autoClose: 3000,
-              });
-
+          if(error.response.status && error.response.status === 401) toast.error(
+            (error.response.data.msg ? error.response.data.msg : "connection impossible"), {
+              position: toast.POSITION.TOP_LEFT,
+              autoClose: 3000,
             });
+
+        });
     }
 }
 
