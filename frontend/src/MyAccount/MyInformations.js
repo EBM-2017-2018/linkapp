@@ -9,18 +9,10 @@ import axios from 'axios/index'
 import { toast, ToastContainer } from 'react-toastify'
 import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
 
-const styles = ({
-  Prenom: {
-    backgroundColor: 'red',
-  },
-
-  root: {
-    backgroundColor: 'red',
-  },
-});
-
 class MyInformations extends Component {
   state = {
+    prenom:'',
+    nom: '',
     password: '',
     showPassword: false,
     password2: '',
@@ -68,6 +60,10 @@ class MyInformations extends Component {
   };
 
   importerPhoto = (event) => {
+      if(!event.target.files) {
+        console.log("opération annulée");
+        return;
+      }
       const data = new FormData();
       data.append('username', 'root');
       data.append('file', event.target.files[0]);
@@ -87,9 +83,9 @@ class MyInformations extends Component {
         }
       });
   };
-  componentDidMount(){
+  componentWillMount(){
     //TODO modifier en fct de l'username
-    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/test', {
+    axios.get(GlobalVarHandler.apiBaseUrl+'users/userinfos/'+cookie.load('username'), {
       headers: {
         'Authorization': this.state.token,
         'Content-Type':'multipart/form-data',
@@ -98,9 +94,21 @@ class MyInformations extends Component {
       .then((data) => {
         console.log(data);
         if( data.status === 200) {
-         /* this.setState({
-            profilePic: `data:${data.headers["content-type"]};base64,${data.data}`,
-          });*/
+          this.setState({
+            nom: data.data.nom,
+            prenom: data.data.prenom
+          })
+        }
+      });
+    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+cookie.load('username'), {
+      headers: {
+        'Authorization': this.state.token,
+        'Content-Type':'multipart/form-data',
+      }
+    })
+      .then((data) => {
+        console.log(data);
+        if( data.status === 200) {
           this.setState({
             profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/test'})
         }
@@ -114,17 +122,26 @@ class MyInformations extends Component {
       <div className="App">
         <ToastContainer />
 
+        ﻿ <h1>  {this.state.prenom+" "+this.state.nom} </h1>
+        <div className= "BlocPrincipalAppMyInformations" >
 
         <div className="App-header">
+          ﻿<div className="BlocPhoto">
+          <div><img src={this.state.profilePic} className="App-logo" alt="logo" /></div>
+          <input
+            accept="image/*"
+            className="BouttonImporterPhoto"
+            id="raised-button-file"
+            type="file"
+            onChange={this.importerPhoto}
+          />
+          <label htmlFor="raised-button-file" className="BouttonChangementPhotoProfil">
+            <Button variant="raised" component="span" className="BouttonChangementPhotoProfil" >
+              Changer sa photo de profil
+            </Button>
+          </label>
+        </div>
 
-          <img  src={this.state.profilePic} className="App-logo" alt="logo" />
-          <div>
-            <Input type="file" className="BouttonImporterPhoto" onClick={this.importerPhoto}>
-              Importer photo
-            </Input>
-          </div>
-          <div><h2 className="Nom" > Nom </h2>
-            <h2 className="Prenom"> Prénom </h2></div>
 
         </div>
 
@@ -196,11 +213,11 @@ class MyInformations extends Component {
 
           <Button onClick={(event) => this.handleClickChangePassword(event)}>Modifier le mot de passe</Button>
 
-
+        </div>
         </div>
 
       </div>
-
+        </div>
     );
 
   }
@@ -239,4 +256,4 @@ class MyInformations extends Component {
   }
 }
 
-export default withStyles(styles)(MyInformations);
+export default MyInformations;

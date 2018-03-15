@@ -127,7 +127,9 @@ class Login extends Component {
 
           if(response.status === 200){
             let token = response.data.token;
+            let username = response.data.username;
             cookie.save('token', token, {path: '/'});
+            cookie.save('username', username, {path: '/'});
             this.props.appOnSuccessLogin(token);
 
           }
