@@ -19,7 +19,7 @@ const server = http.createServer(app);
 /**
  * set the port from env
  * */
-const port = config.app.port || '3000';
+const port = config.app.port || '4000';
 
 /**
  * Event listener for HTTP server "error" event.

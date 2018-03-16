@@ -4,7 +4,7 @@ import cookie from 'react-cookies'
 import { toast } from 'react-toastify'
 
 
-const apiBaseUrl = "http://localhost:3000/api/";
+const apiBaseUrl = "/api/";
 const signinUrl = "signin";
 const getAllUsersUrl = 'users/allusers';
 
@@ -38,6 +38,7 @@ export let getTokenOnLogin = (username, password) => {
         })
     });
 }
+
 
 export let getAllUsers = (token) => {
   return new Promise(

@@ -1,7 +1,7 @@
 class GlobalVarHandler {
   constructor () {
     // url to access mongo DB
-    this.apiBaseUrl = "http://localhost:3000/api/";
+    this.apiBaseUrl = "/api/";
     this.signinUrl = "signin";
     this.getAllPromosUrl = "promos/listpromos";
     this.setPromosUrl = "promos";

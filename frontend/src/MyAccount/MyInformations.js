@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../Style/MyInfoStyle.css'
-import imageTest from './photoProfil.jpg'
+import imageTest from '../Images/photoProfil.jpg'
 import Button from 'material-ui/Button'
 import { FormControl, IconButton, Input, InputAdornment, InputLabel } from 'material-ui'
 import { Visibility, VisibilityOff } from 'material-ui-icons'
@@ -11,8 +11,8 @@ import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/Use
 
 class MyInformations extends Component {
   state = {
-    prenom:'Prénom1',
-    nom: 'Nom1',
+    prenom:'',
+    nom: '',
     password: '',
     showPassword: false,
     password2: '',
@@ -59,17 +59,33 @@ class MyInformations extends Component {
     this.setState({ showPassword3: !this.state.showPassword3 });
   };
 
-    importerNom = () => {
-        console.log("Ecrire la fonction qui permet d'importer le nom");
-    };
-
-    importerPrenom = () => {
-        console.log("Ecrire la fonction qui permet d'importer le prenom");
-    };
- 
-	componentDidMount(){
+  importerPhoto = (event) => {
+      if(!event.target.files) {
+        console.log("opération annulée");
+        return;
+      }
+      const data = new FormData();
+      data.append('username', 'root');
+      data.append('file', event.target.files[0]);
+      //TODO récupérer username
+      axios.post(GlobalVarHandler.apiBaseUrl+'pictures/upload', data).then((response) => {
+        if( response.status === 200) {
+          toast.success("photo mise en ligne", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+        }
+        else {
+          toast.error("erreur durant la mise en ligne de la photo", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+        }
+      });
+  };
+  componentWillMount(){
     //TODO modifier en fct de l'username
-    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/test', {
+    axios.get(GlobalVarHandler.apiBaseUrl+'users/userinfos/'+cookie.load('username'), {
       headers: {
         'Authorization': this.state.token,
         'Content-Type':'multipart/form-data',
@@ -78,9 +94,21 @@ class MyInformations extends Component {
       .then((data) => {
         console.log(data);
         if( data.status === 200) {
-         /* this.setState({
-            profilePic: `data:${data.headers["content-type"]};base64,${data.data}`,
-          });*/
+          this.setState({
+            nom: data.data.nom,
+            prenom: data.data.prenom
+          })
+        }
+      });
+    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+cookie.load('username'), {
+      headers: {
+        'Authorization': this.state.token,
+        'Content-Type':'multipart/form-data',
+      }
+    })
+      .then((data) => {
+        console.log(data);
+        if( data.status === 200) {
           this.setState({
             profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/test'})
         }
@@ -94,24 +122,26 @@ class MyInformations extends Component {
       <div className="App">
         <ToastContainer />
 
-          <h1>  {this.state.prenom+" "+this.state.nom} </h1>
-          <div className= "BlocPrincipalAppMyInformations" >
+        ﻿ <h1>  {this.state.prenom+" "+this.state.nom} </h1>
+        <div className= "BlocPrincipalAppMyInformations" >
 
         <div className="App-header">
-            <div className="BlocPhoto">
+          ﻿<div className="BlocPhoto">
           <div><img src={this.state.profilePic} className="App-logo" alt="logo" /></div>
-            <input
-                accept="image/*"
-                className="BouttonImporterPhoto"
-                id="raised-button-file"
-                type="file"
-            />
-            <label htmlFor="raised-button-file" className="BouttonChangementPhotoProfil">
-                <Button variant="raised" component="span" className="BouttonChangementPhotoProfil" onClick={this.importerPhoto} >
-                    Changer sa photo de profil
-                </Button>
-            </label>
-            </div>
+          <input
+            accept="image/*"
+            className="BouttonImporterPhoto"
+            id="raised-button-file"
+            type="file"
+            onChange={this.importerPhoto}
+          />
+          <label htmlFor="raised-button-file" className="BouttonChangementPhotoProfil">
+            <Button variant="raised" component="span" className="BouttonChangementPhotoProfil" >
+              Changer sa photo de profil
+            </Button>
+          </label>
+        </div>
+
 
         </div>
 
@@ -182,13 +212,12 @@ class MyInformations extends Component {
           <br/>
 
           <Button onClick={(event) => this.handleClickChangePassword(event)}>Modifier le mot de passe</Button>
-            </div>
 
         </div>
-          </div>
+        </div>
 
       </div>
-
+        </div>
     );
 
   }
@@ -223,6 +252,7 @@ class MyInformations extends Component {
       .catch(function (error) {
         console.log(error);
       });
+
   }
 }
 
