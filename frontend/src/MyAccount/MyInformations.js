@@ -11,6 +11,7 @@ import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/Use
 
 class MyInformations extends Component {
   state = {
+    username:cookie.load('username'),
     prenom:'',
     nom: '',
     password: '',
@@ -65,7 +66,7 @@ class MyInformations extends Component {
         return;
       }
       const data = new FormData();
-      data.append('username', 'root');
+      data.append('username', this.state.username);
       data.append('file', event.target.files[0]);
       //TODO récupérer username
       axios.post(GlobalVarHandler.apiBaseUrl+'pictures/upload', data).then((response) => {
@@ -85,7 +86,7 @@ class MyInformations extends Component {
   };
   componentWillMount(){
     //TODO modifier en fct de l'username
-    axios.get(GlobalVarHandler.apiBaseUrl+'users/userinfos/'+cookie.load('username'), {
+    axios.get(GlobalVarHandler.apiBaseUrl+'users/userinfos/'+this.state.username, {
       headers: {
         'Authorization': this.state.token,
         'Content-Type':'multipart/form-data',
@@ -100,7 +101,7 @@ class MyInformations extends Component {
           })
         }
       });
-    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+cookie.load('username'), {
+    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username, {
       headers: {
         'Authorization': this.state.token,
         'Content-Type':'multipart/form-data',
