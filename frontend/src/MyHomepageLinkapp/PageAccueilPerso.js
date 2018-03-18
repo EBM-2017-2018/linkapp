@@ -54,7 +54,7 @@ class PageAccueilPerso extends Component {
   handleClickDeco = () => {
     cookie.remove('token', { path: '/' });
     cookie.remove('username', { path: '/' });
-    //TODO charger la parge de connexion
+    //TODO charger la page de connexion
   };
 
   render() {

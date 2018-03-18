@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import AccountManagement from './AccountManagement'
-import AccountCreation from './AccountCreation'
+import SimpleTabs from "./AccountTabs";
 
 class AccountManagementPage extends Component {
   constructor (props) {
@@ -21,11 +20,7 @@ class AccountManagementPage extends Component {
   render () {
     return (
       <div>
-        {this.state.displayedScreen === 'Account Management' && (
-          <AccountManagement parentContext={this} displayedScreenHandler={this.displayedScreenHandler}/>)}
-        {this.state.displayedScreen === 'Account Creation' && (
-          <AccountCreation parentContext={this} />)
-        }
+        <SimpleTabs/>
       </div>
     );
   }

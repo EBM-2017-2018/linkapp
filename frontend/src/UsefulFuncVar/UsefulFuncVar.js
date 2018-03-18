@@ -8,6 +8,7 @@ class GlobalVarHandler {
     this.signupUrl = "signup";
     this.updatePasswordUrl = "updatePassword";
     this.getAllUsersUrl = 'users/allusers';
+    this.getUserInfos='users/userinfos';
   }
 }
 

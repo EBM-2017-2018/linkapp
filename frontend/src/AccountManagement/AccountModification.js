@@ -64,12 +64,11 @@ class AccountModification extends Component {
     let signupUrl = GlobalVarHandler.signupUrl;
     var donneesFormulaire={
       "username":this.state.username,
-      "password":this.state.password,
       "role":this.state.role,
       "nom": this.state.nom,
       "prenom": this.state.prenom,
       "email": this.state.email
-    }
+    };
 
     axios.post(apiBaseUrl+signupUrl, creerStructureFormulaire(donneesFormulaire), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded',
@@ -118,16 +117,6 @@ class AccountModification extends Component {
         }}
         margin="normal"
         onChange={this.handleChange('username')}
-        />
-        <br/>
-        <TextField
-          label="Mot de passe"
-          placeholder="Mot de passe"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          margin="normal"
-          onChange={this.handleChange('password')}
         />
         <br/>
           <TextField
@@ -192,7 +181,7 @@ class AccountModification extends Component {
   }
 }
 
-AccountCreation.propTypes = {
+AccountModification.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
