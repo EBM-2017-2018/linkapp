@@ -193,6 +193,120 @@
   },
   {
     "version": "1.0.0-SNAPSHOT",
+    "type": "put",
+    "url": "updateUser",
+    "title": "modifier utilisateur",
+    "description": "<p>modifie les données d'un utilisateur</p>",
+    "name": "UpdateUser",
+    "group": "General",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "permission": [
+      {
+        "name": "'administrateur'"
+      },
+      {
+        "name": "'intervenant'"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "\"etudiant\"",
+              "\"intervenant\"",
+              "\"administrateur\""
+            ],
+            "optional": false,
+            "field": "role",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "nom",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "prenom",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Email",
+            "optional": false,
+            "field": "email",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "WrongRole",
+            "description": ""
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "WrongEmail",
+            "description": ""
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NoUsername",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/index.js",
+    "groupTitle": "General",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/updateUser"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
     "type": "get",
     "url": "checkandrefreshtoken",
     "title": "checkAndRefreshToken",
@@ -935,6 +1049,128 @@
     "sampleRequest": [
       {
         "url": "http://localhost:3000/api/pictures/file/:username"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
+    "url": "users/userinfos/:username",
+    "title": "getUserInfos",
+    "description": "<p>récupère les informations l'utilisateur</p>",
+    "name": "getUserInfos",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>le nom d'utilisateur de l'utilisateur</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>succès</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "role",
+            "description": "<p>role de l'utilisateur</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "nom",
+            "description": "<p>nom de l'utilisateur</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "prenom",
+            "description": "<p>prenom de l'utilisateur</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>email de l'utilisateur</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>pseudo de l'utilisateur</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": true,\n    \"role\": \"admin\",\n    \"nom\": \"test\",\n    \"prenom\": \"test\",\n    \"email\": \"test@ebm.fr\",\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "wrongUser",
+            "description": ""
+          },
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/users.js",
+    "groupTitle": "User",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/users/userinfos/:username"
       }
     ]
   },
