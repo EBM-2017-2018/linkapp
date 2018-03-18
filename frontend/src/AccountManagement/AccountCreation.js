@@ -57,9 +57,8 @@ class AccountCreation extends Component {
     });
   };
 
-  handleClick(event)
+  handleClick()
   {
-
     let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
     let signupUrl = GlobalVarHandler.signupUrl;
     var donneesFormulaire={
@@ -68,8 +67,8 @@ class AccountCreation extends Component {
       "role":this.state.role,
       "nom": this.state.nom,
       "prenom": this.state.prenom,
-      "email": this.state.email
-    }
+      "email": this.state.email,
+    };
 
     axios.post(apiBaseUrl+signupUrl, creerStructureFormulaire(donneesFormulaire), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded',

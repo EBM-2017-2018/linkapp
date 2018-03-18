@@ -49,10 +49,12 @@ class SimpleTabs extends React.Component {
             <Tab label="Ajouter utilisateur" />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer>
+        {value === 0 &&
+        <TabContainer>
           <AccountManagement/>
         </TabContainer>}
-        {value === 1 && <TabContainer>
+        {value === 1 &&
+        <TabContainer>
           <AccountCreation/>
         </TabContainer>}
       </div>

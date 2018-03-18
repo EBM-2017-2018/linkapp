@@ -257,7 +257,7 @@ class AccountManagement extends Component {
                 options: this.state.nameAllUsers,
               }}
             />
-            {userToModify ? <AccountModification/> : <p></p>}
+            {userToModify && <AccountModification/> }
           </div> :
           "No existing account available for now"
         }
