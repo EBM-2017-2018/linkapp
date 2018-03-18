@@ -3,7 +3,7 @@ import '../Style/PageAccueilPerso.css'
 import MenuNavigationLinkapp from './MenuNavigationLinkapp'
 import logo from '../Images/IconeApp.png'
 import logoClock from '../Images/logo-clock.png'
-import { AppBar, IconButton, MenuItem, withStyles } from 'material-ui'
+import { AppBar, IconButton, MenuItem, withStyles, Button } from 'material-ui'
 import ApplicationIcon from './ApplicationIcon'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
@@ -13,6 +13,7 @@ import MyInformations from '../MyAccount/MyInformations'
 import PropTypes from 'prop-types'
 import PromsManagementPage from '../PromsManagement/PromsManagementPage'
 import AccountManagementPage from '../AccountManagement/AccountManagementPage'
+import cookie from 'react-cookies'
 
 const styles = {
   root: {
@@ -30,7 +31,8 @@ class PageAccueilPerso extends Component {
     this.token = props.token;
     this.state = {
       anchorEl: null,
-      displayedScreen: 'Mes applications'
+      displayedScreen: 'Mes applications',
+      query:'?token='+cookie.load('token')+'&username='+cookie.load('username'),
     };
   }
 
@@ -49,6 +51,11 @@ class PageAccueilPerso extends Component {
   handleClickMenuNav = (event) => {
   this.setState({displayedScreen: event.target.textContent});
   };
+  handleClickDeco = () => {
+    cookie.remove('token', { path: '/' });
+    cookie.remove('username', { path: '/' });
+    //TODO charger la page de connexion
+  };
 
   render() {
     const { classes } = this.props;
@@ -60,10 +67,12 @@ class PageAccueilPerso extends Component {
             <div className={classes.root}>
               <AppBar position="static">
                 <Toolbar>
+                  <Button color="inherit" onClick={this.handleClickDeco}>Se déconnecter</Button>
                   <Typography variant="title" color="inherit" className={classes.flex}>
                     Linkapp
                   </Typography>
                   <div>
+
                     <IconButton
                       className="myProfileIconButton"
                       aria-owns={open ? 'menu-appbar' : null}
@@ -101,11 +110,21 @@ class PageAccueilPerso extends Component {
               <div className="centralBloc">
                 {this.state.displayedScreen === 'Mes applications' && (
                   <div className="myApplications">
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="OKLM"/>
-                    <ApplicationIcon link="https://www.eurosport.fr" srcImg={logo} nameApp="Sagg"/>
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="Redline"/>
-                    <ApplicationIcon link="https://clock-livecoding.ebm.nymous.io/" srcImg={logoClock} nameApp="CLOCK"/>
-                    <ApplicationIcon link="https://www.google.fr" srcImg={logo} nameApp="MarkUs"/>
+                    <ApplicationIcon link={"https://oklm.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logo}
+                                     nameApp="OKLM"/>
+                    <ApplicationIcon link={"https://sagg.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logo}
+                                     nameApp="Sagg"/>
+                    <ApplicationIcon link={"https://redline.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logo}
+                                     nameApp="Redline"/>
+                    <ApplicationIcon link={"https://clock-livecoding.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logoClock}
+                                     nameApp="CLOCK"/>
+                    <ApplicationIcon link={"https://markus.ebm.nymous.io/"+this.state.query}
+                                     srcImg={logo}
+                                     nameApp="MarkUs"/>
                   </div>)
                 }
 

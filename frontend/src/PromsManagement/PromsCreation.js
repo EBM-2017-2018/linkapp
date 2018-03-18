@@ -7,6 +7,8 @@ import axios from 'axios/index'
 import TablesSelectStudents from './TablesSelectStudents'
 import { toast, ToastContainer } from 'react-toastify'
 import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import { getAllUsers } from '../UsefulFuncVar/ApiCall'
+
 
 class PromsCreation extends Component {
   constructor(props){
@@ -58,11 +60,7 @@ class PromsCreation extends Component {
   }
 
   componentDidMount () {
-    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let getAllUsersUrl = GlobalVarHandler.getAllUsersUrl;
-    axios.get(apiBaseUrl + getAllUsersUrl, {
-      headers: {'Authorization': this.state.token}
-    }).then(response => this.setState({dataForTableOne: response.data.users}));
+    getAllUsers(this.state.token).then((allUsers) => this.setState({dataForTableOne: allUsers}));
   }
 
   render() {

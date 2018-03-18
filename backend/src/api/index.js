@@ -68,7 +68,7 @@ router.post('/signin', (req, res) => {
           prenom: user.prenom,
           email: user.email,
         }, config.secret);
-          // return the information including token as JSON
+        // return the information including token as JSON
         res.json({
           success: true,
           token: `JWT ${token}`,
@@ -135,9 +135,10 @@ router.post('/updatepassword', (req, res) => {
             user.save((err) => {
               console.log(err);
               if (!err) {
-                return res.status(200).send({
-                  success: true,
-                });
+                return res.status(200)
+                  .send({
+                    success: true,
+                  });
               }
               return res.status(500)
                 .send({
@@ -200,10 +201,11 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
           });
       }
       if (!req.body.username || !req.body.password) {
-        return res.status(401).json({
-          success: false,
-          msg: 'Merci d\'entrer un nom d\'utilisateur et un mot de passe',
-        });
+        return res.status(401)
+          .json({
+            success: false,
+            msg: 'Merci d\'entrer un nom d\'utilisateur et un mot de passe',
+          });
       }
       if (!verifUsername.test(req.body.username)) {
         return res.status(401)
@@ -293,6 +295,92 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
   }
 });
 
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {put} updateUser modifier utilisateur
+ * @apiDescription modifie les données d'un utilisateur
+ * @apiName UpdateUser
+ * @apiGroup General
+ * @apiHeader {String} Authorization JWT token
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiPermission 'administrateur'
+ * @apiPermission 'intervenant'
+ * @apiParam {String} username
+ * @apiParam {String="etudiant","intervenant","administrateur"} role
+ * @apiParam {String} nom
+ * @apiParam {String} prenom
+ * @apiParam {Email} email
+ *
+ * @apiError WrongRole
+ * @apiError WrongEmail
+ * @apiError NoUsername
+ */
+router.put('/updateuser', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (token) {
+    const userToFind = req.body.username;
+    return User.findOne({
+      username: userToFind,
+    }, (err, user) => {
+      if (!user) {
+        return res.status(401)
+          .send({
+            success: false,
+            msg: 'Mauvais utilisateur',
+          });
+      }
+      if (!verifUsername.test(req.body.username)) {
+        return res.status(401)
+          .send({
+            success: false,
+            msg: 'Nom d\'utilisateur invalide',
+          });
+      }
+      const userToUpdate = {
+        role: req.body.role,
+        nom: req.body.nom,
+        prenom: req.body.prenom,
+        email: req.body.email,
+      };
+      // ajout d'un user
+      // eslint-disable-next-line no-shadow
+      User.update({
+        username: req.body.username,
+      }, userToUpdate, (err) => {
+        if (err) {
+          if (err.errors) {
+            // mauvais role
+            if (err.errors.role) {
+              return res.json({
+                success: false,
+                msg: err.errors.role.message,
+              });
+            }
+            // email invalide
+            if (err.errors.email) {
+              return res.json({
+                success: false,
+                msg: err.errors.email.message,
+              });
+            }
+          }
+        } else {
+          return res.json({
+            success: true,
+            msg: 'utilisateur mis à jour',
+          });
+        }
+        return res.json({
+          success: false,
+          msg: 'Erreur inconnue',
+        });
+      });
+    });
+  }
+});
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT

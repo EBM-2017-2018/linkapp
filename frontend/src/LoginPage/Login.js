@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import AppBar from 'material-ui/AppBar'
 import TextField from 'material-ui/TextField'
-import { toast, ToastContainer } from 'react-toastify'
-import axios from 'axios'
+import { ToastContainer } from 'react-toastify'
 import {
   Button,
   FormControl,
@@ -18,8 +17,7 @@ import Visibility from 'material-ui-icons/Visibility'
 import VisibilityOff from 'material-ui-icons/VisibilityOff'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import cookie from 'react-cookies'
-import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
+import { getTokenOnLogin } from '../UsefulFuncVar/ApiCall'
 
 const styles = theme => ({
   margin: {
@@ -98,11 +96,11 @@ class Login extends Component {
               </FormControl>
                 <br/>
                 <Button primary={true} variant="raised" color="secondary"
-                              onClick={(event) => this.handleClick(event)}
+                              onClick={() => this.handleClick()}
                         onChange={event => {this.setState({query: event.target.value})}}
                         onKeyPress={ (event) => {
                           if (event.key === 'Enter') {
-                            this.handleClick(event)}
+                            this.handleClick()}
                         }
                         }>
                   Envoyer
@@ -111,36 +109,11 @@ class Login extends Component {
         );
     }
 
-    handleClick(event)
-    {
-      let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-      let signinUrl = GlobalVarHandler.signinUrl;
-      let donneesFormulaire={
-        "username":this.state.username,
-        "password":this.state.password
-      }
 
-      axios.post(apiBaseUrl+signinUrl, creerStructureFormulaire(donneesFormulaire), {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      })
-        .then((response) => {
-
-          if(response.status === 200){
-            let token = response.data.token;
-            cookie.save('token', token, {path: '/'});
-            this.props.appOnSuccessLogin(token);
-
-          }
-        })
-        .catch(function (error) {
-
-          if(error.response.status && error.response.status === 401) toast.error(
-            (error.response.data.msg ? error.response.data.msg : "connection impossible"), {
-              position: toast.POSITION.TOP_LEFT,
-              autoClose: 3000,
-            });
-
-        });
+    handleClick() {
+      getTokenOnLogin(this.state.username, this.state.password)
+        .then(token => this.props.appOnSuccessLogin(token))
+        .catch(error => console.log(error));
     }
 }
 
