@@ -100,10 +100,9 @@ class MyInformations extends Component {
             prenom: data.data.prenom
           })
         }
-      });
+
     axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username, {
       headers: {
-        'Authorization': this.state.token,
         'Content-Type':'multipart/form-data',
       }
     })
@@ -111,8 +110,9 @@ class MyInformations extends Component {
         console.log(data);
         if( data.status === 200) {
           this.setState({
-            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/test'})
+            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username})
         }
+      });
       });
   }
   render() {

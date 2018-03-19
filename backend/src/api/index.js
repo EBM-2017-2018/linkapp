@@ -71,8 +71,8 @@ router.post('/signin', (req, res) => {
         // return the information including token as JSON
         res.json({
           success: true,
-          token: `JWT ${token}`,
           username: user.username,
+          token: `JWT ${token}`,
         });
       } else {
         res.status(401)
