@@ -145,7 +145,7 @@ router.get('/:resp/listpromos', passport.authenticate('jwt', { session: false })
   if (!req.params.resp) {
     return res.status(404).json({
       code: 'NO_RESP',
-      message: 'Le responsable n\'est pas mentionné.',
+      message: 'Le responsable est absent.',
     })
   }
   if (token) {
