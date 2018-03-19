@@ -142,7 +142,7 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
  */
 router.get('/listpromoofresponsable/:responsable', passport.authenticate('jwt', { session: false }), (req, res) => {
   const token = tokenUtils.getToken(req.headers);
-  if (!req.params.resp) {
+  if (!req.params.responsable) {
     return res.status(404).json({
       code: 'NO_RESP',
       message: 'Le responsable est absent.',
