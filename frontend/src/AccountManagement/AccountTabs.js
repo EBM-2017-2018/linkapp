@@ -1,63 +1,69 @@
-import React from 'react'
-import { Tab, Tabs } from 'material-ui/Tabs'
-import cookie from 'react-cookies'
-// From https://github.com/oliviertassinari/react-swipeable-views
-import SwipeableViews from 'react-swipeable-views'
-import { AccountCreation } from './AccountCreation'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import AppBar from 'material-ui/AppBar';
+import Tabs, { Tab } from 'material-ui/Tabs';
+import Typography from 'material-ui/Typography';
+import AccountManagement from "./AccountManagement";
+import AccountCreation from './AccountCreation';
+function TabContainer(props) {
+  return (
+    <Typography component="div" style={{ padding: 8 * 3 }}>
+      {props.children}
+    </Typography>
+  );
+}
 
-const styles = {
-  headline: {
-    fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
-    fontWeight: 400,
-  },
-  slide: {
-    padding: 10,
-  },
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
-export default class AccountTabs extends React.Component {
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    marginTop: theme.spacing.unit * 3,
+    backgroundColor: theme.palette.background.paper,
+  },
+});
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      slideIndex: 0,
-      displayedComponent:'addAccount',
-      token: cookie.load('token')
-    };
-  }
+class SimpleTabs extends React.Component {
+  state = {
+    value: 0,
+  };
 
-  handleChange = (value) => {
-    this.setState({
-      slideIndex: value,
-    });
+  handleChange = (event, value) => {
+    this.setState({ value });
   };
 
   render() {
+    const { classes } = this.props;
+    const { value } = this.state;
+
     return (
-      <div>
-        <Tabs
-          onChange={this.handleChange}
-          value={this.state.slideIndex}
-        >
-          <Tab label="Création" value={0} />
-          <Tab label="Modification" value={1} />
-        </Tabs>
-        <SwipeableViews
-          index={this.state.slideIndex}
-          onChangeIndex={this.handleChange}
-        >
-          <div>
-            <h2 style={styles.headline}>Tabs with slide effect</h2>
-            Swipe to see the next slide.<br />
-            <AccountCreation parentContext={this}/>
-          </div>
-          <div style={styles.slide}>
-            slide n°2
-          </div>
-        </SwipeableViews>
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Tabs value={value}
+                onChange={this.handleChange}
+                fullWidth>
+            <Tab label="Modifier informations" />
+            <Tab label="Ajouter utilisateur" />
+          </Tabs>
+        </AppBar>
+        {value === 0 &&
+        <TabContainer>
+          <AccountManagement/>
+        </TabContainer>}
+        {value === 1 &&
+        <TabContainer>
+          <AccountCreation/>
+        </TabContainer>}
       </div>
     );
   }
 }
+
+SimpleTabs.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(SimpleTabs);

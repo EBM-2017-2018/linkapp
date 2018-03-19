@@ -36,7 +36,7 @@ const roles = [
   },
 ];
 
-class AccountCreation extends Component {
+class AccountModification extends Component {
   constructor(props){
     super(props);
     this.state={
@@ -57,17 +57,17 @@ class AccountCreation extends Component {
     });
   };
 
-  handleClick()
+  handleClick(event)
   {
+
     let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
     let signupUrl = GlobalVarHandler.signupUrl;
     var donneesFormulaire={
       "username":this.state.username,
-      "password":this.state.password,
       "role":this.state.role,
       "nom": this.state.nom,
       "prenom": this.state.prenom,
-      "email": this.state.email,
+      "email": this.state.email
     };
 
     axios.post(apiBaseUrl+signupUrl, creerStructureFormulaire(donneesFormulaire), {
@@ -117,16 +117,6 @@ class AccountCreation extends Component {
         }}
         margin="normal"
         onChange={this.handleChange('username')}
-        />
-        <br/>
-        <TextField
-          label="Mot de passe"
-          placeholder="Mot de passe"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          margin="normal"
-          onChange={this.handleChange('password')}
         />
         <br/>
           <TextField
@@ -191,8 +181,8 @@ class AccountCreation extends Component {
   }
 }
 
-AccountCreation.propTypes = {
+AccountModification.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AccountCreation);
+export default withStyles(styles)(AccountModification);

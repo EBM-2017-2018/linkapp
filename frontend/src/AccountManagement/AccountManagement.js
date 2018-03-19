@@ -12,12 +12,22 @@ import ClearIcon from 'material-ui-icons/Clear'
 import Chip from 'material-ui/Chip'
 import axios from 'axios/index'
 import cookie from 'react-cookies'
-import { Button } from 'material-ui'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import GVH from '../UsefulFuncVar/UsefulFuncVar'
+import AccountModification from './AccountModification'
+var userToModify = null;
 
 class Option extends React.Component {
   handleClick = event => {
     this.props.onSelect(this.props.option, event);
+    const usernameToFind = this.props.option.value;
+    axios.get(GVH.apiBaseUrl + GVH.getUserInfos+'/'+usernameToFind, {
+      headers: {'Authorization': cookie.load('token')}
+    }).then(response => {
+      if(response.status === 200) {
+          //this.props.handler(response.data)
+          userToModify = response.data;
+      }
+    });
   };
 
   render() {
@@ -44,8 +54,8 @@ function SelectWrapped(props) {
 
   return (
     <Select
-      optionComponent={Option}
-      noResultsText={<Typography>{'No results found'}</Typography>}
+      optionComponent={ Option }
+      noResultsText={<Typography>{'Aucun utilisateurs trouvé'}</Typography>}
       arrowRenderer={arrowProps => {
         return arrowProps.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />;
       }}
@@ -189,12 +199,19 @@ const styles = theme => ({
 class AccountManagement extends Component {
   constructor (props) {
     super(props);
-
+    this.handler = this.handler.bind(this);
     this.state = {
       nameAllUsers: [],
       single: null,
       token: cookie.load('token'),
+      userToModify: null,
+
     }
+  }
+  handler(user) {
+    this.setState({
+      userToModify: user,
+    })
   }
 
   handleChangeSingle = single => {
@@ -203,22 +220,17 @@ class AccountManagement extends Component {
     });
   };
 
-  handleClickCreateProm = event => {
-
-  }
 
   componentDidMount() {
-    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let getAllPromosUrl = GlobalVarHandler.getAllUsersUrl;
-    axios.get(apiBaseUrl + getAllPromosUrl, {
+
+    axios.get(GVH.apiBaseUrl + GVH.getAllUsersUrl, {
       headers: {'Authorization': this.state.token}
     }).then(response => {
       let valuesToDisplay = response.data.users.map(receivedUsersInfo => ({
-        value: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
+        value: receivedUsersInfo.username,
         label: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
-      }));
-
-      console.log(valuesToDisplay);
+      })
+      );
       this.setState({nameAllUsers: valuesToDisplay})
     });
   }
@@ -245,15 +257,10 @@ class AccountManagement extends Component {
                 options: this.state.nameAllUsers,
               }}
             />
+            {userToModify && <AccountModification/> }
           </div> :
           "No existing account available for now"
         }
-        <div className='createAccountButtonDiv'>
-          <Button variant="raised" className='createAccountButton' color="secondary"
-                  onClick={event => this.props.displayedScreenHandler(event, 'Account Creation')}>
-            Créer un compte
-          </Button>
-        </div>
       </div>
     )
   }
