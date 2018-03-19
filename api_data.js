@@ -539,6 +539,94 @@ define({ "api": [
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
+    "url": "promos/listpromoofresponsable/:responsable",
+    "title": "getListPromoByResponsable",
+    "description": "<p>récupère la liste des promotions</p>",
+    "name": "getListPromoByResponsable",
+    "group": "Promo",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>JWT token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n\"Authorization\":\"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>succès</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Promo",
+            "optional": false,
+            "field": "promotions",
+            "description": "<p>la liste des promotions</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": true,\n    \"promotions\": [\n        {\n            \"_id\": \"5a9aa79b687a689eba75a121\",\n            \"nomPromo\": \"EBM1\",\n            \"responsable\": \"root\",\n            \"__v\": 0,\n            \"membres\": [\n                \"root\",\n                \"test\",\n                \"test2\"\n            ]\n        },\n        {\n            \"_id\": \"5a9aab5e69e4d89f0e467b23\",\n            \"nomPromo\": \"EBM2\",\n            \"responsable\": \"root\",\n            \"__v\": 0,\n            \"membres\": [\n                \"root\"\n            ]\n        },\n        {\n            \"_id\": \"5a9aab6c69e4d89f0e467b24\",\n            \"nomPromo\": \"EBM\",\n            \"responsable\": \"root\",\n            \"__v\": 0,\n            \"membres\": [\n                \"root\"\n            ]\n        }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "resp",
+            "description": "<p>responsable de la promo</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/promos.js",
+    "groupTitle": "Promo",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/promos/listpromoofresponsable/:responsable"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
     "url": "promos/:promo",
     "title": "getPromo",
     "description": "<p>récupère la promo passée en paramètre</p>",
