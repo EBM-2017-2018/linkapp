@@ -7,7 +7,8 @@ import { Visibility, VisibilityOff } from 'material-ui-icons'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
 import { toast, ToastContainer } from 'react-toastify'
-import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
+import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import { creerStructureFormulaire } from '../UsefulFuncVar/ApiCall'
 
 class MyInformations extends Component {
   state = {

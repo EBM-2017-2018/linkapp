@@ -14,6 +14,7 @@ import axios from 'axios/index'
 import cookie from 'react-cookies'
 import GVH from '../UsefulFuncVar/UsefulFuncVar'
 import AccountModification from './AccountModification'
+
 var userToModify = null;
 
 class Option extends React.Component {

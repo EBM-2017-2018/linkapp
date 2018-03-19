@@ -9,7 +9,6 @@ import { toast, ToastContainer } from 'react-toastify'
 import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 import { getAllUsers } from '../UsefulFuncVar/ApiCall'
 
-
 class PromsCreation extends Component {
   constructor(props){
     super(props);

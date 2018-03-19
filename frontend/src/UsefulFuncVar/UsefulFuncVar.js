@@ -13,15 +13,3 @@ class GlobalVarHandler {
 }
 
 export default (new GlobalVarHandler());
-
-
-export function creerStructureFormulaire(donneesFormulaire) {
-  let structureFormulaire = [];
-  for (let proprietes in donneesFormulaire) {
-    let encodedKey = encodeURIComponent(proprietes);
-    let encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
-    structureFormulaire.push(encodedKey + "=" + encodedValue);
-  }
-  structureFormulaire = structureFormulaire.join("&");
-  return structureFormulaire;
-}

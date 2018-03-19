@@ -1,8 +1,8 @@
-import axios from "axios/index";
-import React, { Component } from 'react';
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar';
-import Login from './Login';
-import cookie from 'react-cookies';
+import axios from 'axios/index'
+import React, { Component } from 'react'
+import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import Login from './Login'
+import cookie from 'react-cookies'
 
 class LoginScreen extends Component {
   constructor(props) {
