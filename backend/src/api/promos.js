@@ -146,26 +146,27 @@ router.get('/:resp/listpromos', passport.authenticate('jwt', { session: false })
     return res.status(404).json({
       code: 'NO_RESP',
       message: 'Le responsable est absent.',
-    })
+    });
   }
   if (token) {
     return Promo.find(
       { responsable: req.params.resp },
       (err, listPromo) => {
-      if (!listPromo) {
-        return res.status(401)
-          .send({
-            success: false,
-            msg: 'no promotion',
-          });
-      }
-      // check if password matches
-      // return the role of the user
-      return res.json({
-        success: true,
-        promotions: listPromo,
-      });
-    });
+        if (!listPromo) {
+          return res.status(401)
+            .send({
+              success: false,
+              msg: 'no promotion',
+            });
+        }
+        // check if password matches
+        // return the role of the user
+        return res.json({
+          success: true,
+          promotions: listPromo,
+        });
+      },
+    );
   }
   return res.status(403)
     .send({
