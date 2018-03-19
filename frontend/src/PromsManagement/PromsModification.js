@@ -14,6 +14,7 @@ import axios from 'axios/index'
 import cookie from 'react-cookies'
 import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 import TablesSelectStudents from './TablesSelectStudents'
+import { getPromosInfos } from '../UsefulFuncVar/ApiCall'
 
 class Option extends React.Component {
   handleClick = event => {
@@ -194,8 +195,10 @@ class PromsModification extends Component {
       nameProms: [],
       single: null,
       token: cookie.load('token'),
+      dataSelectedProm: {},
       dataForTableOne: [],
       dataForTableTwo: [],
+      promSelected: false,
     }
   }
 
@@ -203,6 +206,9 @@ class PromsModification extends Component {
     this.setState({
       single,
     });
+    getPromosInfos(single, this.state.token)
+      .then(dataProm => this.setState({dataSelectedProm: dataProm, promSelected: true}))
+      .catch(error => console.log('error'))
   };
 
 
@@ -217,7 +223,6 @@ class PromsModification extends Component {
         label: receivedPromInfo.nomPromo,
       }));
 
-      console.log(valuesToDisplay);
       this.setState({nameProms: valuesToDisplay})
     });
   }
@@ -248,12 +253,17 @@ class PromsModification extends Component {
           </div> :
           "No existing prom available for now"
         }
+        { this.state.promSelected && (
+      <div className='selectedPromInfo'>
+        <Typography>{this.state.dataSelectedProm.nomPromo}</Typography>
         <div className='blocMembersProm'>
           {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ?
             <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}
             dataForTableTwo={this.state.dataForTableTwo}/>
             : "Pas d'appartenant à la promo"}
         </div>
+      </div>
+        )}
       </div>
     )
   }

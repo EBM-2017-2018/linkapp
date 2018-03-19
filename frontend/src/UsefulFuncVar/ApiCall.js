@@ -1,12 +1,11 @@
-import { creerStructureFormulaire } from './UsefulFuncVar'
 import axios from 'axios/index'
 import cookie from 'react-cookies'
 import { toast } from 'react-toastify'
 
-
 const apiBaseUrl = "/api/";
 const signinUrl = "signin";
 const getAllUsersUrl = 'users/allusers';
+const promosUrl = 'promos';
 
 
 export let getTokenOnLogin = (username, password) => {
@@ -53,4 +52,51 @@ export let getAllUsers = (token) => {
         reject('Error in getAllUsers request');
       });
   })
+}
+
+
+export let getPromosInfos = (nameProm, token) => {
+  return new Promise(
+    (resolve, reject) => {
+      axios.get(apiBaseUrl + promosUrl + '/' + nameProm, {
+        headers: {'Authorization': token}
+      }).then((response) => {
+        let dataProm = response.data.promotion;
+        resolve(dataProm);
+        reject('Error in getPromosInfos');
+      })
+    }
+  )
+}
+
+
+export let setPromosInfos = (nomPromo, responsable, membres, token) => {
+  let dataProm = {
+    "nomPromo": nomPromo,
+    "responsable": responsable,
+    "membres": membres
+  };
+
+  return new Promise(
+    (resolve, reject) => {
+      axios.post(apiBaseUrl + promosUrl, creerStructureFormulaire(dataProm), {
+        headers: {'Authorization': token}
+      }).then((response) => {
+        resolve('answer');
+        reject('Error in setPromosInfos');
+      })
+    }
+  )
+}
+
+
+export function creerStructureFormulaire(donneesFormulaire) {
+  let structureFormulaire = [];
+  for (let proprietes in donneesFormulaire) {
+    let encodedKey = encodeURIComponent(proprietes);
+    let encodedValue = encodeURIComponent(donneesFormulaire[proprietes]);
+    structureFormulaire.push(encodedKey + "=" + encodedValue);
+  }
+  structureFormulaire = structureFormulaire.join("&");
+  return structureFormulaire;
 }
