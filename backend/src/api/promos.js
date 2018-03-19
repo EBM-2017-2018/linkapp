@@ -90,9 +90,9 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} promos/:resp/listpromos getListPromo
+ * @api {get} promos/:responsable/promoslist getListPromoByResponsable
  * @apiDescription récupère la liste des promotions
- * @apiName getListPromoByResponsablle
+ * @apiName getListPromoByResponsable
  * @apiGroup Promo
  * @apiHeader {String} Authorization JWT token
  * @apiHeaderExample {json} Header-Example:
@@ -140,7 +140,7 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
  *
  * @apiError (4xx) Unauthorized
  */
-router.get('/:resp/listpromos', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/:responsable/promoslist', passport.authenticate('jwt', { session: false }), (req, res) => {
   const token = tokenUtils.getToken(req.headers);
   if (!req.params.resp) {
     return res.status(404).json({
@@ -150,7 +150,7 @@ router.get('/:resp/listpromos', passport.authenticate('jwt', { session: false })
   }
   if (token) {
     return Promo.find(
-      { responsable: req.params.resp },
+      { responsable: req.params.responsable },
       (err, listPromo) => {
         if (!listPromo) {
           return res.status(401)
