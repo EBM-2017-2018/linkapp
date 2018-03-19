@@ -14,6 +14,7 @@ class App extends Component {
           token: '',
         }
 
+        this.appOnDeconnexion = this.appOnDeconnexion.bind(this);
         this.appOnSuccessLogin = this.appOnSuccessLogin.bind(this);
     }
 
@@ -34,6 +35,10 @@ class App extends Component {
       }
     }
 
+    appOnDeconnexion = () => {
+      this.setState({displayedScreen: 'Login Page'});
+    }
+
     render() {
         return (
           <MuiThemeProvider theme={theme}>
@@ -46,7 +51,8 @@ class App extends Component {
               }
               {this.state.displayedScreen === 'Page Accueil Perso' && (
                 <PageAccueilPerso parentContext={this}
-                                  token={this.state.token}/>
+                                  token={this.state.token}
+                                  deconnexionHandler={this.appOnDeconnexion}/>
               )}
             </div>
           </MuiThemeProvider>

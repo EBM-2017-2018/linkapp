@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 import axios from 'axios/index'
 import cookie from 'react-cookies'
 import { toast, ToastContainer } from 'react-toastify'
-import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
+import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import { creerStructureFormulaire } from '../UsefulFuncVar/ApiCall'
 
 const styles = theme => ({
   container: {
