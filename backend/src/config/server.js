@@ -50,7 +50,7 @@ app.use(serveStatic(path.join(__dirname, '../../public')));
 
 // 404 errors should now be handled by the frontend, so we redirect everything to index.html
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../frontend/public/index.html'));
+  res.sendFile(path.join(__dirname, '../../public/index.html'));
 });
 
 
