@@ -14,6 +14,7 @@ class MyInformations extends Component {
     username:cookie.load('username'),
     prenom:'',
     nom: '',
+      role: '',
     password: '',
     showPassword: false,
     password2: '',
@@ -97,7 +98,8 @@ class MyInformations extends Component {
         if( data.status === 200) {
           this.setState({
             nom: data.data.nom,
-            prenom: data.data.prenom
+            prenom: data.data.prenom,
+            role : data.data.role
           })
         }
       });
@@ -147,7 +149,9 @@ class MyInformations extends Component {
         </div>
 
         <div>
-
+          <div>
+            <p> {"Status: "+this.state.role}</p>
+          </div>
           <FormControl className="champMotDePasse">
             <InputLabel htmlFor="password">Ancien mot de passe</InputLabel>
             <Input
