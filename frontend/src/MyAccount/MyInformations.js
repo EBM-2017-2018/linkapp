@@ -7,12 +7,15 @@ import { Visibility, VisibilityOff } from 'material-ui-icons'
 import cookie from 'react-cookies'
 import axios from 'axios/index'
 import { toast, ToastContainer } from 'react-toastify'
-import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
+import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import { creerStructureFormulaire } from '../UsefulFuncVar/ApiCall'
 
 class MyInformations extends Component {
   state = {
+    username:cookie.load('username'),
     prenom:'',
     nom: '',
+      role: '',
     password: '',
     showPassword: false,
     password2: '',
@@ -65,7 +68,7 @@ class MyInformations extends Component {
         return;
       }
       const data = new FormData();
-      data.append('username', 'root');
+      data.append('username', this.state.username);
       data.append('file', event.target.files[0]);
       //TODO récupérer username
       axios.post(GlobalVarHandler.apiBaseUrl+'pictures/upload', data).then((response) => {
@@ -85,7 +88,7 @@ class MyInformations extends Component {
   };
   componentWillMount(){
     //TODO modifier en fct de l'username
-    axios.get(GlobalVarHandler.apiBaseUrl+'users/userinfos/'+cookie.load('username'), {
+    axios.get(GlobalVarHandler.apiBaseUrl+'users/userinfos/'+this.state.username, {
       headers: {
         'Authorization': this.state.token,
         'Content-Type':'multipart/form-data',
@@ -96,11 +99,12 @@ class MyInformations extends Component {
         if( data.status === 200) {
           this.setState({
             nom: data.data.nom,
-            prenom: data.data.prenom
+            prenom: data.data.prenom,
+            role : data.data.role
           })
         }
       });
-    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+cookie.load('username'), {
+    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username, {
       headers: {
         'Authorization': this.state.token,
         'Content-Type':'multipart/form-data',
@@ -146,7 +150,9 @@ class MyInformations extends Component {
         </div>
 
         <div>
-
+          <div>
+            <p> {"Status: "+this.state.role}</p>
+          </div>
           <FormControl className="champMotDePasse">
             <InputLabel htmlFor="password">Ancien mot de passe</InputLabel>
             <Input

@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 import axios from 'axios/index'
 import cookie from 'react-cookies'
 import { toast, ToastContainer } from 'react-toastify'
-import GlobalVarHandler, { creerStructureFormulaire } from '../UsefulFuncVar/UsefulFuncVar'
+import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import { creerStructureFormulaire } from '../UsefulFuncVar/ApiCall'
 
 const styles = theme => ({
   container: {
@@ -57,9 +58,8 @@ class AccountCreation extends Component {
     });
   };
 
-  handleClick(event)
+  handleClick()
   {
-
     let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
     let signupUrl = GlobalVarHandler.signupUrl;
     var donneesFormulaire={
@@ -68,8 +68,8 @@ class AccountCreation extends Component {
       "role":this.state.role,
       "nom": this.state.nom,
       "prenom": this.state.prenom,
-      "email": this.state.email
-    }
+      "email": this.state.email,
+    };
 
     axios.post(apiBaseUrl+signupUrl, creerStructureFormulaire(donneesFormulaire), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded',

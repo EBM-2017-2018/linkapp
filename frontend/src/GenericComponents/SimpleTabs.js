@@ -4,8 +4,6 @@ import { withStyles } from 'material-ui/styles'
 import AppBar from 'material-ui/AppBar'
 import Tabs, { Tab } from 'material-ui/Tabs'
 import Typography from 'material-ui/Typography'
-import AccountManagement from './AccountManagement'
-import AccountCreation from './AccountCreation'
 
 function TabContainer(props) {
   return (
@@ -27,13 +25,14 @@ const styles = theme => ({
   },
 });
 
-class SimpleTabs extends React.Component {
+class TabsWrappedLabel extends React.Component {
   state = {
     value: 0,
   };
 
   handleChange = (event, value) => {
     this.setState({ value });
+    this.props.tabChangeHandler(value);
   };
 
   render() {
@@ -43,28 +42,19 @@ class SimpleTabs extends React.Component {
     return (
       <div className={classes.root}>
         <AppBar position="static">
-          <Tabs value={value}
-                onChange={this.handleChange}
-                fullWidth>
-            <Tab label="Modifier informations" />
-            <Tab label="Ajouter utilisateur" />
+          <Tabs value={value} onChange={this.handleChange}>
+            <Tab value={0} label={this.props.nameTabs[0]} />
+            <Tab value={1} label={this.props.nameTabs[1]} />
+            <Tab value={2} label={this.props.nameTabs[2]} />
           </Tabs>
         </AppBar>
-        {value === 0 &&
-        <TabContainer>
-          <AccountManagement/>
-        </TabContainer>}
-        {value === 1 &&
-        <TabContainer>
-          <AccountCreation/>
-        </TabContainer>}
       </div>
     );
   }
 }
 
-SimpleTabs.propTypes = {
+TabsWrappedLabel.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleTabs);
+export default withStyles(styles)(TabsWrappedLabel);

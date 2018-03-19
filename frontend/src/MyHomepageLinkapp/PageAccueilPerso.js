@@ -3,7 +3,7 @@ import '../Style/PageAccueilPerso.css'
 import MenuNavigationLinkapp from './MenuNavigationLinkapp'
 import logo from '../Images/IconeApp.png'
 import logoClock from '../Images/logo-clock.png'
-import { AppBar, IconButton, MenuItem, withStyles, Button } from 'material-ui'
+import { AppBar, Button, IconButton, MenuItem, withStyles } from 'material-ui'
 import ApplicationIcon from './ApplicationIcon'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
@@ -51,10 +51,11 @@ class PageAccueilPerso extends Component {
   handleClickMenuNav = (event) => {
   this.setState({displayedScreen: event.target.textContent});
   };
+
   handleClickDeco = () => {
     cookie.remove('token', { path: '/' });
     cookie.remove('username', { path: '/' });
-    //TODO charger la page de connexion
+    this.props.deconnexionHandler();
   };
 
   render() {

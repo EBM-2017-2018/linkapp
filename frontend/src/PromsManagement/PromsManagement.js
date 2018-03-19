@@ -16,6 +16,7 @@ import { Button } from 'material-ui'
 import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 
 class Option extends React.Component {
+
   handleClick = event => {
     this.props.onSelect(this.props.option, event);
   };
@@ -194,6 +195,7 @@ class PromsManagement extends Component {
       nameProms: [],
       single: null,
       token: cookie.load('token'),
+      selectedProm: '',
     }
   }
 
@@ -201,11 +203,10 @@ class PromsManagement extends Component {
     this.setState({
       single,
     });
+    // Single is the name of the selected prom
+    this.setState({selectedProm: single});
+
   };
-
-  handleClickCreateProm = event => {
-
-  }
 
   componentDidMount() {
     let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
@@ -219,7 +220,7 @@ class PromsManagement extends Component {
       }));
 
       console.log(valuesToDisplay);
-      this.setState({nameProms: valuesToDisplay})
+      this.setState({nameProms: valuesToDisplay});
     });
   }
 
@@ -257,6 +258,7 @@ class PromsManagement extends Component {
       </div>
     )
   }
+
 }
 
 PromsManagement.propTypes = {

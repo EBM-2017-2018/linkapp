@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import SimpleTabs from "./AccountTabs";
+import SimpleTabs from './AccountTabs'
 
 class AccountManagementPage extends Component {
   constructor (props) {

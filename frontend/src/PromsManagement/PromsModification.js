@@ -12,23 +12,13 @@ import ClearIcon from 'material-ui-icons/Clear'
 import Chip from 'material-ui/Chip'
 import axios from 'axios/index'
 import cookie from 'react-cookies'
-import GVH from '../UsefulFuncVar/UsefulFuncVar'
-import AccountModification from './AccountModification'
-
-var userToModify = null;
+import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import TablesSelectStudents from './TablesSelectStudents'
+import { getPromosInfos } from '../UsefulFuncVar/ApiCall'
 
 class Option extends React.Component {
   handleClick = event => {
     this.props.onSelect(this.props.option, event);
-    const usernameToFind = this.props.option.value;
-    axios.get(GVH.apiBaseUrl + GVH.getUserInfos+'/'+usernameToFind, {
-      headers: {'Authorization': cookie.load('token')}
-    }).then(response => {
-      if(response.status === 200) {
-          //this.props.handler(response.data)
-          userToModify = response.data;
-      }
-    });
   };
 
   render() {
@@ -55,8 +45,8 @@ function SelectWrapped(props) {
 
   return (
     <Select
-      optionComponent={ Option }
-      noResultsText={<Typography>{'Aucun utilisateurs trouvé'}</Typography>}
+      optionComponent={Option}
+      noResultsText={<Typography>{'No results found'}</Typography>}
       arrowRenderer={arrowProps => {
         return arrowProps.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />;
       }}
@@ -197,51 +187,53 @@ const styles = theme => ({
 });
 
 
-class AccountManagement extends Component {
+class PromsModification extends Component {
   constructor (props) {
     super(props);
-    this.handler = this.handler.bind(this);
+
     this.state = {
-      nameAllUsers: [],
+      nameProms: [],
       single: null,
       token: cookie.load('token'),
-      userToModify: null,
-
+      dataSelectedProm: {},
+      dataForTableOne: [],
+      dataForTableTwo: [],
+      promSelected: false,
     }
-  }
-  handler(user) {
-    this.setState({
-      userToModify: user,
-    })
   }
 
   handleChangeSingle = single => {
     this.setState({
       single,
     });
+    getPromosInfos(single, this.state.token)
+      .then(dataProm => this.setState({dataSelectedProm: dataProm, promSelected: true}))
+      .catch(error => console.log('error'))
   };
 
 
   componentDidMount() {
-
-    axios.get(GVH.apiBaseUrl + GVH.getAllUsersUrl, {
+    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
+    let getAllPromosUrl = GlobalVarHandler.getAllPromosUrl;
+    axios.get(apiBaseUrl + getAllPromosUrl, {
       headers: {'Authorization': this.state.token}
     }).then(response => {
-      let valuesToDisplay = response.data.users.map(receivedUsersInfo => ({
-        value: receivedUsersInfo.username,
-        label: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
-      })
-      );
-      this.setState({nameAllUsers: valuesToDisplay})
+      let valuesToDisplay = response.data.promotions.map(receivedPromInfo => ({
+        value: receivedPromInfo.nomPromo,
+        label: receivedPromInfo.nomPromo,
+      }));
+
+      this.setState({nameProms: valuesToDisplay})
     });
   }
+
 
   render() {
     const { classes } = this.props;
     const { single } = this.state;
 
     return(<div>
-        {((Array.isArray(this.state.nameAllUsers) && this.state.nameAllUsers.length)) ?
+        {((Array.isArray(this.state.nameProms) && this.state.nameProms.length)) ?
           <div className='root'>
             <Input
               fullWidth
@@ -250,25 +242,36 @@ class AccountManagement extends Component {
                 classes,
                 value: single,
                 onChange: this.handleChangeSingle,
-                placeholder: 'Rechercher un utilisateur',
-                instanceId: 'select-user',
-                id: 'select-user',
-                name: 'select-user',
+                placeholder: 'Rechercher une promo',
+                instanceId: 'select-promo',
+                id: 'select-promo',
+                name: 'select-promo',
                 simpleValue: true,
-                options: this.state.nameAllUsers,
+                options: this.state.nameProms,
               }}
             />
-            {userToModify && <AccountModification/> }
           </div> :
-          "No existing account available for now"
+          "No existing prom available for now"
         }
+        { this.state.promSelected && (
+      <div className='selectedPromInfo'>
+        <Typography>{this.state.dataSelectedProm.nomPromo}</Typography>
+        <div className='blocMembersProm'>
+          {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ?
+            <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}
+            dataForTableTwo={this.state.dataForTableTwo}/>
+            : "Pas d'appartenant à la promo"}
+        </div>
+      </div>
+        )}
       </div>
     )
   }
+
 }
 
-AccountManagement.propTypes = {
+PromsModification.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AccountManagement);
+export default withStyles(styles)(PromsModification);

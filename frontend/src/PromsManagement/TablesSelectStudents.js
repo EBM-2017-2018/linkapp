@@ -20,7 +20,7 @@ class TablesSelectStudents extends Component {
         <IconButton>
           <SwapHoriz />
         </IconButton>
-        <TableSelection className={classes.flex} dataToDisplay={this.props.dataForTableOne}/>
+        <TableSelection className={classes.flex} dataToDisplay={this.props.dataForTableTwo}/>
       </div>
     )
   }
