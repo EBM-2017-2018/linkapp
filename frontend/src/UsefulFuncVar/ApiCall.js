@@ -24,7 +24,9 @@ export let getTokenOnLogin = (username, password) => {
 
           if (response.status === 200) {
             let token = response.data.token;
+            let username = response.data.username;
             cookie.save('token', token, {path: '/'});
+            cookie.save('username', username, {path: '/'});
             resolve(token);
             reject('Error in getTokenOnLogin');
           }

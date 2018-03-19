@@ -17,12 +17,15 @@ class PromsCreation extends Component {
     token: cookie.load('token'),
     nomPromo:'',
     responsable:'',
-    dataForTableOne: []
+    dataForTableOne: [],
+    dataForTableTwo: []
   }
 }
 
   handleChange = prop => event => {
     this.setState({ [prop]: event.target.value });
+    console.log('gfsdgfsqfkhsf a lalallala');
+    console.log(event);
   };
 
   handleClickCreateProm (event) {
@@ -61,6 +64,7 @@ class PromsCreation extends Component {
 
   componentDidMount () {
     getAllUsers(this.state.token).then((allUsers) => this.setState({dataForTableOne: allUsers}));
+    // TODO : Utiliser des requêtes definies dans api call pour mettre les bons users dans les tables
   }
 
   render() {
@@ -93,7 +97,10 @@ class PromsCreation extends Component {
           </form>
         </div>
         <div className = "blocsUtilisateurs">
-          {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ? <TablesSelectStudents dataForTableOne={this.state.dataForTableOne} /> : "Pas d'utilisateur"}
+          {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ?
+            <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}
+            dataForTableTwo={this.state.dataForTableTwo}/>
+            : "Pas d'utilisateur"}
         </div>
 
       </div>

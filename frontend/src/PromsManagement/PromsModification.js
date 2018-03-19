@@ -12,11 +12,10 @@ import ClearIcon from 'material-ui-icons/Clear'
 import Chip from 'material-ui/Chip'
 import axios from 'axios/index'
 import cookie from 'react-cookies'
-import { Button } from 'material-ui'
 import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import TablesSelectStudents from './TablesSelectStudents'
 
 class Option extends React.Component {
-
   handleClick = event => {
     this.props.onSelect(this.props.option, event);
   };
@@ -187,7 +186,7 @@ const styles = theme => ({
 });
 
 
-class PromsManagement extends Component {
+class PromsModification extends Component {
   constructor (props) {
     super(props);
 
@@ -195,7 +194,8 @@ class PromsManagement extends Component {
       nameProms: [],
       single: null,
       token: cookie.load('token'),
-      selectedProm: '',
+      dataForTableOne: [],
+      dataForTableTwo: [],
     }
   }
 
@@ -203,10 +203,8 @@ class PromsManagement extends Component {
     this.setState({
       single,
     });
-    // Single is the name of the selected prom
-    this.setState({selectedProm: single});
-
   };
+
 
   componentDidMount() {
     let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
@@ -220,40 +218,41 @@ class PromsManagement extends Component {
       }));
 
       console.log(valuesToDisplay);
-      this.setState({nameProms: valuesToDisplay});
+      this.setState({nameProms: valuesToDisplay})
     });
   }
+
 
   render() {
     const { classes } = this.props;
     const { single } = this.state;
 
     return(<div>
-      {((Array.isArray(this.state.nameProms) && this.state.nameProms.length)) ?
-        <div className='root'>
-          <Input
-            fullWidth
-            inputComponent={SelectWrapped}
-            inputProps={{
-              classes,
-              value: single,
-              onChange: this.handleChangeSingle,
-              placeholder: 'Rechercher une promo',
-              instanceId: 'select-promo',
-              id: 'select-promo',
-              name: 'select-promo',
-              simpleValue: true,
-              options: this.state.nameProms,
-            }}
-          />
-        </div> :
-        "No existing prom available for now"
+        {((Array.isArray(this.state.nameProms) && this.state.nameProms.length)) ?
+          <div className='root'>
+            <Input
+              fullWidth
+              inputComponent={SelectWrapped}
+              inputProps={{
+                classes,
+                value: single,
+                onChange: this.handleChangeSingle,
+                placeholder: 'Rechercher une promo',
+                instanceId: 'select-promo',
+                id: 'select-promo',
+                name: 'select-promo',
+                simpleValue: true,
+                options: this.state.nameProms,
+              }}
+            />
+          </div> :
+          "No existing prom available for now"
         }
-        <div className='createPromButtonDiv'>
-          <Button variant="raised" className='createPromButton' color="secondary"
-                  onClick={event => this.props.displayedScreenHandler(event, 'Proms Creation')}>
-            Créer une promo
-          </Button>
+        <div className='blocMembersProm'>
+          {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ?
+            <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}
+            dataForTableTwo={this.state.dataForTableTwo}/>
+            : "Pas d'appartenant à la promo"}
         </div>
       </div>
     )
@@ -261,8 +260,8 @@ class PromsManagement extends Component {
 
 }
 
-PromsManagement.propTypes = {
+PromsModification.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PromsManagement);
+export default withStyles(styles)(PromsModification);
