@@ -1066,7 +1066,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n \"success\": true,\n \"users\": [\n     {\n         \"username\": \"eleve\",\n         \"nom\": \"test\",\n         \"prenom\": \"test\",\n         \"role\": \"etudiant\"\n     },\n     {\n         \"username\": \"petitpoucet\",\n         \"nom\": \"test\",\n        \"prenom\": \"test\",\n        \"role\": \"etudiant\"\n     }\n ]\n}",
+          "content": "{\n \"success\": true,\n \"users\": [\n     {\n         \"username\": \"eleve\",\n         \"nom\": \"test\",\n         \"prenom\": \"test\",\n         \"role\": \"etudiant\"\n     },\n     {\n         \"username\": \"petitpoucet\",\n         \"nom\": \"test\",\n        \"prenom\": \"test\",\n        \"role\": \"etudiant\"\n        \"email\": \"tyu@g.gt\"\n     }\n ]\n}",
           "type": "json"
         }
       ]
@@ -1088,6 +1088,94 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "http://localhost:3000/api/users/allusers"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0-SNAPSHOT",
+    "type": "get",
+    "url": "users/basicuserinfos/:username",
+    "title": "getBasicUserInfos",
+    "description": "<p>récupère les informations l'utilisateur</p>",
+    "name": "getBasicUserInfos",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>le psuedo de l'utilisateur</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>succès</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "nom",
+            "description": "<p>nom de l'utilisateur</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "prenom",
+            "description": "<p>prenom de l'utilisateur</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>pseudo de l'utilisateur</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"username\": \"root\",\n    \"nom\": \"test\",\n    \"prenom\": \"test\",\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "4xx": [
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "wrongUser",
+            "description": ""
+          },
+          {
+            "group": "4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "src/api/users.js",
+    "groupTitle": "User",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:3000/api/users/basicuserinfos/:username"
       }
     ]
   },
