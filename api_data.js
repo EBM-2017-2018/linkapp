@@ -539,9 +539,9 @@ define({ "api": [
   {
     "version": "1.0.0-SNAPSHOT",
     "type": "get",
-    "url": "promos/listpromoofresponsable/:responsable",
+    "url": "promos/listpromoofresponsable",
     "title": "getListPromoByResponsable",
-    "description": "<p>récupère la liste des promotions</p>",
+    "description": "<p>récupère la liste des promotions du responsable (token)</p>",
     "name": "getListPromoByResponsable",
     "group": "Promo",
     "header": {
@@ -591,19 +591,6 @@ define({ "api": [
         }
       ]
     },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "resp",
-            "description": "<p>responsable de la promo</p>"
-          }
-        ]
-      }
-    },
     "error": {
       "fields": {
         "4xx": [
@@ -620,7 +607,7 @@ define({ "api": [
     "groupTitle": "Promo",
     "sampleRequest": [
       {
-        "url": "http://localhost:3000/api/promos/listpromoofresponsable/:responsable"
+        "url": "http://localhost:3000/api/promos/listpromoofresponsable"
       }
     ]
   },
