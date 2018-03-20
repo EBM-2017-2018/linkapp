@@ -7,7 +7,7 @@ const passport = require('passport');
 const tokenUtils = require('../libs/tokenUtils');
 
 /**
-* @apiVersion 1.0.0-SNAPSHOT
+ * @apiVersion 1.0.0-SNAPSHOT
  * @api {get} users/role/:username getUserRole
  * @apiDescription récupère le role de l'utilisateur
  * @apiName getUserRole
@@ -120,6 +120,48 @@ router.get('/userinfos/:username', passport.authenticate('jwt', { session: false
       msg: 'Opération non autorisée.',
     });
 });
+
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
+ * @api {get} users/basicuserinfos/:username getBasicUserInfos
+ * @apiDescription récupère les informations l'utilisateur
+ * @apiName getBasicUserInfos
+ * @apiGroup User
+ * @apiParam {String} username le psuedo de l'utilisateur
+ * @apiSuccess {Boolean} success succès
+ * @apiSuccess {String} nom nom de l'utilisateur
+ * @apiSuccess {String} prenom prenom de l'utilisateur
+ * @apiSuccess {String} username pseudo de l'utilisateur
+ * @apiSuccessExample {json} Success-Response:
+ *{
+    "username": "root",
+    "nom": "test",
+    "prenom": "test",
+  }
+ *
+ * @apiError (4xx) wrongUser
+ * @apiError (4xx) Unauthorized
+ */
+router.get('/basicuserinfos/:username', (req, res) => {
+  const userToFind = req.params.username;
+  return User.findOne({
+    username: userToFind,
+  }, (err, user) => {
+    if (!user) {
+      return res.status(401)
+        .send({
+          success: false,
+          msg: 'Utilisateur inconnu',
+        });
+    }
+    return res.json({
+      username: user.username,
+      nom: user.nom,
+      prenom: user.prenom,
+    });
+  });
+});
+
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT

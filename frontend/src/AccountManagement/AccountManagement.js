@@ -25,8 +25,7 @@ class Option extends React.Component {
       headers: {'Authorization': cookie.load('token')}
     }).then(response => {
       if(response.status === 200) {
-          //this.props.handler(response.data)
-          userToModify = response.data;
+          //this.props.handler(response.data;
       }
     });
   };
