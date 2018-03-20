@@ -90,8 +90,8 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
- * @api {get} promos/listpromoofresponsable/:responsable getListPromoByResponsable
- * @apiDescription récupère la liste des promotions
+ * @api {get} promos/listpromoofresponsable getListPromoByResponsable
+ * @apiDescription récupère la liste des promotions du responsable (token)
  * @apiName getListPromoByResponsable
  * @apiGroup Promo
  * @apiHeader {String} Authorization JWT token
@@ -100,7 +100,6 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
  * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
  * }
  * @apiSuccess {Boolean} success succès
- * @apiParam {String} resp responsable de la promo
  * @apiSuccess {Promo} promotions la liste des promotions
  * @apiSuccessExample {json} Success-Response:
  *{
@@ -140,17 +139,13 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
  *
  * @apiError (4xx) Unauthorized
  */
-router.get('/listpromoofresponsable/:responsable', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/listpromoofresponsable', passport.authenticate('jwt', { session: false }), (req, res) => {
   const token = tokenUtils.getToken(req.headers);
-  if (!req.params.responsable) {
-    return res.status(404).json({
-      code: 'NO_RESP',
-      message: 'Le responsable est absent.',
-    });
-  }
   if (token) {
+    const decodedToken = tokenUtils.decodeToken(token);
+    const userToFind = decodedToken.username;
     return Promo.find(
-      { responsable: req.params.responsable },
+      { responsable: userToFind },
       (err, listPromo) => {
         if (!listPromo) {
           return res.status(401)
