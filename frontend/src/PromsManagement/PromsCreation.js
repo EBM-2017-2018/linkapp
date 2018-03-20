@@ -3,11 +3,9 @@ import '../Style/PromsCreation.css'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
 import cookie from 'react-cookies'
-import axios from 'axios/index'
 import TablesSelectStudents from './TablesSelectStudents'
-import { toast, ToastContainer } from 'react-toastify'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
-import { getAllUsers } from '../UsefulFuncVar/ApiCall'
+import { ToastContainer } from 'react-toastify'
+import { getAllUsers, setPromosInfos } from '../UsefulFuncVar/ApiCall'
 
 class PromsCreation extends Component {
   constructor(props){
@@ -23,42 +21,10 @@ class PromsCreation extends Component {
 
   handleChange = prop => event => {
     this.setState({ [prop]: event.target.value });
-    console.log('gfsdgfsqfkhsf a lalallala');
-    console.log(event);
   };
 
   handleClickCreateProm (event) {
-    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let setPromoUrl = GlobalVarHandler.setPromosUrl;
-    var donneesFormulaire={
-      "nomPromo":this.state.nomPromo,
-      "responsable": this.state.responsable
-    }
-
-    axios.post(apiBaseUrl+setPromoUrl, donneesFormulaire, {
-      headers: { 'Content-Type': 'application/json',
-        'Authorization': this.state.token}
-    })
-      .then(function (response) {
-        console.log(response);
-
-        if(response.status === 200){
-          var token = response.data.token;
-          cookie.save('token', token, {path: '/'});
-          toast.success("Promotion crée", {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-        }
-      })
-      .catch(function (error) {
-        if(error.response.status === 403) toast.error("Vous n'avez pas les droits pour cette opération", {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-        });
-        console.log(error);
-      });
-
+    setPromosInfos(this.state.nomPromo, this.state.responsable, this.state.dataForTableTwo, this.state.token);
   }
 
   componentDidMount () {
