@@ -14,7 +14,7 @@ import axios from 'axios/index'
 import cookie from 'react-cookies'
 import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 import TablesSelectStudents from './TablesSelectStudents'
-import { getPromosInfos } from '../UsefulFuncVar/ApiCall'
+import { getAllUsers, getPromosInfos } from '../UsefulFuncVar/ApiCall'
 
 class Option extends React.Component {
   handleClick = event => {
@@ -195,20 +195,46 @@ class PromsModification extends Component {
       nameProms: [],
       single: null,
       token: cookie.load('token'),
-      dataSelectedProm: {},
+      nameSelectedProm: '',
+      respoSelectedProm: '',
       dataForTableOne: [],
       dataForTableTwo: [],
       promSelected: false,
     }
   }
 
+  // When value of selected prom changes
   handleChangeSingle = single => {
     this.setState({
       single,
     });
+
+    // Api call to get data of members of prom and remove members of prom from allUsers to get people who don't
+    // belong to the prom
     getPromosInfos(single, this.state.token)
-      .then(dataProm => this.setState({dataSelectedProm: dataProm, promSelected: true}))
-      .catch(error => console.log('error'))
+      .then(dataProm => {
+        getAllUsers(this.state.token).then(allUsers => {
+          let usernamesMembersOption = dataProm.membres;
+          let tableAllUsers = allUsers;
+          let dataForTableTwo = [];
+
+          for (let i=0; i<usernamesMembersOption.length; i++) {
+            let userInfo = tableAllUsers.filter(user => user.username===usernamesMembersOption[i]);
+            dataForTableTwo.push(userInfo[0]);
+          }
+
+          let dataForTableOne = allUsers.filter(user => !dataForTableTwo.includes(user));
+
+          this.setState({
+            nameSelectedProm: dataProm.nomPromo,
+            promSelected: true,
+            dataForTableOne: dataForTableOne,
+            dataForTableTwo: dataForTableTwo
+          });
+
+        }).catch(error => console.log(error));
+      }).catch(error => console.log(error))
+
   };
 
 
@@ -255,7 +281,8 @@ class PromsModification extends Component {
         }
         { this.state.promSelected && (
       <div className='selectedPromInfo'>
-        <Typography>{this.state.dataSelectedProm.nomPromo}</Typography>
+        <Typography>{this.state.nomPromo}</Typography>
+        <Typography>{this.state.responsable}</Typography>
         <div className='blocMembersProm'>
           {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ?
             <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}

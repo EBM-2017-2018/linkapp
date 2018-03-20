@@ -4,8 +4,10 @@ import { toast } from 'react-toastify'
 
 const apiBaseUrl = "/api/";
 const signinUrl = "signin";
-const getAllUsersUrl = 'users/allusers';
-const promosUrl = 'promos';
+const usersUrl = 'users/';
+const allUsersUrl = "allusers"
+const promosUrl = 'promos/';
+const userInfoUrl = 'userinfos/'
 
 
 export let getTokenOnLogin = (username, password) => {
@@ -44,7 +46,7 @@ export let getTokenOnLogin = (username, password) => {
 export let getAllUsers = (token) => {
   return new Promise(
     (resolve, reject) => {
-      axios.get(apiBaseUrl + getAllUsersUrl, {
+      axios.get(apiBaseUrl + usersUrl + allUsersUrl, {
         headers: {'Authorization': token}
       }).then((response) => {
         let allUsers = response.data.users;
@@ -54,11 +56,24 @@ export let getAllUsers = (token) => {
   })
 }
 
+export let getUserInfos = (token, username) => {
+  return new Promise(
+    (resolve, reject) => {
+      axios.get(apiBaseUrl + usersUrl + userInfoUrl + username, {
+        headers: {'Authorization': token}
+      }).then((response) => {
+        let userInfos = response.data;
+        resolve(userInfos);
+        reject('Error in getUserInfos request');
+      });
+    })
+}
+
 
 export let getPromosInfos = (nameProm, token) => {
   return new Promise(
     (resolve, reject) => {
-      axios.get(apiBaseUrl + promosUrl + '/' + nameProm, {
+      axios.get(apiBaseUrl + promosUrl  + nameProm, {
         headers: {'Authorization': token}
       }).then((response) => {
         let dataProm = response.data.promotion;
@@ -80,11 +95,26 @@ export let setPromosInfos = (nomPromo, responsable, membres, token) => {
   return new Promise(
     (resolve, reject) => {
       axios.post(apiBaseUrl + promosUrl, creerStructureFormulaire(dataProm), {
-        headers: {'Authorization': token}
+        headers: {'Authorization': token,
+          'Content-Type': 'application/json'}
       }).then((response) => {
-        resolve('answer');
-        reject('Error in setPromosInfos');
-      })
+
+          if (response.status === 200) {
+            toast.success("Promotion crée", {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 3000,
+            });
+            resolve('answer');
+            reject('Error in setPromoInfo');
+          }
+        })
+        .catch(function (error) {
+          if(error.response.status === 403) toast.error("Vous n'avez pas les droits pour cette opération", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          console.log(error);
+        })
     }
   )
 }

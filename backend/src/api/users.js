@@ -299,6 +299,7 @@ router.get('/getusersstartingwith/:name', passport.authenticate('jwt', { session
  *          "nom": "test",
  *         "prenom": "test",
  *         "role": "etudiant"
+ *         "email": "tyu@g.gt"
  *      }
  *  ]
  *}
@@ -325,7 +326,7 @@ router.get('/allusers', passport.authenticate('jwt', { session: false }), (req, 
           nom: user.nom,
           prenom: user.prenom,
           role: user.role,
-
+          email: user.email,
         });
       });
       return res.json({
