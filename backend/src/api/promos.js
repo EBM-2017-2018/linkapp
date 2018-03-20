@@ -143,7 +143,7 @@ router.get('/listpromoofresponsable', passport.authenticate('jwt', { session: fa
   const token = tokenUtils.getToken(req.headers);
   if (token) {
     const decodedToken = tokenUtils.decodeToken(token);
-    const userToFind = decodedToken.username;
+    const userToFind = decodedToken.username; // to get the name
     return Promo.find(
       { responsable: userToFind },
       (err, listPromo) => {
