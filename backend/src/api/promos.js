@@ -90,6 +90,93 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
 
 /**
  * @apiVersion 1.0.0-SNAPSHOT
+ * @api {get} promos/listpromoofresponsable/:responsable getListPromoByResponsable
+ * @apiDescription récupère la liste des promotions
+ * @apiName getListPromoByResponsable
+ * @apiGroup Promo
+ * @apiHeader {String} Authorization JWT token
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ * "Authorization":"JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
+ * }
+ * @apiSuccess {Boolean} success succès
+ * @apiParam {String} resp responsable de la promo
+ * @apiSuccess {Promo} promotions la liste des promotions
+ * @apiSuccessExample {json} Success-Response:
+ *{
+    "success": true,
+    "promotions": [
+        {
+            "_id": "5a9aa79b687a689eba75a121",
+            "nomPromo": "EBM1",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root",
+                "test",
+                "test2"
+            ]
+        },
+        {
+            "_id": "5a9aab5e69e4d89f0e467b23",
+            "nomPromo": "EBM2",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root"
+            ]
+        },
+        {
+            "_id": "5a9aab6c69e4d89f0e467b24",
+            "nomPromo": "EBM",
+            "responsable": "root",
+            "__v": 0,
+            "membres": [
+                "root"
+            ]
+        }
+    ]
+}
+ *
+ * @apiError (4xx) Unauthorized
+ */
+router.get('/listpromoofresponsable/:responsable', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const token = tokenUtils.getToken(req.headers);
+  if (!req.params.resp) {
+    return res.status(404).json({
+      code: 'NO_RESP',
+      message: 'Le responsable est absent.',
+    });
+  }
+  if (token) {
+    return Promo.find(
+      { responsable: req.params.responsable },
+      (err, listPromo) => {
+        if (!listPromo) {
+          return res.status(401)
+            .send({
+              success: false,
+              msg: 'no promotion',
+            });
+        }
+        // check if password matches
+        // return the role of the user
+        return res.json({
+          success: true,
+          promotions: listPromo,
+        });
+      },
+    );
+  }
+  return res.status(403)
+    .send({
+      success: false,
+      msg: 'Unauthorized.',
+    });
+});
+
+/**
+ * @apiVersion 1.0.0-SNAPSHOT
  * @api {get} promos/:promo getPromo
  * @apiDescription récupère la promo passée en paramètre
  * @apiName getPromo

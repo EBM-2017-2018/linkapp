@@ -15,6 +15,7 @@ class MyInformations extends Component {
     username:cookie.load('username'),
     prenom:'',
     nom: '',
+      role: '',
     password: '',
     showPassword: false,
     password2: '',
@@ -98,13 +99,13 @@ class MyInformations extends Component {
         if( data.status === 200) {
           this.setState({
             nom: data.data.nom,
-            prenom: data.data.prenom
+            prenom: data.data.prenom,
+            role : data.data.role
           })
         }
-      });
+
     axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username, {
       headers: {
-        'Authorization': this.state.token,
         'Content-Type':'multipart/form-data',
       }
     })
@@ -112,8 +113,9 @@ class MyInformations extends Component {
         console.log(data);
         if( data.status === 200) {
           this.setState({
-            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/test'})
+            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username})
         }
+      });
       });
   }
   render() {
@@ -148,7 +150,9 @@ class MyInformations extends Component {
         </div>
 
         <div>
-
+          <div>
+            <p> {"Status: "+this.state.role}</p>
+          </div>
           <FormControl className="champMotDePasse">
             <InputLabel htmlFor="password">Ancien mot de passe</InputLabel>
             <Input

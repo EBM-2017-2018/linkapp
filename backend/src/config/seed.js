@@ -74,7 +74,7 @@ User.findOne({
     const interUser = new User({
       username: configdb.seedInterUsername,
       password: configdb.seedInterPassword,
-      role: 'etudiant',
+      role: 'intervenant',
       nom: 'root',
       prenom: 'root',
       email: 'root@etudiant.fr',
