@@ -249,12 +249,12 @@ class PromsManagement extends Component {
         </div> :
         "No existing prom available for now"
         }
-        <div className='createPromButtonDiv'>
+      {this.state.selectedProm !== '' && (<div className='modifyPromButtonDiv'>
           <Button variant="raised" className='createPromButton' color="secondary"
                   onClick={event => this.props.displayedScreenHandler(event, 'Proms Creation')}>
-            Créer une promo
+            Modifier la promo
           </Button>
-        </div>
+        </div>)}
       </div>
     )
   }

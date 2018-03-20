@@ -22,9 +22,9 @@ import FilterListIcon from 'material-ui-icons/FilterList'
 import { lighten } from 'material-ui/styles/colorManipulator'
 
 let counter = 0;
-function createData(nom, prenom, role) {
+function createData(username, nom, prenom, role) {
   counter += 1;
-  return { id: counter, nom, prenom, role };
+  return { id: counter, username, nom, prenom, role };
 }
 
 const columnData = [
@@ -176,22 +176,31 @@ const styles = theme => ({
 class TableSelection extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.dataToDisplay);
-    console.log('in TableSelection');
-
-    let dataToProceed = this.props.dataToDisplay;
-    let finalDataTable = [];
-    for (var i=0; i<dataToProceed.length; i++)
-    {finalDataTable.push(createData(dataToProceed[i]['nom'], dataToProceed[i]['prenom'], dataToProceed[i]['role']))}
 
     this.state = {
       order: 'asc',
       orderBy: 'nom',
       selected: [],
-      data: finalDataTable.sort((a, b) => (a.nom < b.nom ? -1 : 1)),
+      data: [],
       page: 0,
       rowsPerPage: 5,
     };
+  }
+
+  /* Returns table of elements that are selected
+  returns: array of json elements with 'nom', 'prenom', 'role' and 'username' */
+  getTableSelectedElements = () => {
+    let allElements = this.state.data;
+    let indexesSelectedElements = this.state.selected;
+    let tableSelectedElements = [];
+
+    for(let i=0; i<indexesSelectedElements.length;i++){
+      let element = allElements.filter((el) => el.id===indexesSelectedElements[i]);
+      tableSelectedElements.push(element[0]);
+    }
+
+    this.setState({selected: []});
+    return tableSelectedElements;
   }
 
   handleRequestSort = (event, property) => {
@@ -249,13 +258,49 @@ class TableSelection extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+  componentDidMount() {
+    this.props.tableRef(this);
+    let dataToProceed = this.props.dataToDisplay;
+    let finalDataTable = [];
+    for (var i=0; i<dataToProceed.length; i++) {
+      finalDataTable.push(createData(dataToProceed[i]['username'],
+        dataToProceed[i]['nom'],
+        dataToProceed[i]['prenom'],
+        dataToProceed[i]['role']))
+    }
+
+    this.setState({data: finalDataTable.sort((a, b) => (a.nom < b.nom ? -1 : 1))});
+  }
+
+  componentWillUnmount() {
+    this.props.tableRef(undefined);
+  }
+
+  componentDidUpdate() {
+    this.props.tableRef(this);
+    let dataToProceed = this.props.dataToDisplay;
+    let finalDataTable = [];
+    for (var i=0; i<dataToProceed.length; i++) {
+      finalDataTable.push(createData(dataToProceed[i]['username'],
+        dataToProceed[i]['nom'],
+        dataToProceed[i]['prenom'],
+        dataToProceed[i]['role']))
+    }
+
+    let newData = finalDataTable.sort((a, b) => (a.nom < b.nom ? -1 : 1));
+
+    if ( this.state.data.length !== newData.length) {
+      this.setState({data: newData});
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
-      <Paper className={classes.root}>
+      <Paper className={classes.root} ref={this.props.tableRef}>
         <TableSelectionToolbar numSelected={selected.length} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>

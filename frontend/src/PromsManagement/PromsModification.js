@@ -191,6 +191,8 @@ class PromsModification extends Component {
   constructor (props) {
     super(props);
 
+    this.dataTableUpdater = this.dataTableUpdater.bind(this);
+
     this.state = {
       nameProms: [],
       single: null,
@@ -201,6 +203,39 @@ class PromsModification extends Component {
       dataForTableTwo: [],
       promSelected: false,
     }
+  }
+
+  // Updates dataForTableOne and dataForTableTwo
+  dataTableUpdater (toRemoveInTableOne, toRemoveInTableTwo){
+    getAllUsers(this.state.token).then(allUsers => {
+      let usernamesToRemoveOne = toRemoveInTableOne.map((el) => el.username);
+      let usernamesToRemoveTwo = toRemoveInTableTwo.map((el) => el.username);
+      let tableAllUsers = allUsers;
+      let dataForTableOne = this.state.dataForTableOne;
+      let dataForTableTwo = this.state.dataForTableTwo;
+
+      for (let i=0; i<usernamesToRemoveTwo.length; i++) {
+        let userInfo = tableAllUsers.filter(user => user.username===usernamesToRemoveTwo[i]);
+        dataForTableOne.push(userInfo[0]);
+        dataForTableTwo = dataForTableTwo.filter(user=>user.username!==usernamesToRemoveTwo[i]);
+      }
+
+      for (let i=0; i<usernamesToRemoveOne.length; i++) {
+        let userInfo = tableAllUsers.filter(user => user.username===usernamesToRemoveOne[i]);
+        dataForTableTwo.push(userInfo[0]);
+        dataForTableOne = dataForTableOne.filter(user=>user.username!==usernamesToRemoveOne[i]);
+      }
+
+      console.log("dataForTableOne in PromModif");
+      console.log(dataForTableOne);
+      console.log(dataForTableTwo);
+
+      this.setState({
+        dataForTableOne: dataForTableOne,
+        dataForTableTwo: dataForTableTwo
+      });
+
+    }).catch(error => console.log(error));
   }
 
   // When value of selected prom changes
@@ -214,12 +249,12 @@ class PromsModification extends Component {
     getPromosInfos(single, this.state.token)
       .then(dataProm => {
         getAllUsers(this.state.token).then(allUsers => {
-          let usernamesMembersOption = dataProm.membres;
+          let usernamesMemberProm = dataProm.membres;
           let tableAllUsers = allUsers;
           let dataForTableTwo = [];
 
-          for (let i=0; i<usernamesMembersOption.length; i++) {
-            let userInfo = tableAllUsers.filter(user => user.username===usernamesMembersOption[i]);
+          for (let i=0; i<usernamesMemberProm.length; i++) {
+            let userInfo = tableAllUsers.filter(user => user.username===usernamesMemberProm[i]);
             dataForTableTwo.push(userInfo[0]);
           }
 
@@ -286,7 +321,8 @@ class PromsModification extends Component {
         <div className='blocMembersProm'>
           {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ?
             <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}
-            dataForTableTwo={this.state.dataForTableTwo}/>
+            dataForTableTwo={this.state.dataForTableTwo}
+            dataTableUpdater={this.dataTableUpdater}/>
             : "Pas d'appartenant à la promo"}
         </div>
       </div>

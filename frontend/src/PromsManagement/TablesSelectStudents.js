@@ -11,16 +11,23 @@ const styles = ({
 
 class TablesSelectStudents extends Component {
 
+  onSwapButtonClick = () => {
+    let toDeleteTableOne = this.tableOne.getTableSelectedElements();
+    let toDeleteTableTwo = this.tableTwo.getTableSelectedElements();
+    console.log(toDeleteTableTwo);
+    this.props.dataTableUpdater(toDeleteTableOne, toDeleteTableTwo);
+  }
+
   render() {
     const { classes } = this.props;
     console.log(this.props.dataForTableOne);
     return (
       <div className='tablesContainer'>
-        <TableSelection className={classes.flex} dataToDisplay={this.props.dataForTableOne}/>
-        <IconButton>
+        <TableSelection tableRef={el => {this.tableOne = el;}} className={classes.flex} dataToDisplay={this.props.dataForTableOne}/>
+        <IconButton onClick={this.onSwapButtonClick}>
           <SwapHoriz />
         </IconButton>
-        <TableSelection className={classes.flex} dataToDisplay={this.props.dataForTableTwo}/>
+        <TableSelection tableRef={el => {this.tableTwo = el;}} className={classes.flex} dataToDisplay={this.props.dataForTableTwo}/>
       </div>
     )
   }
