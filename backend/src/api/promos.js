@@ -75,7 +75,7 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
       }
       // check if password matches
       // return the role of the user
-      return res.json({
+      return res.status(200).json({
         success: true,
         promotions: listPromo,
       });

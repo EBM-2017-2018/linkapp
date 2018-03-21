@@ -5,10 +5,11 @@ import { toast } from 'react-toastify'
 const apiBaseUrl = "/api/";
 const signinUrl = "signin";
 const usersUrl = 'users/';
-const allUsersUrl = "allusers"
+const allUsersUrl = "allusers";
 const promosUrl = 'promos/';
-const userInfoUrl = 'userinfos/'
-
+const userInfoUrl = 'userinfos/';
+const allPromosUrl = 'listpromos';
+const basicUserInfoUrl = 'basicuserinfos/';
 
 export let getTokenOnLogin = (username, password) => {
   return new Promise(
@@ -65,6 +66,19 @@ export let getUserInfos = (token, username) => {
         let userInfos = response.data;
         resolve(userInfos);
         reject('Error in getUserInfos request');
+      });
+    })
+}
+
+export let getBasicUserInfos = (token, username) => {
+  return new Promise(
+    (resolve, reject) => {
+      axios.get(apiBaseUrl + usersUrl + basicUserInfoUrl + username, {
+        headers: {'Authorization': token}
+      }).then((response) => {
+        let basicUserInfos = response.data;
+        resolve(basicUserInfos);
+        reject('Error in getBasicUserInfos request');
       });
     })
 }
@@ -150,6 +164,20 @@ export let updatePromoInfos = (token, nomPromo, responsable, membres) => {
           });
           console.log(error);
         })
+    }
+  )
+}
+
+export let getAllPromos = (token) => {
+  return new Promise(
+    (resolve, reject) => {
+      axios.get(apiBaseUrl + promosUrl  + allPromosUrl, {
+        headers: {'Authorization': token}
+      }).then((response) => {
+        let dataAllPromos = response.data.promotions;
+        resolve(dataAllPromos);
+        reject('Error in getAllPromos');
+      })
     }
   )
 }

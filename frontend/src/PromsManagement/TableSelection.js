@@ -289,7 +289,7 @@ class TableSelection extends React.Component {
 
     let newData = finalDataTable.sort((a, b) => (a.nom < b.nom ? -1 : 1));
 
-    if ( this.state.data.length !== newData.length) {
+    if (this.state.data.length !== newData.length) {
       this.setState({data: newData});
     }
   }

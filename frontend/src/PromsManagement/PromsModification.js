@@ -10,11 +10,12 @@ import CancelIcon from 'material-ui-icons/Cancel'
 import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
 import ClearIcon from 'material-ui-icons/Clear'
 import Chip from 'material-ui/Chip'
-import axios from 'axios/index'
 import cookie from 'react-cookies'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 import TablesSelectStudents from './TablesSelectStudents'
-import { getAllUsers, getPromosInfos, updatePromoInfos } from '../UsefulFuncVar/ApiCall'
+import {
+  getAllUsers, getPromosInfos, updatePromoInfos, getAllPromos,
+  getBasicUserInfos
+} from '../UsefulFuncVar/ApiCall'
 import { Button } from 'material-ui'
 
 class Option extends React.Component {
@@ -196,6 +197,7 @@ class PromsModification extends Component {
 
     this.state = {
       nameProms: [],
+      infosPossibleRespos: [],
       single: null,
       token: cookie.load('token'),
       nameSelectedProm: '',
@@ -203,6 +205,7 @@ class PromsModification extends Component {
       dataForTableOne: [],
       dataForTableTwo: [],
       promSelected: false,
+      nomEtPrenomRespo: '',
     }
   }
 
@@ -259,34 +262,51 @@ class PromsModification extends Component {
 
             let dataForTableOne = allUsers.filter(user => !dataForTableTwo.includes(user));
 
-            this.setState({
-              nameSelectedProm: dataProm.nomPromo,
-              promSelected: true,
-              dataForTableOne: dataForTableOne,
-              dataForTableTwo: dataForTableTwo,
-              respoSelectedProm: dataProm.responsable
-            });
-
+            getBasicUserInfos(this.state.token, dataProm.responsable)
+              .then(respoInfo => {
+                this.setState({
+                  nameSelectedProm: dataProm.nomPromo,
+                  promSelected: true,
+                  dataForTableOne: dataForTableOne,
+                  dataForTableTwo: dataForTableTwo,
+                  respoSelectedProm: dataProm.responsable,
+                  nomEtPrenomRespo: respoInfo.prenom + " " + respoInfo.nom,
+                });
+              }).catch(error => console.log(error));
           }).catch(error => console.log(error));
         }).catch(error => console.log(error))
     }
 
   };
 
+  handleChangeSingleRespo = (respo) => {
+    this.setState({
+      respo,
+    });
+
+    if (respo !== null) {
+      let nomEtPrenomRespo = this.state.infosPossibleRespos.filter(el => el.value===respo)[0].label;
+      this.setState({nomEtPrenomRespo: nomEtPrenomRespo});
+    }
+  }
 
   componentDidMount() {
-    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let getAllPromosUrl = GlobalVarHandler.getAllPromosUrl;
-    axios.get(apiBaseUrl + getAllPromosUrl, {
-      headers: {'Authorization': this.state.token}
-    }).then(response => {
-      let valuesToDisplay = response.data.promotions.map(receivedPromInfo => ({
-        value: receivedPromInfo.nomPromo,
-        label: receivedPromInfo.nomPromo,
+    getAllPromos(this.state.token).then((allPromos) => {
+      let valuesToDisplay = allPromos.map(prom => ({
+        value: prom.nomPromo,
+        label: prom.nomPromo,
       }));
-
-      this.setState({nameProms: valuesToDisplay})
-    });
+      getAllUsers(this.state.token).then(allUsers => {
+        let possibleRespos = allUsers.filter(user => user.role==='intervenant' || user.role==='administrateur')
+          .map(user => ({
+            value: user.username,
+            label: user.prenom + " " + user.nom,
+          }));
+        this.setState({nameProms: valuesToDisplay, infosPossibleRespos: possibleRespos});
+      })
+        .catch(error => console.log(error));
+    })
+      .catch(error => console.log(error));
   }
 
 
@@ -318,7 +338,22 @@ class PromsModification extends Component {
         { this.state.promSelected && (
       <div className='selectedPromInfo'>
         <h2>Nom de la promo : {this.state.nameSelectedProm}</h2>
-        <h2>Nom du responsable : {this.state.respoSelectedProm}</h2>
+        <h2>Nom du responsable : </h2>
+        <Input
+          fullWidth
+          inputComponent={SelectWrapped}
+          inputProps={{
+            classes,
+            value: single,
+            onChange: this.handleChangeSingleRespo,
+            placeholder: this.state.nomEtPrenomRespo,
+            instanceId: 'select-respo',
+            id: 'select-respo',
+            name: 'select-respo',
+            simpleValue: true,
+            options: this.state.infosPossibleRespos,
+          }}
+        />
         <div className='blocMembersProm'>
           {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ?
             <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}
@@ -341,10 +376,13 @@ class PromsModification extends Component {
   // Send new prom data to database
   handleClickUpdateProm (event) {
     let membersUsernames = this.state.dataForTableTwo.map(el => el.username)
+    let respoUsername = this.state.infosPossibleRespos.filter(el => el.label===this.state.nomEtPrenomRespo)[0].value;
 
+    console.log('responsable ?');
+    console.log(respoUsername);
     updatePromoInfos(this.state.token,
       this.state.nameSelectedProm,
-      this.state.respoSelectedProm,
+      respoUsername,
       membersUsernames);
   }
 }
