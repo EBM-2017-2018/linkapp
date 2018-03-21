@@ -135,7 +135,7 @@ class AccountCreation extends Component {
             select
             label="Role"
             className={classes.textField}
-            value="etudiant"
+            value={this.state.role}
             onChange={this.handleChange('role')}
             SelectProps={{
               native: true,

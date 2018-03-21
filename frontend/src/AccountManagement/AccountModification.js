@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { Button, TextField, withStyles } from 'material-ui'
 import PropTypes from 'prop-types'
-import axios from 'axios/index'
 import cookie from 'react-cookies'
-import { toast, ToastContainer } from 'react-toastify'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
-import { creerStructureFormulaire } from '../UsefulFuncVar/ApiCall'
+import { ToastContainer } from 'react-toastify'
+import {updateUserInfos} from '../UsefulFuncVar/ApiCall'
 
 const styles = theme => ({
   container: {
@@ -41,12 +39,11 @@ class AccountModification extends Component {
   constructor(props){
     super(props);
     this.state={
-      username:'',
-      password:'',
-      role:'etudiant',
-      nom:'',
-      prenom:'',
-      email:'',
+      username:this.props.user.username,
+      role:this.props.user.role,
+      nom:this.props.user.nom,
+      prenom:this.props.user.prenom,
+      email:this.props.user.email,
       displayedComponent:'addAccount',
       token: cookie.load('token')
     }
@@ -60,9 +57,6 @@ class AccountModification extends Component {
 
   handleClick(event)
   {
-
-    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let signupUrl = GlobalVarHandler.signupUrl;
     var donneesFormulaire={
       "username":this.state.username,
       "role":this.state.role,
@@ -71,35 +65,7 @@ class AccountModification extends Component {
       "email": this.state.email
     };
 
-    axios.post(apiBaseUrl+signupUrl, creerStructureFormulaire(donneesFormulaire), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': this.state.token }
-    })
-      .then(function (response) {
-        console.log(response);
-
-        if(response.status === 200){
-          console.log("Signup successfull");
-          toast.success("utilisateur ajouté", {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-        }
-        else if(response.status === 11000){
-          alert("Username Already exists");
-        }
-        else if(response.status === 401){
-          console.log("Wrong role");
-          alert("Wrong role")
-        }
-        else{
-          console.log("Username does not exists");
-          alert("Username does not exist");
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    updateUserInfos(this.state.token, donneesFormulaire);
   }
 
   render () {
@@ -108,11 +74,13 @@ class AccountModification extends Component {
     return(
       <div>
         <ToastContainer/>
-        <h2>Pour ajouter un utilisateur, remplissez le formulaire ci-dessous</h2>
+        <h2>Pour Modifier les informations de l'utilisateur sélectionné, remplissez le formulaire ci-dessous</h2>
         <div className="addUserForm">
           <TextField
         label="Identifiant"
         placeholder="Identifiant"
+        value={this.state.username}
+        disabled={true}
         InputLabelProps={{
           shrink: true,
         }}
@@ -125,7 +93,7 @@ class AccountModification extends Component {
             select
             label="Role"
             className={classes.textField}
-            value="etudiant"
+            value={this.state.role}
             onChange={this.handleChange('role')}
             SelectProps={{
               native: true,
@@ -145,6 +113,7 @@ class AccountModification extends Component {
           <TextField
             label="Nom"
             placeholder="Nom"
+            value={this.state.nom}
             InputLabelProps={{
               shrink: true,
             }}
@@ -155,6 +124,7 @@ class AccountModification extends Component {
           <TextField
             label="Prenom"
             placeholder="Prenom"
+            value={this.state.prenom}
             InputLabelProps={{
               shrink: true,
             }}
@@ -165,6 +135,7 @@ class AccountModification extends Component {
           <TextField
             label="Email"
             placeholder="Email"
+            value={this.state.email}
             InputLabelProps={{
               shrink: true,
             }}

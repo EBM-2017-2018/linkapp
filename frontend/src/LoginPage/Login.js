@@ -110,8 +110,7 @@ class Login extends Component {
 
     add = (event) => {
       if(event.key === 'Enter'){
-        console.log("entrée");
-      this.handleClick();
+        this.handleClick();
     }};
 
     handleClick = () => {
