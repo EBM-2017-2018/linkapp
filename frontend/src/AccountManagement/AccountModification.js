@@ -3,7 +3,6 @@ import { Button, TextField, withStyles } from 'material-ui'
 import PropTypes from 'prop-types'
 import cookie from 'react-cookies'
 import { ToastContainer } from 'react-toastify'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 import {updateUserInfos} from '../UsefulFuncVar/ApiCall'
 
 const styles = theme => ({

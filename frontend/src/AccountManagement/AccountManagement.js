@@ -15,8 +15,6 @@ import cookie from 'react-cookies'
 import GVH from '../UsefulFuncVar/UsefulFuncVar'
 import AccountModification from './AccountModification'
 
-var userToModify=null;
-
 class Option extends React.Component {
   handleClick = event => {
     this.props.onSelect(this.props.option, event);
