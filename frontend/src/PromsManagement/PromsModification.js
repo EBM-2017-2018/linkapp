@@ -14,7 +14,8 @@ import axios from 'axios/index'
 import cookie from 'react-cookies'
 import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 import TablesSelectStudents from './TablesSelectStudents'
-import { getAllUsers, getPromosInfos } from '../UsefulFuncVar/ApiCall'
+import { getAllUsers, getPromosInfos, updatePromoInfos } from '../UsefulFuncVar/ApiCall'
+import { Button } from 'material-ui'
 
 class Option extends React.Component {
   handleClick = event => {
@@ -226,10 +227,6 @@ class PromsModification extends Component {
         dataForTableOne = dataForTableOne.filter(user=>user.username!==usernamesToRemoveOne[i]);
       }
 
-      console.log("dataForTableOne in PromModif");
-      console.log(dataForTableOne);
-      console.log(dataForTableTwo);
-
       this.setState({
         dataForTableOne: dataForTableOne,
         dataForTableTwo: dataForTableTwo
@@ -244,31 +241,36 @@ class PromsModification extends Component {
       single,
     });
 
-    // Api call to get data of members of prom and remove members of prom from allUsers to get people who don't
-    // belong to the prom
-    getPromosInfos(single, this.state.token)
-      .then(dataProm => {
-        getAllUsers(this.state.token).then(allUsers => {
-          let usernamesMemberProm = dataProm.membres;
-          let tableAllUsers = allUsers;
-          let dataForTableTwo = [];
+    if (single !== null) {
+      console.log(this.state.single);
+      // Api call to get selected prom infos
+      getPromosInfos(single, this.state.token)
+        .then(dataProm => {
+          getAllUsers(this.state.token).then(allUsers => {
 
-          for (let i=0; i<usernamesMemberProm.length; i++) {
-            let userInfo = tableAllUsers.filter(user => user.username===usernamesMemberProm[i]);
-            dataForTableTwo.push(userInfo[0]);
-          }
+            // Work to fill table of members and non-members table of selected prom
+            let usernamesMemberProm = dataProm.membres;
+            let tableAllUsers = allUsers;
+            let dataForTableTwo = [];
 
-          let dataForTableOne = allUsers.filter(user => !dataForTableTwo.includes(user));
+            for (let i = 0; i < usernamesMemberProm.length; i++) {
+              let userInfo = tableAllUsers.filter(user => user.username === usernamesMemberProm[i]);
+              dataForTableTwo.push(userInfo[0]);
+            }
 
-          this.setState({
-            nameSelectedProm: dataProm.nomPromo,
-            promSelected: true,
-            dataForTableOne: dataForTableOne,
-            dataForTableTwo: dataForTableTwo
-          });
+            let dataForTableOne = allUsers.filter(user => !dataForTableTwo.includes(user));
 
-        }).catch(error => console.log(error));
-      }).catch(error => console.log(error))
+            this.setState({
+              nameSelectedProm: dataProm.nomPromo,
+              promSelected: true,
+              dataForTableOne: dataForTableOne,
+              dataForTableTwo: dataForTableTwo,
+              respoSelectedProm: dataProm.responsable
+            });
+
+          }).catch(error => console.log(error));
+        }).catch(error => console.log(error))
+    }
 
   };
 
@@ -316,8 +318,8 @@ class PromsModification extends Component {
         }
         { this.state.promSelected && (
       <div className='selectedPromInfo'>
-        <Typography>{this.state.nomPromo}</Typography>
-        <Typography>{this.state.responsable}</Typography>
+        <h2>Nom de la promo : {this.state.nameSelectedProm}</h2>
+        <h2>Nom du responsable : {this.state.respoSelectedProm}</h2>
         <div className='blocMembersProm'>
           {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ?
             <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}
@@ -325,12 +327,27 @@ class PromsModification extends Component {
             dataTableUpdater={this.dataTableUpdater}/>
             : "Pas d'appartenant à la promo"}
         </div>
+        <div>
+          <Button primary={true} color="secondary" variant="raised"
+                  onClick={(event) => this.handleClickUpdateProm(event)}>
+            Mettre à jour la promo
+          </Button>
+        </div>
       </div>
         )}
       </div>
     )
   }
 
+  // Send new prom data to database
+  handleClickUpdateProm (event) {
+    let membersUsernames = this.state.dataForTableTwo.map(el => el.username)
+
+    updatePromoInfos(this.state.token,
+      this.state.nameSelectedProm,
+      this.state.respoSelectedProm,
+      membersUsernames);
+  }
 }
 
 PromsModification.propTypes = {

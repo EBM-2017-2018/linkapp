@@ -130,7 +130,7 @@ let TableSelectionToolbar = props => {
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography variant="title">Eleves</Typography>
+          <Typography variant="title">{props.nameTable}</Typography>
         )}
       </div>
       <div className={classes.spacer} />
@@ -301,7 +301,7 @@ class TableSelection extends React.Component {
 
     return (
       <Paper className={classes.root} ref={this.props.tableRef}>
-        <TableSelectionToolbar numSelected={selected.length} />
+        <TableSelectionToolbar numSelected={selected.length} nameTable={this.props.nameTable}/>
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <TableSelectionHead

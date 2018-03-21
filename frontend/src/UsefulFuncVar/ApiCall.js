@@ -85,7 +85,7 @@ export let getPromosInfos = (nameProm, token) => {
 }
 
 
-export let setPromosInfos = (nomPromo, responsable, membres, token) => {
+export let setPromosInfos = (nomPromo, responsable, token, membres) => {
   let dataProm = {
     "nomPromo": nomPromo,
     "responsable": responsable,
@@ -94,7 +94,7 @@ export let setPromosInfos = (nomPromo, responsable, membres, token) => {
 
   return new Promise(
     (resolve, reject) => {
-      axios.post(apiBaseUrl + promosUrl, creerStructureFormulaire(dataProm), {
+      axios.post(apiBaseUrl + promosUrl, dataProm, {
         headers: {'Authorization': token,
           'Content-Type': 'application/json'}
       }).then((response) => {
@@ -108,6 +108,41 @@ export let setPromosInfos = (nomPromo, responsable, membres, token) => {
             reject('Error in setPromoInfo');
           }
         })
+        .catch(function (error) {
+          if(error.response.status === 403) toast.error("Vous n'avez pas les droits pour cette opération", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          console.log(error);
+        })
+    }
+  )
+}
+
+
+export let updatePromoInfos = (token, nomPromo, responsable, membres) => {
+  let dataProm = {
+    "nomPromo": nomPromo,
+    "responsable": responsable,
+    "membres": membres
+  };
+
+  return new Promise(
+    (resolve, reject) => {
+      axios.put(apiBaseUrl + promosUrl, dataProm, {
+        headers: {'Authorization': token,
+          'Content-Type': 'application/json'}
+      }).then((response) => {
+
+        if (response.status === 200) {
+          toast.success("Promotion mise à jour", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          resolve('answer');
+          reject('Error in updatePromoInfo');
+        }
+      })
         .catch(function (error) {
           if(error.response.status === 403) toast.error("Vous n'avez pas les droits pour cette opération", {
             position: toast.POSITION.TOP_CENTER,

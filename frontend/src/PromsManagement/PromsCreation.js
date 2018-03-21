@@ -24,7 +24,7 @@ class PromsCreation extends Component {
   };
 
   handleClickCreateProm (event) {
-    setPromosInfos(this.state.nomPromo, this.state.responsable, this.state.dataForTableTwo, this.state.token);
+    setPromosInfos(this.state.nomPromo, this.state.responsable, this.state.token, this.state.dataForTableTwo);
   }
 
   componentDidMount () {
@@ -55,10 +55,6 @@ class PromsCreation extends Component {
                 margin="normal"
                 onChange={this.handleChange('responsable')}/>
             </div>
-            <Button color="primary"
-            onClick={(event) => this.handleClickCreateProm(event)}>
-              Ajouter
-            </Button>
           </form>
         </div>
         <div className = "blocsUtilisateurs">
@@ -66,6 +62,12 @@ class PromsCreation extends Component {
             <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}
             dataForTableTwo={this.state.dataForTableTwo}/>
             : "Pas d'utilisateur"}
+        </div>
+        <div>
+          <Button primary={true} color="secondary" variant="raised"
+                  onClick={(event) => this.handleClickCreateProm(event)}>
+            Créer
+          </Button>
         </div>
 
       </div>
