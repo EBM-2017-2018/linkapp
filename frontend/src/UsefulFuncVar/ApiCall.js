@@ -117,9 +117,15 @@ export let getPromosInfos = (nameProm, token) => {
       axios.get(apiBaseUrl + promosUrl  + nameProm, {
         headers: {'Authorization': token}
       }).then((response) => {
-        let dataProm = response.data.promotion;
-        resolve(dataProm);
-        reject('Error in getPromosInfos');
+        if (response.status === 200) {
+          toast.success("Promo mise à jour" , {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          let dataProm = response.data.promotion;
+          resolve(dataProm);
+          reject('Error in getPromosInfos');
+        }
       })
     }
   )

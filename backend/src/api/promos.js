@@ -466,7 +466,7 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
                 }
               }
             } else {
-              return res.status(400).json({
+              return res.status(200).json({
                 success: true,
                 msg: 'promo mise à jour',
               });
