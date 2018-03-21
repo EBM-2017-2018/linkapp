@@ -5,7 +5,7 @@ import Button from 'material-ui/Button'
 import cookie from 'react-cookies'
 import TablesSelectStudents from './TablesSelectStudents'
 import { ToastContainer } from 'react-toastify'
-import { getAllUsers, getBasicUserInfos, setPromosInfos } from '../UsefulFuncVar/ApiCall'
+import { getAllUsers, setPromosInfos } from '../UsefulFuncVar/ApiCall'
 import { Input, withStyles } from 'material-ui'
 import { SelectWrapped } from '../GenericComponents/Selects'
 
