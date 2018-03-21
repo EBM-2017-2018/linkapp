@@ -15,21 +15,11 @@ import cookie from 'react-cookies'
 import GVH from '../UsefulFuncVar/UsefulFuncVar'
 import AccountModification from './AccountModification'
 
-var userToModify = null;
+var userToModify=null;
 
 class Option extends React.Component {
   handleClick = event => {
     this.props.onSelect(this.props.option, event);
-    const usernameToFind = this.props.option.value;
-    axios.get(GVH.apiBaseUrl + GVH.getUserInfos+'/'+usernameToFind, {
-      headers: {'Authorization': cookie.load('token')}
-    }).then(response => {
-      if(response.status === 200) {
-          //this.props.handler(response.data;
-        userToModify=response.data;
-        console.log(response.data);
-      }
-    });
   };
 
   render() {
@@ -216,7 +206,17 @@ class AccountManagement extends Component {
     })
   }
 
-  handleChangeSingle = single => {
+  handleChangeSingle = single =>{
+    console.log(single);
+    axios.get(GVH.apiBaseUrl + GVH.getUserInfos+'/'+single, {
+      headers: {'Authorization': cookie.load('token')}
+    }).then(response => {
+      if(response.status === 200) {
+        this.handler(response.data);
+        console.log(response.data);
+
+      }
+    });
     this.setState({
       single,
     });
@@ -259,7 +259,7 @@ class AccountManagement extends Component {
                 options: this.state.nameAllUsers,
               }}
             />
-            {userToModify && <AccountModification/> }
+            {this.state.userToModify && <AccountModification user={this.state.userToModify}/> }
           </div> :
           "No existing account available for now"
         }

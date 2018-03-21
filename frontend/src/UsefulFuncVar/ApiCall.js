@@ -69,7 +69,31 @@ export let getUserInfos = (token, username) => {
     })
 }
 
-
+export let updateUserInfos = (token, user) => {
+  return new Promise(
+    (resolve, reject) => {
+      axios.put(apiBaseUrl+'updateuser', user, {
+        headers: {'Authorization': token}
+      }).then((response) => {
+        if (response.status === 200) {
+          toast.success("utilisateur mis à jour" , {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          resolve('answer');
+          reject('Error in setPromoInfo');
+        }
+      })
+        .catch(function (error) {
+          if(error.response.status === 403) toast.error("Vous n'avez pas les droits pour cette opération", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          console.log(error);
+        })
+    }
+  )
+}
 export let getPromosInfos = (nameProm, token) => {
   return new Promise(
     (resolve, reject) => {
