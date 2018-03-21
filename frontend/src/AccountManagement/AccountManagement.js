@@ -26,6 +26,8 @@ class Option extends React.Component {
     }).then(response => {
       if(response.status === 200) {
           //this.props.handler(response.data;
+        userToModify=response.data;
+        console.log(response.data);
       }
     });
   };
