@@ -1,15 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
-import Select from 'react-select'
-import Typography from 'material-ui/Typography'
 import Input from 'material-ui/Input'
-import { MenuItem } from 'material-ui/Menu'
-import ArrowDropDownIcon from 'material-ui-icons/ArrowDropDown'
-import CancelIcon from 'material-ui-icons/Cancel'
-import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
-import ClearIcon from 'material-ui-icons/Clear'
-import Chip from 'material-ui/Chip'
 import cookie from 'react-cookies'
 import TablesSelectStudents from './TablesSelectStudents'
 import {
@@ -17,69 +9,9 @@ import {
   getBasicUserInfos
 } from '../UsefulFuncVar/ApiCall'
 import { Button } from 'material-ui'
+import { ToastContainer } from 'react-toastify'
+import { SelectWrapped } from '../GenericComponents/Selects'
 
-class Option extends React.Component {
-  handleClick = event => {
-    this.props.onSelect(this.props.option, event);
-  };
-
-  render() {
-    const { children, isFocused, isSelected, onFocus } = this.props;
-
-    return (
-      <MenuItem
-        onFocus={onFocus}
-        selected={isFocused}
-        onClick={this.handleClick}
-        component="div"
-        style={{
-          fontWeight: isSelected ? 500 : 400,
-        }}
-      >
-        {children}
-      </MenuItem>
-    );
-  }
-}
-
-function SelectWrapped(props) {
-  const { classes, ...other } = props;
-
-  return (
-    <Select
-      optionComponent={Option}
-      noResultsText={<Typography>{'No results found'}</Typography>}
-      arrowRenderer={arrowProps => {
-        return arrowProps.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />;
-      }}
-      clearRenderer={() => <ClearIcon />}
-      valueComponent={valueProps => {
-        const { value, children, onRemove } = valueProps;
-
-        const onDelete = event => {
-          event.preventDefault();
-          event.stopPropagation();
-          onRemove(value);
-        };
-
-        if (onRemove) {
-          return (
-            <Chip
-              tabIndex={-1}
-              label={children}
-              className={classes.chip}
-              deleteIcon={<CancelIcon onTouchEnd={onDelete} />}
-              onDelete={onDelete}
-            />
-          );
-        }
-
-        return <div className="Select-value">{children}</div>;
-      }}
-      {...other}
-    />
-  );
-}
 
 const ITEM_HEIGHT = 48;
 
@@ -187,7 +119,6 @@ const styles = theme => ({
     },
   },
 });
-
 
 class PromsModification extends Component {
   constructor (props) {
@@ -315,6 +246,7 @@ class PromsModification extends Component {
     const { single } = this.state;
 
     return(<div>
+        <ToastContainer/>
         {((Array.isArray(this.state.nameProms) && this.state.nameProms.length)) ?
           <div className='root'>
             <Input
@@ -378,8 +310,6 @@ class PromsModification extends Component {
     let membersUsernames = this.state.dataForTableTwo.map(el => el.username)
     let respoUsername = this.state.infosPossibleRespos.filter(el => el.label===this.state.nomEtPrenomRespo)[0].value;
 
-    console.log('responsable ?');
-    console.log(respoUsername);
     updatePromoInfos(this.state.token,
       this.state.nameSelectedProm,
       respoUsername,

@@ -118,10 +118,6 @@ export let getPromosInfos = (nameProm, token) => {
         headers: {'Authorization': token}
       }).then((response) => {
         if (response.status === 200) {
-          toast.success("Promo mise à jour" , {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
           let dataProm = response.data.promotion;
           resolve(dataProm);
           reject('Error in getPromosInfos');
