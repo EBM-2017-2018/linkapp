@@ -17,12 +17,13 @@ class PromsManagementPage extends Component {
     this.displayedScreenHandler = this.displayedScreenHandler.bind(this)
   }
 
-  displayedScreenHandler (event, nameDisplayedScreen) {
-    event.preventDefault();
-    this.setState({displayedScreen: nameDisplayedScreen});
+  displayedScreenHandler = (event, nameDisplayedScreen) => {
+    let numberTab = this.state.nameTabs.indexOf(nameDisplayedScreen);
+    this.changePromDisplayedScreen(numberTab);
+    this.refTabs.handleChange(event, numberTab);
   }
 
-  changePromDisplayedScreen (numberTab) {
+  changePromDisplayedScreen = (numberTab) => {
     this.setState({displayedScreen: this.state.nameTabs[numberTab]});
   }
 
@@ -31,6 +32,7 @@ class PromsManagementPage extends Component {
     <div>
       <div>
         <SimpleTabs nameTabs={this.state.nameTabs}
+                    onRef={ref => (this.refTabs = ref)}
                     tabChangeHandler={this.changePromDisplayedScreen}/>
       </div>
       {this.state.displayedScreen === 'Afficher les promos' && (
