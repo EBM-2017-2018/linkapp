@@ -69,18 +69,17 @@ router.post('/signin', (req, res) => {
           email: user.email,
         }, config.secret);
         // return the information including token as JSON
-        res.json({
+        return res.json({
           success: true,
           username: user.username,
           token: `JWT ${token}`,
         });
-      } else {
-        res.status(401)
-          .send({
-            success: false,
-            msg: 'mot de passe invalide',
-          });
       }
+      return res.status(401)
+        .send({
+          success: false,
+          msg: 'mot de passe invalide',
+        });
     });
   });
 });
