@@ -14,6 +14,7 @@ import axios from 'axios/index'
 import cookie from 'react-cookies'
 import { Button } from 'material-ui'
 import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
+import { getPromosInfos } from '../UsefulFuncVar/ApiCall'
 
 class Option extends React.Component {
 
@@ -195,16 +196,33 @@ class PromsManagement extends Component {
       nameProms: [],
       single: null,
       token: cookie.load('token'),
-      selectedProm: '',
+      selectedProm: false,
+      nameSelectedProm: '',
+      respoSelectedProm: '',
+      membersUsername: []
     }
   }
 
+  // Called when selected item in Select menu changes
   handleChangeSingle = single => {
     this.setState({
       single,
     });
-    // Single is the name of the selected prom
-    this.setState({selectedProm: single});
+
+    if (single !== null) {
+      // Api call to get selected prom infos
+      getPromosInfos(single, this.state.token)
+        .then(dataProm => {
+
+          this.setState({
+            nameSelectedProm: dataProm.nomPromo,
+            promSelected: true,
+            membersUsername: dataProm.membres,
+            respoSelectedProm: dataProm.responsable
+          });
+
+        }).catch(error => console.log(error))
+    }
 
   };
 
@@ -249,14 +267,20 @@ class PromsManagement extends Component {
         </div> :
         "No existing prom available for now"
         }
-      {this.state.selectedProm !== '' && (<div className='modifyPromButtonDiv'>
+      {(this.state.promSelected) && (<div>
+        <div className='promDataBloc'>
+          <h2>Nom de la promo : {this.state.nameSelectedProm}</h2>
+          <h2>Nom du responsable : {this.state.respoSelectedProm}</h2>
+        </div>
+        <div className='modifyPromButtonDiv'>
           <Button variant="raised" className='createPromButton' color="secondary"
-                  onClick={event => this.props.displayedScreenHandler(event, 'Proms Creation')}>
+                  onClick={(event) => this.props.displayedScreenHandler(event, 'Modifier une promo')}>
             Modifier la promo
           </Button>
-        </div>)}
-      </div>
-    )
+        </div>
+      </div>)
+      }
+      </div>)
   }
 
 }

@@ -242,7 +242,6 @@ class PromsModification extends Component {
     });
 
     if (single !== null) {
-      console.log(this.state.single);
       // Api call to get selected prom infos
       getPromosInfos(single, this.state.token)
         .then(dataProm => {

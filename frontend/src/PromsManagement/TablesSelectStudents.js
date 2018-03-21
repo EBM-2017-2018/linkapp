@@ -14,13 +14,11 @@ class TablesSelectStudents extends Component {
   onSwapButtonClick = () => {
     let toDeleteTableOne = this.tableOne.getTableSelectedElements();
     let toDeleteTableTwo = this.tableTwo.getTableSelectedElements();
-    console.log(toDeleteTableTwo);
     this.props.dataTableUpdater(toDeleteTableOne, toDeleteTableTwo);
   }
 
   render() {
     const { classes } = this.props;
-    console.log(this.props.dataForTableOne);
     return (
       <div className='tablesContainer'>
         <TableSelection tableRef={el => {this.tableOne = el;}}

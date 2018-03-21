@@ -25,10 +25,22 @@ const styles = theme => ({
   },
 });
 
-class TabsWrappedLabel extends React.Component {
-  state = {
-    value: 0,
-  };
+class SimpleTabs extends React.Component {
+  constructor (props) {
+   super(props);
+
+    this.state = {
+      value: 0,
+    };
+  }
+
+  componentDidMount() {
+    this.props.onRef(this);
+  }
+
+  componentWillUnmount () {
+    this.props.onRef(undefined);
+  }
 
   handleChange = (event, value) => {
     this.setState({ value });
@@ -53,8 +65,8 @@ class TabsWrappedLabel extends React.Component {
   }
 }
 
-TabsWrappedLabel.propTypes = {
+SimpleTabs.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TabsWrappedLabel);
+export default withStyles(styles)(SimpleTabs);
