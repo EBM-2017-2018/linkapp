@@ -1,26 +1,42 @@
 import React, { Component } from 'react'
-import SimpleTabs from './AccountTabs'
+import AccountManagement from './AccountManagement'
+import AccountCreation from './AccountCreation'
+import SimpleTabs from '../GenericComponents/SimpleTabs'
 
 class AccountManagementPage extends Component {
   constructor (props) {
     super(props);
 
     this.state = {
-      displayedScreen: 'Account Management',
+      displayedScreen: 'Modifier un compte',
+      nameTabs: ['Modifier un compte', 'Créer un compte'],
     }
 
-    this.displayedScreenHandler = this.displayedScreenHandler.bind(this)
+    this.changeAccountDisplayedScreen = this.changeAccountDisplayedScreen.bind(this)
   }
 
-  displayedScreenHandler (event, nameDisplayedScreen) {
-    event.preventDefault();
-    this.setState({displayedScreen: nameDisplayedScreen});
+  changeAccountDisplayedScreen = (numberTab) => {
+    this.setState({displayedScreen: this.state.nameTabs[numberTab]});
   }
 
   render () {
     return (
       <div>
-        <SimpleTabs/>
+        <div>
+          <SimpleTabs nameTabs={this.state.nameTabs}
+                      onRef={ref => (this.refTabs = ref)}
+                      tabChangeHandler={this.changeAccountDisplayedScreen}/>
+        </div>
+        <div>
+          {this.state.displayedScreen === 'Modifier un compte' && (
+          <div>
+            <AccountManagement/>
+          </div>)}
+          {this.state.displayedScreen === 'Créer un compte' && (
+            <div>
+            <AccountCreation/>
+          </div>)}
+        </div>
       </div>
     );
   }

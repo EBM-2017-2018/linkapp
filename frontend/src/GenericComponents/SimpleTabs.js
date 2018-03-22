@@ -20,7 +20,7 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: theme.spacing.unit * 3,
+    marginTop: 0,
     backgroundColor: theme.palette.background.paper,
   },
 });
@@ -57,7 +57,6 @@ class SimpleTabs extends React.Component {
           <Tabs value={value} onChange={this.handleChange}>
             <Tab value={0} label={this.props.nameTabs[0]} />
             <Tab value={1} label={this.props.nameTabs[1]} />
-            <Tab value={2} label={this.props.nameTabs[2]} />
           </Tabs>
         </AppBar>
       </div>
