@@ -10,10 +10,9 @@ import CancelIcon from 'material-ui-icons/Cancel'
 import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
 import ClearIcon from 'material-ui-icons/Clear'
 import Chip from 'material-ui/Chip'
-import axios from 'axios/index'
 import cookie from 'react-cookies'
-import GVH from '../UsefulFuncVar/UsefulFuncVar'
 import AccountModification from './AccountModification'
+import { getAllUsers, getUserInfos } from '../UsefulFuncVar/ApiCall'
 
 class Option extends React.Component {
   handleClick = event => {
@@ -189,7 +188,7 @@ const styles = theme => ({
 class AccountManagement extends Component {
   constructor (props) {
     super(props);
-    this.handler = this.handler.bind(this);
+
     this.state = {
       nameAllUsers: [],
       single: null,
@@ -198,41 +197,26 @@ class AccountManagement extends Component {
 
     }
   }
-  handler(user) {
-    this.setState({
-      userToModify: user,
-    })
-  }
 
   handleChangeSingle = single =>{
-    console.log(single);
-    axios.get(GVH.apiBaseUrl + GVH.getUserInfos+'/'+single, {
-      headers: {'Authorization': cookie.load('token')}
-    }).then(response => {
-      if(response.status === 200) {
-        this.handler(response.data);
-        console.log(response.data);
-
-      }
-    });
     this.setState({
       single,
     });
+    getUserInfos(this.state.token, single).then(userInfos=>{
+      this.setState({userToModify: userInfos});
+    }).catch(error => console.log(error));
   };
 
 
   componentDidMount() {
-
-    axios.get(GVH.apiBaseUrl + GVH.getAllUsersUrl, {
-      headers: {'Authorization': this.state.token}
-    }).then(response => {
-      let valuesToDisplay = response.data.users.map(receivedUsersInfo => ({
-        value: receivedUsersInfo.username,
-        label: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
-      })
-      );
-      this.setState({nameAllUsers: valuesToDisplay})
-    });
+    // Retrieve all users names from database to put in Select
+    getAllUsers(this.state.token).then(allUsers => {
+      let valuesToDisplay = allUsers.map(receivedUsersInfo => ({
+      value: receivedUsersInfo.username,
+      label: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
+    }))
+    this.setState({nameAllUsers: valuesToDisplay})
+    }).catch(error => console.log(error));
   }
 
   render() {

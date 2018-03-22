@@ -57,15 +57,12 @@ class AccountModification extends Component {
 
   handleClick(event)
   {
-    var donneesFormulaire={
-      "username":this.state.username,
-      "role":this.state.role,
-      "nom": this.state.nom,
-      "prenom": this.state.prenom,
-      "email": this.state.email
-    };
-
-    updateUserInfos(this.state.token, donneesFormulaire);
+    updateUserInfos(this.state.token,
+      this.state.username,
+      this.state.role,
+      this.state.nom,
+      this.state.prenom,
+      this.state.email);
   }
 
   render () {

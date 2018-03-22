@@ -6,10 +6,12 @@ const apiBaseUrl = "/api/";
 const signinUrl = "signin";
 const usersUrl = 'users/';
 const allUsersUrl = "allusers";
+const updateUserUrl = 'updateuser';
 const promosUrl = 'promos/';
 const userInfoUrl = 'userinfos/';
 const allPromosUrl = 'listpromos';
 const basicUserInfoUrl = 'basicuserinfos/';
+const signupUrl = 'signup';
 
 export let getTokenOnLogin = (username, password) => {
   return new Promise(
@@ -63,9 +65,11 @@ export let getUserInfos = (token, username) => {
       axios.get(apiBaseUrl + usersUrl + userInfoUrl + username, {
         headers: {'Authorization': token}
       }).then((response) => {
-        let userInfos = response.data;
-        resolve(userInfos);
-        reject('Error in getUserInfos request');
+        if(response.status === 200) {
+          let userInfos = response.data;
+          resolve(userInfos);
+          reject('Error in getUserInfos request');
+        }
       });
     })
 }
@@ -84,19 +88,84 @@ export let getBasicUserInfos = (token, username) => {
 }
 
 
-export let updateUserInfos = (token, user) => {
+export let setUserInfos = (token, username, password, roleUser, nomUser, prenomUser, emailUser) => {
+  let dataUser = {
+    "username": username,
+    'password': password ,
+    'role': roleUser,
+    'nom': nomUser,
+    'prenom': prenomUser,
+    'email': emailUser
+  };
+
   return new Promise(
     (resolve, reject) => {
-      axios.put(apiBaseUrl+'updateuser', user, {
-        headers: {'Authorization': token}
+      axios.post(apiBaseUrl + signupUrl, dataUser, {
+        headers: {'Authorization': token,
+          'Content-Type': 'application/json'}
       }).then((response) => {
+
         if (response.status === 200) {
-          toast.success("utilisateur mis à jour" , {
+          toast.success("Utilisateur créé", {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
           });
           resolve('answer');
-          reject('Error in setPromoInfo');
+          reject('Error in setUserInfo');
+        }
+      })
+        .catch(function (error) {
+          if(error.status === 11000){
+            toast.error("Username Already exists", {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 3000,
+            });
+          }
+          else if(error.status === 401){
+            toast.error("Wrong role", {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 3000,
+            });
+          }
+          else if(error.response.status === 403) {
+            toast.error("Vous n'avez pas les droits pour cette opération", {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 3000,
+            });
+          }
+          else {
+            toast.error("Username does not exists", {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 3000,
+            });
+          }
+        })
+    }
+  )
+}
+
+
+export let updateUserInfos = (token, username, role, nom, prenom, email) => {
+  let donneesFormulaire={
+    "username":username,
+    "role":role,
+    "nom": nom,
+    "prenom": prenom,
+    "email": email
+  };
+
+  return new Promise(
+    (resolve, reject) => {
+      axios.put(apiBaseUrl+ updateUserUrl, donneesFormulaire, {
+        headers: {'Authorization': token}
+      }).then((response) => {
+        if (response.status === 200) {
+          toast.success("Utilisateur mis à jour" , {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          resolve('answer');
+          reject('Error in updateUserInfo');
         }
       })
         .catch(function (error) {
@@ -143,7 +212,7 @@ export let setPromosInfos = (nomPromo, responsable, token, membres) => {
       }).then((response) => {
 
           if (response.status === 200) {
-            toast.success("Promotion crée", {
+            toast.success("Promotion créée", {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 3000,
             });
