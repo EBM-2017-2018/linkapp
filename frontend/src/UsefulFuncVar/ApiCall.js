@@ -12,6 +12,7 @@ const userInfoUrl = 'userinfos/';
 const allPromosUrl = 'listpromos';
 const basicUserInfoUrl = 'basicuserinfos/';
 const signupUrl = 'signup';
+const checkAndRefreshToken = 'checkandrefreshtoken';
 
 export let getTokenOnLogin = (username, password) => {
   return new Promise(
@@ -43,6 +44,22 @@ export let getTokenOnLogin = (username, password) => {
             });
         })
     });
+}
+
+export let funcCheckAndRefreshToken = () => {
+  return new Promise((resolve, reject) =>
+  {
+    axios.get(apiBaseUrl + checkAndRefreshToken, {
+      headers: {'Authorization': cookie.load('token')}
+    })
+      .then((response) => {
+        if (response.status === 200 && response.data.newToken) {
+          cookie.save('token', response.data.newToken);
+          resolve(cookie.load('token'));
+          reject('Error in checkAndRefreshToken');
+        }
+      })
+  })
 }
 
 
