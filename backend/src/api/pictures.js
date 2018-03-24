@@ -6,8 +6,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 
-Grid.mongo = mongoose.mongo;
-const gfs = new Grid(mongoose.connection.db);
+const gfs = Grid(mongoose.connection.db, mongoose.mongo);
 
 const router = express.Router();
 
@@ -17,8 +16,8 @@ const storage = GridFsStorage({
   gfs,
   file: (req) => {
     // eslint-disable-next-line no-throw-literal
-    if (!req.body.username) { throw 'username manquant'; }
-    return req.body.username;
+    if (!req.params.username) { throw 'username manquant'; }
+    return req.params.username;
   },
   /** With gridfs we can store aditional meta-data along with the file */
   metadata(req, file, cb) {
@@ -54,8 +53,8 @@ const upload = multer({ // multer settings for single upload
  *  }
  * @apiError (4xx) Wrong password
  */
-router.post('/upload', (req, res) => {
-  gfs.files.find({ filename: req.body.username }).toArray((err, files) => {
+router.post('/upload/:username', (req, res) => {
+  gfs.files.find({ filename: req.params.username }).toArray((err, files) => {
     if (err) {
       return res.status(500)
         .json({
@@ -63,26 +62,35 @@ router.post('/upload', (req, res) => {
           msg: 'erreur durant le remplacement du fichier',
         });
     }
-    console.log(req.body.username);
-    console.log(files);
+    console.log(req.params.username);
+    console.log(files[0]);
     if (files && files.length > 0) {
       // eslint-disable-next-line no-underscore-dangle
       gfs.remove({ _id: files[0]._id }, (err) => {
-        console.log(err);
-        return res.status(500)
-          .json({
-            success: false,
-            msg: 'erreur durant le remplacement du fichier',
-          });
+        if (err) {
+          return res.status(500)
+            .json({
+              success: false,
+              msg: 'erreur durant le remplacement du fichier',
+            });
+        }
+        upload(req, res, (err) => {
+          if (err) {
+            res.status(500).json({ success: false, msg: err });
+            return;
+          }
+          return res.json({ success: true, msg: name });
+        });
+      });
+    } else {
+      upload(req, res, (err) => {
+        if (err) {
+          res.status(500).json({ success: false, msg: err });
+          return;
+        }
+        return res.json({ success: true, msg: name });
       });
     }
-  });
-  upload(req, res, (err) => {
-    if (err) {
-      res.status(500).json({ success: false, msg: err });
-      return;
-    }
-    res.json({ success: true, msg: name });
   });
 });
 

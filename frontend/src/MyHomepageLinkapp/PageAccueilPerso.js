@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import '../Style/PageAccueilPerso.css'
 import MenuNavigationLinkapp from './MenuNavigationLinkapp'
 import logo from '../Images/IconeApp.png'
 import logoClock from '../Images/logo-clock.png'
-import { AppBar, Button, IconButton, MenuItem, withStyles } from 'material-ui'
+import { AppBar, Button, IconButton, MenuItem, withStyles, Tooltip } from 'material-ui'
 import ApplicationIcon from './ApplicationIcon'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
@@ -14,6 +14,9 @@ import PropTypes from 'prop-types'
 import PromsManagementPage from '../PromsManagement/PromsManagementPage'
 import AccountManagementPage from '../AccountManagement/AccountManagementPage'
 import cookie from 'react-cookies'
+import AppsMenu from './AppMenu'
+import {Apps as AppsIcon} from 'material-ui-icons';
+
 
 const styles = {
   root: {
@@ -24,24 +27,33 @@ const styles = {
   },
 };
 
-class PageAccueilPerso extends Component {
+class PageAccueilPerso extends PureComponent {
 
   constructor (props) {
     super(props);
     this.token = props.token;
     this.state = {
       anchorEl: null,
+      appsAnchorEl: null,
+      appsMenuOpen: false,
+      myAccountMenuOpen: false,
       displayedScreen: 'Mes applications',
       query:'?token='+cookie.load('token')+'&username='+cookie.load('username'),
     };
   }
 
   handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
+    this.setState({
+      anchorEl: event.currentTarget,
+      myAccountMenuOpen: true,
+    });
   };
 
   handleClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({
+      anchorEl: null,
+      myAccountMenuOpen: false,
+    });
   };
 
   handleClickPersonalMenu = (event) => {
@@ -58,11 +70,25 @@ class PageAccueilPerso extends Component {
     this.props.deconnexionHandler();
   };
 
+  handleAppsMenuClick = (event) => {
+    this.setState({
+      appsMenuOpen: true,
+      appsAnchorEl: event.currentTarget,
+    });
+  };
+
+  handleAppsMenuClose = () => {
+    this.setState({
+      appsMenuOpen: false,
+      appsAnchorEl: null,
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-
+    let open = this.state.myAccountMenuOpen;
+    let appsMenuOpen = this.state.appsMenuOpen;
       return (
           <div className="pageAccueilPerso">
             <div className={classes.root}>
@@ -73,16 +99,19 @@ class PageAccueilPerso extends Component {
                     Linkapp
                   </Typography>
                   <div>
-
+                    <Tooltip id="personal-icon" title="Mon Compte">
                     <IconButton
                       className="myProfileIconButton"
+                      aria-label="Mon compte"
                       aria-owns={open ? 'menu-appbar' : null}
                       aria-haspopup="true"
+                      ref={node => this.button = node}
                       onClick={this.handleMenu}
                       color="inherit"
                     >
                       <AccountCircle />
                     </IconButton>
+                    </Tooltip>
                     <Menu
                       id="myProfileMenu"
                       anchorEl={anchorEl}
@@ -101,6 +130,19 @@ class PageAccueilPerso extends Component {
                       <MenuItem onClick={this.handleClose}>Mon emploi du temps</MenuItem>
                     </Menu>
                   </div>
+                  <Tooltip id="apps-icon" title="Applications">
+                    <IconButton
+                      color="inherit"
+                      aria-label="Applications"
+                      ref={node => this.button = node}
+                      onClick={this.handleAppsMenuClick}>
+                      <AppsIcon/>
+                    </IconButton>
+                  </Tooltip>
+                  <AppsMenu
+                    open={this.state.appsMenuOpen}
+                    anchorEl={anchorEl}
+                    closeCallback={this.handleAppsMenuClose}/>
                 </Toolbar>
               </AppBar>
             </div>

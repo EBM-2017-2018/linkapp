@@ -68,15 +68,17 @@ class MyInformations extends Component {
         return;
       }
       const data = new FormData();
-      data.append('username', this.state.username);
       data.append('file', event.target.files[0]);
-      //TODO récupérer username
-      axios.post(GlobalVarHandler.apiBaseUrl+'pictures/upload', data).then((response) => {
+      axios.post(GlobalVarHandler.apiBaseUrl+'pictures/upload/'+this.state.username, data).then((response) => {
         if( response.status === 200) {
           toast.success("photo mise en ligne", {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
           });
+          this.setState({
+            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username+'?t='+ new Date().getTime(),
+          });
+
         }
         else {
           toast.error("erreur durant la mise en ligne de la photo", {
