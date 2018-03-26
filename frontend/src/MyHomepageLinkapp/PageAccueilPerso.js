@@ -88,7 +88,6 @@ class PageAccueilPerso extends PureComponent {
     const { classes } = this.props;
     const { anchorEl } = this.state;
     let open = this.state.myAccountMenuOpen;
-    let appsMenuOpen = this.state.appsMenuOpen;
       return (
           <div className="pageAccueilPerso">
             <div className={classes.root}>
