@@ -1,3 +1,7 @@
+/* Defines the structure of each request to our database Mongo
+ * Paths are defined in const at the beginning
+  * Each function corresponds to a specific request */
+
 import axios from 'axios/index'
 import cookie from 'react-cookies'
 import { toast } from 'react-toastify'
@@ -65,7 +69,6 @@ export let funcCheckAndRefreshToken = () => {
   })
 }
 
-
 export let getAllUsers = (token) => {
   return new Promise(
     (resolve, reject) => {
@@ -106,7 +109,6 @@ export let getBasicUserInfos = (token, username) => {
       });
     })
 }
-
 
 export let setUserInfos = (token, username, password, roleUser, nomUser, prenomUser, emailUser) => {
   let dataUser = {
@@ -164,7 +166,6 @@ export let setUserInfos = (token, username, password, roleUser, nomUser, prenomU
   )
 }
 
-
 export let updateUserInfos = (token, username, role, nom, prenom, email) => {
   let donneesFormulaire={
     "username":username,
@@ -198,7 +199,6 @@ export let updateUserInfos = (token, username, role, nom, prenom, email) => {
     }
   )
 }
-
 
 export let updatePassword = (myToken, oldPassword, newPassword) => {
   return new Promise ((resolve, reject) => {
@@ -263,7 +263,6 @@ export let uploadPicture = (username, data) => {
   })
 }
 
-
 export let getPromosInfos = (nameProm, token) => {
   return new Promise(
     (resolve, reject) => {
@@ -279,7 +278,6 @@ export let getPromosInfos = (nameProm, token) => {
     }
   )
 }
-
 
 export let setPromosInfos = (nomPromo, responsable, token, membres) => {
   let dataProm = {
@@ -314,7 +312,6 @@ export let setPromosInfos = (nomPromo, responsable, token, membres) => {
     }
   )
 }
-
 
 export let updatePromoInfos = (token, nomPromo, responsable, membres) => {
   let dataProm = {
@@ -364,7 +361,7 @@ export let getAllPromos = (token) => {
   )
 }
 
-
+/* Creates a request typical structure */
 export function creerStructureFormulaire(donneesFormulaire) {
   let structureFormulaire = [];
   for (let proprietes in donneesFormulaire) {
