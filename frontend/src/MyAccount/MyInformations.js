@@ -8,7 +8,7 @@ import cookie from 'react-cookies'
 import axios from 'axios/index'
 import { toast, ToastContainer } from 'react-toastify'
 import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
-import { creerStructureFormulaire } from '../UsefulFuncVar/ApiCall'
+import { getPicture, getUserInfos, updatePassword } from '../UsefulFuncVar/ApiCall'
 
 class MyInformations extends Component {
   state = {
@@ -88,38 +88,21 @@ class MyInformations extends Component {
         }
       });
   };
-  componentWillMount(){
-    //TODO modifier en fct de l'username
-    axios.get(GlobalVarHandler.apiBaseUrl+'users/userinfos/'+this.state.username, {
-      headers: {
-        'Authorization': this.state.token,
-        'Content-Type':'multipart/form-data',
-      }
-    })
-      .then((data) => {
-        console.log(data);
-        if( data.status === 200) {
-          this.setState({
-            nom: data.data.nom,
-            prenom: data.data.prenom,
-            role : data.data.role
-          })
-        }
 
-    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username, {
-      headers: {
-        'Content-Type':'multipart/form-data',
-      }
-    })
-      .then((data) => {
-        console.log(data);
-        if( data.status === 200) {
-          this.setState({
-            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username})
-        }
-      });
-      });
+  componentWillMount(){
+    getUserInfos(this.state.token, this.state.username).then(userInfo => {
+      getPicture(this.state.token, this.state.username).then(link => {
+        this.setState({
+          nom: userInfo.nom,
+          prenom: userInfo.prenom,
+          role : userInfo.role,
+          profilePic: link,
+        });
+      }).catch(error => console.log(error));
+    }).catch(error => console.log(error));
   }
+
+
   render() {
 
     return (
@@ -231,36 +214,8 @@ class MyInformations extends Component {
   }
 
   handleClickChangePassword (event) {
-    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let updatePasswordUrl = GlobalVarHandler.updatePasswordUrl;
-    let donneesFormulaire={
-      "password":this.state.password,
-      "newPassword": this.state.password2
-    }
-
-    axios.post(apiBaseUrl+updatePasswordUrl, creerStructureFormulaire(donneesFormulaire), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': this.state.token}
-    })
-      .then(function (response) {
-        console.log(response);
-
-        if(response.status === 200){
-          var token = response.data.token;
-          cookie.save('token', token, {path: '/'});
-          toast.success("Mot de passe modifié", {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-          console.log("Password changed");
-          console.log(response.data.token);
-          // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
+    // Updates password
+    updatePassword(this.state.token, this.state.password, this.state.password2).catch(error => console.log(error));
   }
 }
 

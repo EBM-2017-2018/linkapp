@@ -13,6 +13,8 @@ const allPromosUrl = 'listpromos';
 const basicUserInfoUrl = 'basicuserinfos/';
 const signupUrl = 'signup';
 const checkAndRefreshToken = 'checkandrefreshtoken';
+const updatePasswordUrl = 'updatePassword';
+const pictureFileUrl = 'pictures/file/'
 
 export let getTokenOnLogin = (username, password) => {
   return new Promise(
@@ -194,6 +196,49 @@ export let updateUserInfos = (token, username, role, nom, prenom, email) => {
         })
     }
   )
+}
+
+
+export let updatePassword = (myToken, oldPassword, newPassword) => {
+  return new Promise ((resolve, reject) => {
+    let donneesFormulaire={
+      "password":oldPassword,
+      "newPassword": newPassword
+    }
+
+    axios.post(apiBaseUrl+updatePasswordUrl, creerStructureFormulaire(donneesFormulaire), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': myToken}
+    })
+      .then(function (response) {
+        if(response.status === 200){
+          let token = response.data.token;
+          cookie.save('token', token, {path: '/'});
+          toast.success("Mot de passe modifié", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          resolve('success');
+          reject('error in updatePassword');
+        }
+      })
+  })
+}
+
+export let getPicture = (token, username) => {
+  return new Promise((resolve, reject) => {
+    axios.get(apiBaseUrl+pictureFileUrl+username, {
+      headers: {
+        'Content-Type':'multipart/form-data',
+      }
+    })
+      .then((data) => {
+        if( data.status === 200) {
+          resolve(apiBaseUrl+pictureFileUrl+username);
+          reject('error in getPicture');
+      }
+    })
+  })
 }
 
 
