@@ -5,10 +5,8 @@ import Button from 'material-ui/Button'
 import { FormControl, IconButton, Input, InputAdornment, InputLabel } from 'material-ui'
 import { Visibility, VisibilityOff } from 'material-ui-icons'
 import cookie from 'react-cookies'
-import axios from 'axios/index'
 import { toast, ToastContainer } from 'react-toastify'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
-import { getPicture, getUserInfos, updatePassword } from '../UsefulFuncVar/ApiCall'
+import { getPicture, getUserInfos, updatePassword, uploadPicture } from '../UsefulFuncVar/ApiCall'
 
 class MyInformations extends Component {
   state = {
@@ -69,24 +67,12 @@ class MyInformations extends Component {
       }
       const data = new FormData();
       data.append('file', event.target.files[0]);
-      axios.post(GlobalVarHandler.apiBaseUrl+'pictures/upload/'+this.state.username, data).then((response) => {
-        if( response.status === 200) {
-          toast.success("photo mise en ligne", {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-          this.setState({
-            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username+'?t='+ new Date().getTime(),
-          });
 
-        }
-        else {
-          toast.error("erreur durant la mise en ligne de la photo", {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-        }
-      });
+      uploadPicture(this.state.username, data).then((link) => {
+        this.setState({
+          profilePic: link+'?t='+ new Date().getTime(),
+        });
+      }).catch(error => console.log(error));
   };
 
   componentWillMount(){

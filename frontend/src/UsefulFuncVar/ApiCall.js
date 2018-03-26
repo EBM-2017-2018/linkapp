@@ -15,6 +15,7 @@ const signupUrl = 'signup';
 const checkAndRefreshToken = 'checkandrefreshtoken';
 const updatePasswordUrl = 'updatePassword';
 const pictureFileUrl = 'pictures/file/'
+const pictureUploadUrl = 'pictures/upload/'
 
 export let getTokenOnLogin = (username, password) => {
   return new Promise(
@@ -238,6 +239,27 @@ export let getPicture = (token, username) => {
           reject('error in getPicture');
       }
     })
+  })
+}
+
+export let uploadPicture = (username, data) => {
+  return new Promise ((resolve, reject) => {
+    axios.post(apiBaseUrl + pictureUploadUrl + username, data).then((response) => {
+      if( response.status === 200) {
+        toast.success("photo mise en ligne", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        resolve(apiBaseUrl + pictureFileUrl + username);
+        reject('Error in uploadPicture');
+      }
+    })
+      .catch((error) => {
+        toast.error("erreur durant la mise en ligne de la photo", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+      })
   })
 }
 
