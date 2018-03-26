@@ -1,3 +1,5 @@
+/* PromsManagement is the component that handles the switch between each possible screen of PromsManagement folder */
+
 import React, { Component } from 'react'
 import PromsCreation from './PromsCreation'
 import SimpleTabs from '../GenericComponents/SimpleTabs'
@@ -16,12 +18,14 @@ class PromsManagementPage extends Component {
     this.displayedScreenHandler = this.displayedScreenHandler.bind(this)
   }
 
+  /* Passes to the tab component the index of the tab that needs to be displayed */
   displayedScreenHandler = (event, nameDisplayedScreen) => {
     let numberTab = this.state.nameTabs.indexOf(nameDisplayedScreen);
     this.changePromDisplayedScreen(numberTab);
     this.refTabs.handleChange(event, numberTab);
   }
 
+  /* Changes screen by updating state */
   changePromDisplayedScreen = (numberTab) => {
     this.setState({displayedScreen: this.state.nameTabs[numberTab]});
   }

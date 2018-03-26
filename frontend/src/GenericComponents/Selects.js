@@ -1,3 +1,7 @@
+/* Defines SelectWraped component which is a searchable dropdown list
+ * Option component is what handles the list of elements you want to display in the list.
+  * An instance of Option has to be provided in the props of each SelectWrapped */
+
 import React from 'react'
 import Select from 'react-select'
 import Typography from 'material-ui/Typography'

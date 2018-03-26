@@ -1,3 +1,6 @@
+/* Defines the PromsModification component that enables user to look for an existing prom and to change its respo
+ * or people that are in it */
+
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
@@ -7,7 +10,7 @@ import TablesSelectStudents from './TablesSelectStudents'
 import {
   getAllUsers, getPromosInfos, updatePromoInfos, getAllPromos,
   getBasicUserInfos
-} from '../UsefulFuncVar/ApiCall'
+} from '../Utils/ApiCall'
 import { Button } from 'material-ui'
 import { ToastContainer } from 'react-toastify'
 import { SelectWrapped } from '../GenericComponents/Selects'
@@ -126,6 +129,10 @@ class PromsModification extends Component {
 
     this.dataTableUpdater = this.dataTableUpdater.bind(this);
 
+    // dataForTableOne and Two are arrays containing users' data with the following structure
+    // {username: "preal", nom: "Real", prenom: "Paul", role: "etudiant", email: "pr@hotmail.com"}
+    // infosPossibleRespo has the same structure but only of users who can be respo (intervenant et administrateur)
+    // nomEtPrenomRespo is the concatenation of first and lastname of selected respo
     this.state = {
       nameProms: [],
       infosPossibleRespos: [],
@@ -140,7 +147,7 @@ class PromsModification extends Component {
     }
   }
 
-  // Updates dataForTableOne and dataForTableTwo
+  /* Updates dataForTableOne and dataForTableTwo */
   dataTableUpdater (toRemoveInTableOne, toRemoveInTableTwo){
     getAllUsers(this.state.token).then(allUsers => {
       let usernamesToRemoveOne = toRemoveInTableOne.map((el) => el.username);
@@ -169,7 +176,8 @@ class PromsModification extends Component {
     }).catch(error => console.log(error));
   }
 
-  // When value of selected prom changes
+  /* When value of selected prom changes
+  * single is the name of the selected prom */
   handleChangeSingle = single => {
     this.setState({
       single,
@@ -210,6 +218,7 @@ class PromsModification extends Component {
 
   };
 
+  /* When value of selected respo changes */
   handleChangeSingleRespo = (respo) => {
     this.setState({
       respo,
@@ -305,7 +314,7 @@ class PromsModification extends Component {
     )
   }
 
-  // Send new prom data to database
+  /* Send new prom data to database */
   handleClickUpdateProm (event) {
     let membersUsernames = this.state.dataForTableTwo.map(el => el.username)
     let respoUsername = this.state.infosPossibleRespos.filter(el => el.label===this.state.nomEtPrenomRespo)[0].value;

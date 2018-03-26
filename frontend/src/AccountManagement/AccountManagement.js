@@ -12,7 +12,7 @@ import ClearIcon from 'material-ui-icons/Clear'
 import Chip from 'material-ui/Chip'
 import cookie from 'react-cookies'
 import AccountModification from './AccountModification'
-import { getAllUsers, getUserInfos } from '../UsefulFuncVar/ApiCall'
+import { getAllUsers, getUserInfos } from '../Utils/ApiCall'
 
 class Option extends React.Component {
   handleClick = event => {

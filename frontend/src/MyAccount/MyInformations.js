@@ -1,3 +1,5 @@
+/* Defines the component used to modify your password or profile picture */
+
 import React, { Component } from 'react'
 import '../Style/MyInfoStyle.css'
 import imageTest from '../Images/photoProfil.jpg'
@@ -6,7 +8,7 @@ import { FormControl, IconButton, Input, InputAdornment, InputLabel } from 'mate
 import { Visibility, VisibilityOff } from 'material-ui-icons'
 import cookie from 'react-cookies'
 import { toast, ToastContainer } from 'react-toastify'
-import { getPicture, getUserInfos, updatePassword, uploadPicture } from '../UsefulFuncVar/ApiCall'
+import { getPicture, getUserInfos, updatePassword, uploadPicture } from '../Utils/ApiCall'
 
 class MyInformations extends Component {
   state = {
@@ -24,15 +26,8 @@ class MyInformations extends Component {
     profilePic: imageTest,
   };
 
+  /* Updates in real time state values when text is written in textfields */
   handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
-  };
-
-  handleChange2 = prop => event => {
-    this.setState({ [prop]: event.target.value });
-  };
-
-  handleChange3 = prop => event => {
     this.setState({ [prop]: event.target.value });
   };
 
@@ -40,26 +35,20 @@ class MyInformations extends Component {
     event.preventDefault();
   };
 
-  handleMouseDownPassword2 = event => {
-    event.preventDefault();
-  };
-
-  handleMouseDownPassword3 = event => {
-    event.preventDefault();
-  };
-
-  handleClickShowPasssword = () => {
+  /* Changes boolean value of showPassword */
+  handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
 
-  handleClickShowPasssword2 = () => {
+  handleClickShowPassword2 = () => {
     this.setState({ showPassword2: !this.state.showPassword2 });
   };
 
-  handleClickShowPasssword3 = () => {
+  handleClickShowPassword3 = () => {
     this.setState({ showPassword3: !this.state.showPassword3 });
   };
 
+  /* Upload picture */
   importerPhoto = (event) => {
       if(!event.target.files) {
         console.log("opération annulée");
@@ -76,6 +65,7 @@ class MyInformations extends Component {
   };
 
   componentWillMount(){
+    // Get user info to display it : first general infos and then picture
     getUserInfos(this.state.token, this.state.username).then(userInfo => {
       getPicture(this.state.token, this.state.username).then(link => {
         this.setState({
@@ -134,7 +124,7 @@ class MyInformations extends Component {
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
-                    onClick={this.handleClickShowPasssword}
+                    onClick={this.handleClickShowPassword}
                     onMouseDown={this.handleMouseDownPassword}
                   >
                     {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
@@ -152,12 +142,12 @@ class MyInformations extends Component {
                 id="adornment-password2"
                 type={this.state.showPassword2 ? 'text' : 'password2'}
                 value={this.state.password2}
-                onChange={this.handleChange2('password2')}
+                onChange={this.handleChange('password2')}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
-                      onClick={this.handleClickShowPasssword2}
-                      onMouseDown={this.handleMouseDownPassword2}
+                      onClick={this.handleClickShowPassword2}
+                      onMouseDown={this.handleMouseDownPassword}
                     >
                       {this.state.showPassword2 ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -173,12 +163,12 @@ class MyInformations extends Component {
               id="adornment-password3"
               type={this.state.showPassword3 ? 'text' : 'password3'}
               value={this.state.password3}
-              onChange={this.handleChange3('password3')}
+              onChange={this.handleChange('password3')}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
-                    onClick={this.handleClickShowPasssword3}
-                    onMouseDown={this.handleMouseDownPassword3}
+                    onClick={this.handleClickShowPassword3}
+                    onMouseDown={this.handleMouseDownPassword}
                   >
                     {this.state.showPassword3 ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
@@ -199,9 +189,20 @@ class MyInformations extends Component {
 
   }
 
+  /* Change password */
   handleClickChangePassword (event) {
-    // Updates password
-    updatePassword(this.state.token, this.state.password, this.state.password2).catch(error => console.log(error));
+
+    // check if both new password fields are not equals
+    if (this.state.password2 !== this.state.password3) {
+      toast.error("You typed two different passwords", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
+    }
+
+    else {
+      updatePassword(this.state.token, this.state.password, this.state.password2).catch(error => console.log(error));
+    }
   }
 }
 
