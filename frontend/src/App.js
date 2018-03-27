@@ -25,9 +25,13 @@ class App extends Component {
       const parsedQuery = qs.parse(document.location.search.slice(1));
 
       if (parsedQuery.redirect) {
-        parsedQuery.token = token;
-        let queryToken = qs.stringify({token: token});
-        document.location.replace(parsedQuery.redirect + '?' + queryToken + '&username=' + username);
+        const redirectUrl = new URL(parsedQuery.redirect);
+        const baseUrl = redirectUrl.origin;
+        const pathname = redirectUrl.pathname;
+        const existingQuery = qs.parse(redirectUrl.search.slice(1));
+        const newQueryString = qs.stringify({ token, username, ...existingQuery });
+
+        document.location.replace(baseUrl + pathname + '?' + newQueryString);
       }
 
       else {
