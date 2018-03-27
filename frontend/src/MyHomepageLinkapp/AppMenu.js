@@ -9,6 +9,7 @@ import logoOklm from '../Images/logo-oklm.png'
 import logoSagg from '../Images/logo-sagg.png'
 import logoRedline from '../Images/logo-redline.png'
 import logoLinkapp from '../Images/logo-linkapp.png'
+import cookie from 'react-cookies'
 const styles = theme => ({
   root: {
     overflow: 'hidden',
@@ -17,7 +18,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
   }
 });
-
+const query ='?token='+cookie.load('token')+'&username='+cookie.load('username');
 class AppsMenu extends PureComponent {
 
   static propTypes = {
@@ -30,32 +31,32 @@ class AppsMenu extends PureComponent {
   apps = [
     {
       name: 'OKLM',
-      url: '//oklm.ebm.nymous.io',
+      url: '//oklm.ebm.nymous.io'+query,
       logo: logoOklm
     },
     {
       name: 'Redline',
-      url: '//redline.ebm.nymous.io',
+      url: '//redline.ebm.nymous.io'+query,
       logo: logoRedline
     },
     {
       name: 'Linkapp',
-      url: '//linkapp.ebm.nymous.io',
+      url: '//linkapp.ebm.nymous.io'+query,
       logo: logoLinkapp
     },
     {
       name: 'Markus',
-      url: '//markus.ebm.nymous.io',
+      url: '//markus.ebm.nymous.io'+query,
       logo: logoMarkus
     },
     {
       name: 'SAGG',
-      url: '//sagg.ebm.nymous.io',
+      url: '//sagg.ebm.nymous.io'+query,
       logo: logoSagg
     },
     {
       name: 'Livecoding',
-      url: '//clock-livecoding.ebm.nymous.io',
+      url: '//clock-livecoding.ebm.nymous.io'+query,
       logo: logoClock
     }
   ];

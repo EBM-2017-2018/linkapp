@@ -21,13 +21,13 @@ class App extends Component {
     componentWillMount(){
     }
 
-    appOnSuccessLogin = (token) => {
+    appOnSuccessLogin = (token, username) => {
       const parsedQuery = qs.parse(document.location.search.slice(1));
 
       if (parsedQuery.redirect) {
         parsedQuery.token = token;
         let queryToken = qs.stringify({token: token});
-        document.location.replace(parsedQuery.redirect + '?' + queryToken);
+        document.location.replace(parsedQuery.redirect + '?' + queryToken + '&username=' + username);
       }
 
       else {

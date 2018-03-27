@@ -115,7 +115,7 @@ class Login extends Component {
     handleClick = () => {
 
       getTokenOnLogin(this.state.username, this.state.password)
-        .then(token => this.props.appOnSuccessLogin(token))
+        .then(token => this.props.appOnSuccessLogin(token, this.state.username))
         .catch(error => console.log(error));
     }
 }
