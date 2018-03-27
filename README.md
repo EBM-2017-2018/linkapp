@@ -27,7 +27,7 @@ pour vérifier le token, il faut envoyer une requête à https://linkapp.ebm.nym
 {
      "success": true,
      "token": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm",
-  }
+ }
   ``` 
 il faut ensuite récupérer le nouveau token dans le json et remplacer l'ancien token par le nouveau.
 
