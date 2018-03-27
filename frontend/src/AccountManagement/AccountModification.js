@@ -65,13 +65,25 @@ class AccountModification extends Component {
       this.state.email);
   }
 
+  componentDidUpdate = () => {
+    if (this.state.username !== this.props.user.username) {
+      this.setState({
+        username:this.props.user.username,
+        role:this.props.user.role,
+        nom:this.props.user.nom,
+        prenom:this.props.user.prenom,
+        email:this.props.user.email
+      });
+    }
+  }
+
   render () {
     const { classes } = this.props;
 
     return(
       <div>
         <ToastContainer/>
-        <h2>Pour Modifier les informations de l'utilisateur sélectionné, remplissez le formulaire ci-dessous</h2>
+        <h2>Pour modifier les informations de l'utilisateur sélectionné, remplissez le formulaire ci-dessous</h2>
         <div className="addUserForm">
           <TextField
         label="Identifiant"

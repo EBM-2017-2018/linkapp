@@ -101,7 +101,8 @@ class MyInformations extends Component {
             onChange={this.importerPhoto}
           />
           <label htmlFor="raised-button-file" className="BouttonChangementPhotoProfil">
-            <Button variant="raised" component="span" className="BouttonChangementPhotoProfil" >
+            <Button primary={true} color="secondary"
+              variant="raised" component="span" className="BouttonChangementPhotoProfil" >
               Changer sa photo de profil
             </Button>
           </label>
@@ -112,7 +113,7 @@ class MyInformations extends Component {
 
         <div>
           <div>
-            <p> {"Status: "+this.state.role}</p>
+            <p> {"Statut: "+this.state.role}</p>
           </div>
           <FormControl className="champMotDePasse">
             <InputLabel htmlFor="password">Ancien mot de passe</InputLabel>
@@ -178,7 +179,10 @@ class MyInformations extends Component {
           </FormControl>
           <br/>
 
-          <Button onClick={(event) => this.handleClickChangePassword(event)}>Modifier le mot de passe</Button>
+          <Button primary={true} variant="raised" color="secondary"
+            onClick={(event) => this.handleClickChangePassword(event)}>
+            Modifier le mot de passe
+          </Button>
 
         </div>
         </div>
