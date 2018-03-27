@@ -14,7 +14,7 @@ const styles = ({
 
 class TablesSelectStudents extends Component {
 
-  /* Sends to parent what is to delete in table one and two
+  /* Sends to parent what has to be deleted in table one and two
   * (ie. what needs to be swapped from one table to the other) */
   onSwapButtonClick = () => {
     let toDeleteTableOne = this.tableOne.getTableSelectedElements();
@@ -30,9 +30,17 @@ class TablesSelectStudents extends Component {
                         nameTable={"Non membres"}
                         className={classes.flex}
                         dataToDisplay={this.props.dataForTableOne}/>
-        <IconButton onClick={this.onSwapButtonClick}>
-          <SwapHoriz />
-        </IconButton>
+        <div className={classes.swapButtonContainer}
+             style={{
+               flex: 1,
+               flexDirection: 'column',
+               justifyContent: 'center',
+             }}>
+          <IconButton className={classes.swapButton}
+            onClick={this.onSwapButtonClick}>
+            <SwapHoriz />
+          </IconButton>
+        </div>
         <TableSelection tableRef={el => {this.tableTwo = el;}}
                         nameTable={"Membres de la promo"}
                         className={classes.flex}

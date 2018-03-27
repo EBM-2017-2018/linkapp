@@ -72,7 +72,7 @@ export let funcCheckAndRefreshToken = () => {
 export let getAllUsers = (token) => {
   return new Promise(
     (resolve, reject) => {
-      axios.get(apiBaseUrl + usersUrl + allUsersUrl, {
+      axios.get(apiBaseUrl + usersUrl + allUsersUrl +'?t='+ new Date().getTime(), {
         headers: {'Authorization': token}
       }).then((response) => {
         let allUsers = response.data.users;
@@ -222,7 +222,13 @@ export let updatePassword = (myToken, oldPassword, newPassword) => {
           resolve('success');
           reject('error in updatePassword');
         }
-      })
+      }).catch(function (error) {
+      if (error.response.status && error.response.status === 401) toast.error(
+        (error.response.data.msg ? error.response.data.msg : "Erreur modification mot de passe \n vérifiez les données saisies"), {
+          position: toast.POSITION.TOP_LEFT,
+          autoClose: 3000,
+        });
+    })
   })
 }
 

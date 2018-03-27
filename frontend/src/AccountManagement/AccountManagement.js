@@ -189,6 +189,8 @@ class AccountManagement extends Component {
   constructor (props) {
     super(props);
 
+    this.onAccountModification = this.onAccountModification.bind(this);
+
     this.state = {
       nameAllUsers: [],
       single: null,
@@ -211,6 +213,10 @@ class AccountManagement extends Component {
     }
   };
 
+  onAccountModification = (valuesToDisplay) => {
+    console.log(valuesToDisplay);
+    this.setState({nameAllUsers: valuesToDisplay});
+  }
 
   componentDidMount() {
     // Retrieve all users names from database to put in Select
@@ -245,7 +251,9 @@ class AccountManagement extends Component {
                 options: this.state.nameAllUsers,
               }}
             />
-            {this.state.userToModify && <AccountModification user={this.state.userToModify}/> }
+            {this.state.userToModify && <AccountModification
+              refreshListHandler={this.onAccountModification}
+              user={this.state.userToModify}/> }
           </div> :
           "No existing account available for now"
         }

@@ -28,7 +28,6 @@ const styles = theme => ({
   },
 });
 
-// TODO : document.location.pass à regarder pour connaître l'url de redirection
 
 class Login extends Component {
     constructor(props){
