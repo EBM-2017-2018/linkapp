@@ -2,7 +2,7 @@
 const configdb = require('./database');
 const User = require('../models/user');
 
-// seed data - documents organized by Model
+// seed data : ajoute des utilisateurs de base
 
 const adminUserToFind = configdb.seedAdminUsername;
 

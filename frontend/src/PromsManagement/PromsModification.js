@@ -1,83 +1,20 @@
+/* Defines the PromsModification component that enables user to look for an existing prom and to change its respo
+ * or people that are in it */
+
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
-import Select from 'react-select'
-import Typography from 'material-ui/Typography'
 import Input from 'material-ui/Input'
-import { MenuItem } from 'material-ui/Menu'
-import ArrowDropDownIcon from 'material-ui-icons/ArrowDropDown'
-import CancelIcon from 'material-ui-icons/Cancel'
-import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
-import ClearIcon from 'material-ui-icons/Clear'
-import Chip from 'material-ui/Chip'
-import axios from 'axios/index'
 import cookie from 'react-cookies'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 import TablesSelectStudents from './TablesSelectStudents'
-import { getAllUsers, getPromosInfos } from '../UsefulFuncVar/ApiCall'
+import {
+  getAllUsers, getPromosInfos, updatePromoInfos, getAllPromos,
+  getBasicUserInfos
+} from '../Utils/ApiCall'
+import { Button } from 'material-ui'
+import { ToastContainer } from 'react-toastify'
+import { SelectWrapped } from '../GenericComponents/Selects'
 
-class Option extends React.Component {
-  handleClick = event => {
-    this.props.onSelect(this.props.option, event);
-  };
-
-  render() {
-    const { children, isFocused, isSelected, onFocus } = this.props;
-
-    return (
-      <MenuItem
-        onFocus={onFocus}
-        selected={isFocused}
-        onClick={this.handleClick}
-        component="div"
-        style={{
-          fontWeight: isSelected ? 500 : 400,
-        }}
-      >
-        {children}
-      </MenuItem>
-    );
-  }
-}
-
-function SelectWrapped(props) {
-  const { classes, ...other } = props;
-
-  return (
-    <Select
-      optionComponent={Option}
-      noResultsText={<Typography>{'No results found'}</Typography>}
-      arrowRenderer={arrowProps => {
-        return arrowProps.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />;
-      }}
-      clearRenderer={() => <ClearIcon />}
-      valueComponent={valueProps => {
-        const { value, children, onRemove } = valueProps;
-
-        const onDelete = event => {
-          event.preventDefault();
-          event.stopPropagation();
-          onRemove(value);
-        };
-
-        if (onRemove) {
-          return (
-            <Chip
-              tabIndex={-1}
-              label={children}
-              className={classes.chip}
-              deleteIcon={<CancelIcon onTouchEnd={onDelete} />}
-              onDelete={onDelete}
-            />
-          );
-        }
-
-        return <div className="Select-value">{children}</div>;
-      }}
-      {...other}
-    />
-  );
-}
 
 const ITEM_HEIGHT = 48;
 
@@ -186,15 +123,19 @@ const styles = theme => ({
   },
 });
 
-
 class PromsModification extends Component {
   constructor (props) {
     super(props);
 
     this.dataTableUpdater = this.dataTableUpdater.bind(this);
 
+    // dataForTableOne and Two are arrays containing users' data with the following structure
+    // {username: "preal", nom: "Real", prenom: "Paul", role: "etudiant", email: "pr@hotmail.com"}
+    // infosPossibleRespo has the same structure but only of users who can be respo (intervenant et administrateur)
+    // nomEtPrenomRespo is the concatenation of first and lastname of selected respo
     this.state = {
       nameProms: [],
+      infosPossibleRespos: [],
       single: null,
       token: cookie.load('token'),
       nameSelectedProm: '',
@@ -202,10 +143,11 @@ class PromsModification extends Component {
       dataForTableOne: [],
       dataForTableTwo: [],
       promSelected: false,
+      nomEtPrenomRespo: '',
     }
   }
 
-  // Updates dataForTableOne and dataForTableTwo
+  /* Updates dataForTableOne and dataForTableTwo */
   dataTableUpdater (toRemoveInTableOne, toRemoveInTableTwo){
     getAllUsers(this.state.token).then(allUsers => {
       let usernamesToRemoveOne = toRemoveInTableOne.map((el) => el.username);
@@ -226,10 +168,6 @@ class PromsModification extends Component {
         dataForTableOne = dataForTableOne.filter(user=>user.username!==usernamesToRemoveOne[i]);
       }
 
-      console.log("dataForTableOne in PromModif");
-      console.log(dataForTableOne);
-      console.log(dataForTableTwo);
-
       this.setState({
         dataForTableOne: dataForTableOne,
         dataForTableTwo: dataForTableTwo
@@ -238,54 +176,77 @@ class PromsModification extends Component {
     }).catch(error => console.log(error));
   }
 
-  // When value of selected prom changes
+  /* When value of selected prom changes
+  * single is the name of the selected prom */
   handleChangeSingle = single => {
     this.setState({
       single,
     });
 
-    // Api call to get data of members of prom and remove members of prom from allUsers to get people who don't
-    // belong to the prom
-    getPromosInfos(single, this.state.token)
-      .then(dataProm => {
-        getAllUsers(this.state.token).then(allUsers => {
-          let usernamesMemberProm = dataProm.membres;
-          let tableAllUsers = allUsers;
-          let dataForTableTwo = [];
+    if (single !== null) {
+      // Api call to get selected prom infos
+      getPromosInfos(single, this.state.token)
+        .then(dataProm => {
+          getAllUsers(this.state.token).then(allUsers => {
 
-          for (let i=0; i<usernamesMemberProm.length; i++) {
-            let userInfo = tableAllUsers.filter(user => user.username===usernamesMemberProm[i]);
-            dataForTableTwo.push(userInfo[0]);
-          }
+            // Work to fill table of members and non-members table of selected prom
+            let usernamesMemberProm = dataProm.membres;
+            let tableAllUsers = allUsers;
+            let dataForTableTwo = [];
 
-          let dataForTableOne = allUsers.filter(user => !dataForTableTwo.includes(user));
+            for (let i = 0; i < usernamesMemberProm.length; i++) {
+              let userInfo = tableAllUsers.filter(user => user.username === usernamesMemberProm[i]);
+              dataForTableTwo.push(userInfo[0]);
+            }
 
-          this.setState({
-            nameSelectedProm: dataProm.nomPromo,
-            promSelected: true,
-            dataForTableOne: dataForTableOne,
-            dataForTableTwo: dataForTableTwo
-          });
+            let dataForTableOne = allUsers.filter(user => !dataForTableTwo.includes(user));
 
-        }).catch(error => console.log(error));
-      }).catch(error => console.log(error))
+            getBasicUserInfos(this.state.token, dataProm.responsable)
+              .then(respoInfo => {
+                this.setState({
+                  nameSelectedProm: dataProm.nomPromo,
+                  promSelected: true,
+                  dataForTableOne: dataForTableOne,
+                  dataForTableTwo: dataForTableTwo,
+                  respoSelectedProm: dataProm.responsable,
+                  nomEtPrenomRespo: respoInfo.prenom + " " + respoInfo.nom,
+                });
+              }).catch(error => console.log(error));
+          }).catch(error => console.log(error));
+        }).catch(error => console.log(error))
+    }
 
   };
 
+  /* When value of selected respo changes */
+  handleChangeSingleRespo = (respo) => {
+    this.setState({
+      respo,
+    });
+
+    if (respo !== null) {
+      let nomEtPrenomRespo = this.state.infosPossibleRespos.filter(el => el.value===respo)[0].label;
+      this.setState({nomEtPrenomRespo: nomEtPrenomRespo});
+    }
+  }
 
   componentDidMount() {
-    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let getAllPromosUrl = GlobalVarHandler.getAllPromosUrl;
-    axios.get(apiBaseUrl + getAllPromosUrl, {
-      headers: {'Authorization': this.state.token}
-    }).then(response => {
-      let valuesToDisplay = response.data.promotions.map(receivedPromInfo => ({
-        value: receivedPromInfo.nomPromo,
-        label: receivedPromInfo.nomPromo,
+    getAllPromos(this.state.token).then((allPromos) => {
+      let valuesToDisplay = allPromos.map(prom => ({
+        value: prom.nomPromo,
+        label: prom.nomPromo,
       }));
-
-      this.setState({nameProms: valuesToDisplay})
-    });
+      getAllUsers(this.state.token).then(allUsers => {
+        let possibleRespos = allUsers.filter(user => user.role==='intervenant' || user.role==='administrateur')
+          .map(user => ({
+            value: user.username,
+            label: user.prenom + " " + user.nom,
+          }));
+        this.setState({nameProms: valuesToDisplay, infosPossibleRespos: possibleRespos});
+      })
+        .catch(error => console.log(error));
+    })
+      .catch(error => console.log(error));
   }
 
 
@@ -294,6 +255,7 @@ class PromsModification extends Component {
     const { single } = this.state;
 
     return(<div>
+        <ToastContainer/>
         {((Array.isArray(this.state.nameProms) && this.state.nameProms.length)) ?
           <div className='root'>
             <Input
@@ -316,8 +278,23 @@ class PromsModification extends Component {
         }
         { this.state.promSelected && (
       <div className='selectedPromInfo'>
-        <Typography>{this.state.nomPromo}</Typography>
-        <Typography>{this.state.responsable}</Typography>
+        <h2>Nom de la promo : {this.state.nameSelectedProm}</h2>
+        <h2>Nom du responsable : </h2>
+        <Input
+          fullWidth
+          inputComponent={SelectWrapped}
+          inputProps={{
+            classes,
+            value: single,
+            onChange: this.handleChangeSingleRespo,
+            placeholder: this.state.nomEtPrenomRespo,
+            instanceId: 'select-respo',
+            id: 'select-respo',
+            name: 'select-respo',
+            simpleValue: true,
+            options: this.state.infosPossibleRespos,
+          }}
+        />
         <div className='blocMembersProm'>
           {!(this.state.dataForTableOne === undefined || this.state.dataForTableOne.length === 0) ?
             <TablesSelectStudents dataForTableOne={this.state.dataForTableOne}
@@ -325,12 +302,28 @@ class PromsModification extends Component {
             dataTableUpdater={this.dataTableUpdater}/>
             : "Pas d'appartenant à la promo"}
         </div>
+        <div>
+          <Button primary={true} color="secondary" variant="raised"
+                  onClick={(event) => this.handleClickUpdateProm(event)}>
+            Mettre à jour la promo
+          </Button>
+        </div>
       </div>
         )}
       </div>
     )
   }
 
+  /* Send new prom data to database */
+  handleClickUpdateProm (event) {
+    let membersUsernames = this.state.dataForTableTwo.map(el => el.username)
+    let respoUsername = this.state.infosPossibleRespos.filter(el => el.label===this.state.nomEtPrenomRespo)[0].value;
+
+    updatePromoInfos(this.state.token,
+      this.state.nameSelectedProm,
+      respoUsername,
+      membersUsernames);
+  }
 }
 
 PromsModification.propTypes = {

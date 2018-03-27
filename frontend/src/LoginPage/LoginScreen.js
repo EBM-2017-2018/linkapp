@@ -1,8 +1,7 @@
-import axios from 'axios/index'
 import React, { Component } from 'react'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
 import Login from './Login'
 import cookie from 'react-cookies'
+import { funcCheckAndRefreshToken } from '../Utils/ApiCall'
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -19,16 +18,8 @@ class LoginScreen extends Component {
   componentWillMount() {
     //si token présent d'une ancienne session connection auto
     if (cookie.load('token')) {
-      axios.get(GlobalVarHandler.apiBaseUrl + 'checkandrefreshtoken', {
-        headers: { 'Authorization': cookie.load('token') }
-      })
-        .then((response) => {
-          if (response.status === 200 && response.data.newToken) {
-            cookie.save('token', response.data.newToken);
-            return this.props.appOnSuccessLogin(cookie.load('token'));
-
-          }
-        });
+      funcCheckAndRefreshToken().then(token => this.props.appOnSuccessLogin(token))
+        .catch(error => console.log('error'));
     }
 
     var loginScreen = [];

@@ -1,6 +1,7 @@
+/* PromsManagement is the component that handles the switch between each possible screen of PromsManagement folder */
+
 import React, { Component } from 'react'
 import PromsCreation from './PromsCreation'
-import PromsManagement from './PromsManagement'
 import SimpleTabs from '../GenericComponents/SimpleTabs'
 import PromsModification from './PromsModification'
 
@@ -10,19 +11,22 @@ class PromsManagementPage extends Component {
     this.changePromDisplayedScreen = this.changePromDisplayedScreen.bind(this);
 
     this.state = {
-      displayedScreen: 'Afficher les promos',
-      nameTabs: ['Afficher les promos', 'Modifier une promo', 'Créer une promo']
+      displayedScreen: 'Modifier une promo',
+      nameTabs: ['Modifier une promo', 'Créer une promo']
     }
 
     this.displayedScreenHandler = this.displayedScreenHandler.bind(this)
   }
 
-  displayedScreenHandler (event, nameDisplayedScreen) {
-    event.preventDefault();
-    this.setState({displayedScreen: nameDisplayedScreen});
+  /* Passes to the tab component the index of the tab that needs to be displayed */
+  displayedScreenHandler = (event, nameDisplayedScreen) => {
+    let numberTab = this.state.nameTabs.indexOf(nameDisplayedScreen);
+    this.changePromDisplayedScreen(numberTab);
+    this.refTabs.handleChange(event, numberTab);
   }
 
-  changePromDisplayedScreen (numberTab) {
+  /* Changes screen by updating state */
+  changePromDisplayedScreen = (numberTab) => {
     this.setState({displayedScreen: this.state.nameTabs[numberTab]});
   }
 
@@ -31,10 +35,9 @@ class PromsManagementPage extends Component {
     <div>
       <div>
         <SimpleTabs nameTabs={this.state.nameTabs}
+                    onRef={ref => (this.refTabs = ref)}
                     tabChangeHandler={this.changePromDisplayedScreen}/>
       </div>
-      {this.state.displayedScreen === 'Afficher les promos' && (
-        <PromsManagement parentContext={this} displayedScreenHandler={this.displayedScreenHandler}/>)}
         {this.state.displayedScreen === 'Modifier une promo' && (
         <PromsModification parentContext={this} displayedScreenHandler={this.displayedScreenHandler}/>)}
       {this.state.displayedScreen === 'Créer une promo' && (

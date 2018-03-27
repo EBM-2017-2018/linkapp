@@ -1,11 +1,10 @@
+/* Component that contains the form to create a new account */
 import React, { Component } from 'react'
 import { Button, TextField, withStyles } from 'material-ui'
 import PropTypes from 'prop-types'
-import axios from 'axios/index'
 import cookie from 'react-cookies'
-import { toast, ToastContainer } from 'react-toastify'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
-import { creerStructureFormulaire } from '../UsefulFuncVar/ApiCall'
+import { ToastContainer } from 'react-toastify'
+import { setUserInfos } from '../Utils/ApiCall'
 
 const styles = theme => ({
   container: {
@@ -52,54 +51,23 @@ class AccountCreation extends Component {
     }
   }
 
+  /* Function that changes the states variables everytime one form entry is being completed */
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     });
   };
 
+  /* Creates a new account in the mongo DB */
   handleClick()
   {
-    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let signupUrl = GlobalVarHandler.signupUrl;
-    var donneesFormulaire={
-      "username":this.state.username,
-      "password":this.state.password,
-      "role":this.state.role,
-      "nom": this.state.nom,
-      "prenom": this.state.prenom,
-      "email": this.state.email,
-    };
-
-    axios.post(apiBaseUrl+signupUrl, creerStructureFormulaire(donneesFormulaire), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': this.state.token }
-    })
-      .then(function (response) {
-        console.log(response);
-
-        if(response.status === 200){
-          console.log("Signup successfull");
-          toast.success("utilisateur ajouté", {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-        }
-        else if(response.status === 11000){
-          alert("Username Already exists");
-        }
-        else if(response.status === 401){
-          console.log("Wrong role");
-          alert("Wrong role")
-        }
-        else{
-          console.log("Username does not exists");
-          alert("Username does not exist");
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    setUserInfos(this.state.token,
+      this.state.username,
+      this.state.password,
+      this.state.role,
+      this.state.nom,
+      this.state.prenom,
+      this.state.email);
   }
 
   render () {
@@ -135,7 +103,7 @@ class AccountCreation extends Component {
             select
             label="Role"
             className={classes.textField}
-            value="etudiant"
+            value={this.state.role}
             onChange={this.handleChange('role')}
             SelectProps={{
               native: true,

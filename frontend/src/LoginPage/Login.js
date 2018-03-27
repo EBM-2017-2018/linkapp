@@ -17,7 +17,7 @@ import Visibility from 'material-ui-icons/Visibility'
 import VisibilityOff from 'material-ui-icons/VisibilityOff'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import { getTokenOnLogin } from '../UsefulFuncVar/ApiCall'
+import { getTokenOnLogin } from '../Utils/ApiCall'
 
 const styles = theme => ({
   margin: {
@@ -73,6 +73,7 @@ class Login extends Component {
                 }}
                 margin="normal"
                 onChange={this.handleChange('username')}
+                onKeyPress={event => this.add(event)}
               />
                 <br/>
               <FormControl className={classNames(classes.margin, classes.textField)} autoComplete="on">
@@ -82,6 +83,7 @@ class Login extends Component {
                   type={this.state.showPassword ? 'text' : 'password'}
                   value={this.state.password}
                   onChange={this.handleChange('password')}
+                  onKeyPress={event => this.add(event)}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
@@ -98,19 +100,21 @@ class Login extends Component {
                 <Button primary={true} variant="raised" color="secondary"
                               onClick={() => this.handleClick()}
                         onChange={event => {this.setState({query: event.target.value})}}
-                        onKeyPress={ (event) => {
-                          if (event.key === 'Enter') {
-                            this.handleClick()}
-                        }
-                        }>
+                onKeyPress={event => this.add(event)}
+                >
                   Envoyer
                 </Button>
             </div>
         );
     }
 
+    add = (event) => {
+      if(event.key === 'Enter'){
+        this.handleClick();
+    }};
 
-    handleClick() {
+    handleClick = () => {
+
       getTokenOnLogin(this.state.username, this.state.password)
         .then(token => this.props.appOnSuccessLogin(token))
         .catch(error => console.log(error));

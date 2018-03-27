@@ -1,3 +1,5 @@
+/* TabContainer is a two options-tab, some changes are needed to enable the creation of more (or less) than two tabs */
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
@@ -20,15 +22,27 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: theme.spacing.unit * 3,
+    marginTop: 0,
     backgroundColor: theme.palette.background.paper,
   },
 });
 
-class TabsWrappedLabel extends React.Component {
-  state = {
-    value: 0,
-  };
+class SimpleTabs extends React.Component {
+  constructor (props) {
+   super(props);
+
+    this.state = {
+      value: 0,
+    };
+  }
+
+  componentDidMount() {
+    this.props.onRef(this);
+  }
+
+  componentWillUnmount () {
+    this.props.onRef(undefined);
+  }
 
   handleChange = (event, value) => {
     this.setState({ value });
@@ -45,7 +59,6 @@ class TabsWrappedLabel extends React.Component {
           <Tabs value={value} onChange={this.handleChange}>
             <Tab value={0} label={this.props.nameTabs[0]} />
             <Tab value={1} label={this.props.nameTabs[1]} />
-            <Tab value={2} label={this.props.nameTabs[2]} />
           </Tabs>
         </AppBar>
       </div>
@@ -53,8 +66,8 @@ class TabsWrappedLabel extends React.Component {
   }
 }
 
-TabsWrappedLabel.propTypes = {
+SimpleTabs.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TabsWrappedLabel);
+export default withStyles(styles)(SimpleTabs);

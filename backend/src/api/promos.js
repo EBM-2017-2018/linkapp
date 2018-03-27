@@ -75,7 +75,7 @@ router.get('/listpromos', passport.authenticate('jwt', { session: false }), (req
       }
       // check if password matches
       // return the role of the user
-      return res.json({
+      return res.status(200).json({
         success: true,
         promotions: listPromo,
       });
@@ -466,7 +466,7 @@ router.put('/', passport.authenticate('jwt', { session: false }), (req, res) => 
                 }
               }
             } else {
-              return res.status(400).json({
+              return res.status(200).json({
                 success: true,
                 msg: 'promo mise à jour',
               });

@@ -10,24 +10,13 @@ import CancelIcon from 'material-ui-icons/Cancel'
 import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
 import ClearIcon from 'material-ui-icons/Clear'
 import Chip from 'material-ui/Chip'
-import axios from 'axios/index'
 import cookie from 'react-cookies'
-import GVH from '../UsefulFuncVar/UsefulFuncVar'
 import AccountModification from './AccountModification'
-
-var userToModify = null;
+import { getAllUsers, getUserInfos } from '../Utils/ApiCall'
 
 class Option extends React.Component {
   handleClick = event => {
     this.props.onSelect(this.props.option, event);
-    const usernameToFind = this.props.option.value;
-    axios.get(GVH.apiBaseUrl + GVH.getUserInfos+'/'+usernameToFind, {
-      headers: {'Authorization': cookie.load('token')}
-    }).then(response => {
-      if(response.status === 200) {
-          //this.props.handler(response.data;
-      }
-    });
   };
 
   render() {
@@ -55,7 +44,7 @@ function SelectWrapped(props) {
   return (
     <Select
       optionComponent={ Option }
-      noResultsText={<Typography>{'Aucun utilisateurs trouvé'}</Typography>}
+      noResultsText={<Typography>{'Aucun utilisateur trouvé'}</Typography>}
       arrowRenderer={arrowProps => {
         return arrowProps.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />;
       }}
@@ -199,7 +188,7 @@ const styles = theme => ({
 class AccountManagement extends Component {
   constructor (props) {
     super(props);
-    this.handler = this.handler.bind(this);
+
     this.state = {
       nameAllUsers: [],
       single: null,
@@ -208,31 +197,30 @@ class AccountManagement extends Component {
 
     }
   }
-  handler(user) {
-    this.setState({
-      userToModify: user,
-    })
-  }
 
-  handleChangeSingle = single => {
+  handleChangeSingle = single =>{
     this.setState({
       single,
     });
+
+    if( single !== null) {
+      getUserInfos(this.state.token, single).then(userInfos => {
+        this.setState({userToModify: userInfos});
+        console.log(this.state.userToModify);
+      }).catch(error => console.log(error));
+    }
   };
 
 
   componentDidMount() {
-
-    axios.get(GVH.apiBaseUrl + GVH.getAllUsersUrl, {
-      headers: {'Authorization': this.state.token}
-    }).then(response => {
-      let valuesToDisplay = response.data.users.map(receivedUsersInfo => ({
-        value: receivedUsersInfo.username,
-        label: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
-      })
-      );
-      this.setState({nameAllUsers: valuesToDisplay})
-    });
+    // Retrieve all users names from database to put in Select
+    getAllUsers(this.state.token).then(allUsers => {
+      let valuesToDisplay = allUsers.map(receivedUsersInfo => ({
+      value: receivedUsersInfo.username,
+      label: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
+    }))
+    this.setState({nameAllUsers: valuesToDisplay})
+    }).catch(error => console.log(error));
   }
 
   render() {
@@ -257,7 +245,7 @@ class AccountManagement extends Component {
                 options: this.state.nameAllUsers,
               }}
             />
-            {userToModify && <AccountModification/> }
+            {this.state.userToModify && <AccountModification user={this.state.userToModify}/> }
           </div> :
           "No existing account available for now"
         }

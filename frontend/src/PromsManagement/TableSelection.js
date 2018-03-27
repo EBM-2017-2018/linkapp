@@ -1,3 +1,6 @@
+/*  Defines the table component where you can select elements
+* For now, label of each columns are 'Nom', 'Prenom' and 'Role' */
+
 import React from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
@@ -130,7 +133,7 @@ let TableSelectionToolbar = props => {
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography variant="title">Eleves</Typography>
+          <Typography variant="title">{props.nameTable}</Typography>
         )}
       </div>
       <div className={classes.spacer} />
@@ -289,7 +292,7 @@ class TableSelection extends React.Component {
 
     let newData = finalDataTable.sort((a, b) => (a.nom < b.nom ? -1 : 1));
 
-    if ( this.state.data.length !== newData.length) {
+    if (this.state.data.length !== newData.length) {
       this.setState({data: newData});
     }
   }
@@ -301,7 +304,7 @@ class TableSelection extends React.Component {
 
     return (
       <Paper className={classes.root} ref={this.props.tableRef}>
-        <TableSelectionToolbar numSelected={selected.length} />
+        <TableSelectionToolbar numSelected={selected.length} nameTable={this.props.nameTable}/>
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <TableSelectionHead

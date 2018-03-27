@@ -69,18 +69,17 @@ router.post('/signin', (req, res) => {
           email: user.email,
         }, config.secret);
         // return the information including token as JSON
-        res.json({
+        return res.json({
           success: true,
           username: user.username,
           token: `JWT ${token}`,
         });
-      } else {
-        res.status(401)
-          .send({
-            success: false,
-            msg: 'mot de passe invalide',
-          });
       }
+      return res.status(401)
+        .send({
+          success: false,
+          msg: 'mot de passe invalide',
+        });
     });
   });
 });
@@ -125,7 +124,7 @@ router.post('/updatepassword', (req, res) => {
         res.status(401)
           .send({
             success: false,
-            msg: 'User not found.',
+            msg: 'Utilisateur non trouvé',
           });
       } else {
         // check if password matches
@@ -150,7 +149,7 @@ router.post('/updatepassword', (req, res) => {
             res.status(401)
               .send({
                 success: false,
-                msg: 'Wrong password.',
+                msg: 'Mauvais mot de passe',
               });
           }
         });
@@ -214,6 +213,7 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
             msg: 'Nom d\'utilisateur invalide',
           });
       }
+      // vérification du role
       if (
         (
           (

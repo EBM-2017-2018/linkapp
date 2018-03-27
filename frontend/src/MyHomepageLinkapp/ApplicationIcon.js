@@ -3,13 +3,16 @@ import React, { Component } from 'react'
 class ApplicationIcon extends Component {
 
   render () {
-      var link = this.props.link;
-      var srcImg = this.props.srcImg;
-      var nameApp = this.props.nameApp;
+      const link = this.props.link;
+      const srcImg = this.props.srcImg;
+      const nameApp = this.props.nameApp;
 
       return(
       <a href={link} className="logoApplication">
-        <img src={srcImg} className="application" id={nameApp} alt={nameApp}/>
+        <img src={srcImg} style={{
+         height: 100,
+          width: 120,
+        }} className="application"  id={nameApp} alt={nameApp}/>
         <h2 className= "nomApplication">{nameApp}</h2>
       </a>
     )
