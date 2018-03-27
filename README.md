@@ -23,10 +23,12 @@ Ce dépot contient le code du projet projet Linkapp.
 pour vérifier le token, il faut envoyer une requête à https://linkapp.ebm.nymous.io/api/checkadnrefreshtoken avec un header 
 `Authorization` ayant comme valeur le token, si le token est valide la réponse est de la forme :
 
-`{
-     "success": true
-     "token": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm"
-  }` 
+```json
+{
+     "success": true,
+     "token": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTZmMDlkYzM1YmZkZTBm",
+  }
+  ``` 
 il faut ensuite récupérer le nouveau token dans le json et remplacer l'ancien token par le nouveau.
 
 Il est maintenant possible d'utiliser le middleware [ebm-auth](https://github.com/EBM-2017-2018/ebm-auth) qui simplifie grandement la gestion de l'authentification.
