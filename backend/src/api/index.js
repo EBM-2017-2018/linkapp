@@ -124,7 +124,7 @@ router.post('/updatepassword', (req, res) => {
         res.status(401)
           .send({
             success: false,
-            msg: 'User not found.',
+            msg: 'Utilisateur non trouvé',
           });
       } else {
         // check if password matches
@@ -149,7 +149,7 @@ router.post('/updatepassword', (req, res) => {
             res.status(401)
               .send({
                 success: false,
-                msg: 'Wrong password.',
+                msg: 'Mauvais mot de passe',
               });
           }
         });
