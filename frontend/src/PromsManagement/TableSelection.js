@@ -23,6 +23,7 @@ import Tooltip from 'material-ui/Tooltip'
 import DeleteIcon from 'material-ui-icons/Delete'
 import FilterListIcon from 'material-ui-icons/FilterList'
 import { lighten } from 'material-ui/styles/colorManipulator'
+import _ from 'underscore'
 
 let counter = 0;
 function createData(username, nom, prenom, role) {
@@ -187,6 +188,7 @@ class TableSelection extends React.Component {
       data: [],
       page: 0,
       rowsPerPage: 5,
+      tableHasUpdate: false,
     };
   }
 
@@ -292,7 +294,10 @@ class TableSelection extends React.Component {
 
     let newData = finalDataTable.sort((a, b) => (a.nom < b.nom ? -1 : 1));
 
-    if (this.state.data.length !== newData.length) {
+    let oldUsernames = this.state.data.map(el => el.username);
+    let newUsernames = newData.map(el => el.username);
+
+    if (!_.isEqual(oldUsernames, newUsernames)) {
       this.setState({data: newData});
     }
   }
