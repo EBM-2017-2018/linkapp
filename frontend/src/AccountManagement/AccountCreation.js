@@ -1,9 +1,10 @@
+/* Component that contains the form to create a new account */
 import React, { Component } from 'react'
 import { Button, TextField, withStyles } from 'material-ui'
 import PropTypes from 'prop-types'
 import cookie from 'react-cookies'
 import { ToastContainer } from 'react-toastify'
-import { setUserInfos } from '../UsefulFuncVar/ApiCall'
+import { setUserInfos } from '../Utils/ApiCall'
 
 const styles = theme => ({
   container: {
@@ -50,12 +51,14 @@ class AccountCreation extends Component {
     }
   }
 
+  /* Function that changes the states variables everytime one form entry is being completed */
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     });
   };
 
+  /* Creates a new account in the mongo DB */
   handleClick()
   {
     setUserInfos(this.state.token,

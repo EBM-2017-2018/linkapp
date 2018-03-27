@@ -1,3 +1,5 @@
+/* Defines the component used to modify your password or profile picture */
+
 import React, { Component } from 'react'
 import '../Style/MyInfoStyle.css'
 import imageTest from '../Images/photoProfil.jpg'
@@ -5,10 +7,8 @@ import Button from 'material-ui/Button'
 import { FormControl, IconButton, Input, InputAdornment, InputLabel } from 'material-ui'
 import { Visibility, VisibilityOff } from 'material-ui-icons'
 import cookie from 'react-cookies'
-import axios from 'axios/index'
 import { toast, ToastContainer } from 'react-toastify'
-import GlobalVarHandler from '../UsefulFuncVar/UsefulFuncVar'
-import { creerStructureFormulaire } from '../UsefulFuncVar/ApiCall'
+import { getPicture, getUserInfos, updatePassword, uploadPicture } from '../Utils/ApiCall'
 
 class MyInformations extends Component {
   state = {
@@ -26,15 +26,8 @@ class MyInformations extends Component {
     profilePic: imageTest,
   };
 
+  /* Updates in real time state values when text is written in textfields */
   handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
-  };
-
-  handleChange2 = prop => event => {
-    this.setState({ [prop]: event.target.value });
-  };
-
-  handleChange3 = prop => event => {
     this.setState({ [prop]: event.target.value });
   };
 
@@ -42,26 +35,20 @@ class MyInformations extends Component {
     event.preventDefault();
   };
 
-  handleMouseDownPassword2 = event => {
-    event.preventDefault();
-  };
-
-  handleMouseDownPassword3 = event => {
-    event.preventDefault();
-  };
-
-  handleClickShowPasssword = () => {
+  /* Changes boolean value of showPassword */
+  handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
 
-  handleClickShowPasssword2 = () => {
+  handleClickShowPassword2 = () => {
     this.setState({ showPassword2: !this.state.showPassword2 });
   };
 
-  handleClickShowPasssword3 = () => {
+  handleClickShowPassword3 = () => {
     this.setState({ showPassword3: !this.state.showPassword3 });
   };
 
+  /* Upload picture */
   importerPhoto = (event) => {
       if(!event.target.files) {
         console.log("opération annulée");
@@ -69,57 +56,29 @@ class MyInformations extends Component {
       }
       const data = new FormData();
       data.append('file', event.target.files[0]);
-      axios.post(GlobalVarHandler.apiBaseUrl+'pictures/upload/'+this.state.username, data).then((response) => {
-        if( response.status === 200) {
-          toast.success("photo mise en ligne", {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-          this.setState({
-            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username+'?t='+ new Date().getTime(),
-          });
 
-        }
-        else {
-          toast.error("erreur durant la mise en ligne de la photo", {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-        }
-      });
+      uploadPicture(this.state.username, data).then((link) => {
+        this.setState({
+          profilePic: link+'?t='+ new Date().getTime(),
+        });
+      }).catch(error => console.log(error));
   };
-  componentWillMount(){
-    //TODO modifier en fct de l'username
-    axios.get(GlobalVarHandler.apiBaseUrl+'users/userinfos/'+this.state.username, {
-      headers: {
-        'Authorization': this.state.token,
-        'Content-Type':'multipart/form-data',
-      }
-    })
-      .then((data) => {
-        console.log(data);
-        if( data.status === 200) {
-          this.setState({
-            nom: data.data.nom,
-            prenom: data.data.prenom,
-            role : data.data.role
-          })
-        }
 
-    axios.get(GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username, {
-      headers: {
-        'Content-Type':'multipart/form-data',
-      }
-    })
-      .then((data) => {
-        console.log(data);
-        if( data.status === 200) {
-          this.setState({
-            profilePic: GlobalVarHandler.apiBaseUrl+'pictures/file/'+this.state.username})
-        }
-      });
-      });
+  componentWillMount(){
+    // Get user info to display it : first general infos and then picture
+    getUserInfos(this.state.token, this.state.username).then(userInfo => {
+      getPicture(this.state.token, this.state.username).then(link => {
+        this.setState({
+          nom: userInfo.nom,
+          prenom: userInfo.prenom,
+          role : userInfo.role,
+          profilePic: link,
+        });
+      }).catch(error => console.log(error));
+    }).catch(error => console.log(error));
   }
+
+
   render() {
 
     return (
@@ -142,7 +101,8 @@ class MyInformations extends Component {
             onChange={this.importerPhoto}
           />
           <label htmlFor="raised-button-file" className="BouttonChangementPhotoProfil">
-            <Button variant="raised" component="span" className="BouttonChangementPhotoProfil" >
+            <Button primary={true} color="secondary"
+              variant="raised" component="span" className="BouttonChangementPhotoProfil" >
               Changer sa photo de profil
             </Button>
           </label>
@@ -153,7 +113,7 @@ class MyInformations extends Component {
 
         <div>
           <div>
-            <p> {"Status: "+this.state.role}</p>
+            <p> {"Statut: "+this.state.role}</p>
           </div>
           <FormControl className="champMotDePasse">
             <InputLabel htmlFor="password">Ancien mot de passe</InputLabel>
@@ -165,7 +125,7 @@ class MyInformations extends Component {
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
-                    onClick={this.handleClickShowPasssword}
+                    onClick={this.handleClickShowPassword}
                     onMouseDown={this.handleMouseDownPassword}
                   >
                     {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
@@ -183,12 +143,12 @@ class MyInformations extends Component {
                 id="adornment-password2"
                 type={this.state.showPassword2 ? 'text' : 'password2'}
                 value={this.state.password2}
-                onChange={this.handleChange2('password2')}
+                onChange={this.handleChange('password2')}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
-                      onClick={this.handleClickShowPasssword2}
-                      onMouseDown={this.handleMouseDownPassword2}
+                      onClick={this.handleClickShowPassword2}
+                      onMouseDown={this.handleMouseDownPassword}
                     >
                       {this.state.showPassword2 ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -204,12 +164,12 @@ class MyInformations extends Component {
               id="adornment-password3"
               type={this.state.showPassword3 ? 'text' : 'password3'}
               value={this.state.password3}
-              onChange={this.handleChange3('password3')}
+              onChange={this.handleChange('password3')}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
-                    onClick={this.handleClickShowPasssword3}
-                    onMouseDown={this.handleMouseDownPassword3}
+                    onClick={this.handleClickShowPassword3}
+                    onMouseDown={this.handleMouseDownPassword}
                   >
                     {this.state.showPassword3 ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
@@ -219,7 +179,10 @@ class MyInformations extends Component {
           </FormControl>
           <br/>
 
-          <Button onClick={(event) => this.handleClickChangePassword(event)}>Modifier le mot de passe</Button>
+          <Button primary={true} variant="raised" color="secondary"
+            onClick={(event) => this.handleClickChangePassword(event)}>
+            Modifier le mot de passe
+          </Button>
 
         </div>
         </div>
@@ -230,37 +193,20 @@ class MyInformations extends Component {
 
   }
 
+  /* Change password */
   handleClickChangePassword (event) {
-    let apiBaseUrl = GlobalVarHandler.apiBaseUrl;
-    let updatePasswordUrl = GlobalVarHandler.updatePasswordUrl;
-    let donneesFormulaire={
-      "password":this.state.password,
-      "newPassword": this.state.password2
+
+    // check if both new password fields are not equals
+    if (this.state.password2 !== this.state.password3) {
+      toast.error("You typed two different passwords", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+      });
     }
 
-    axios.post(apiBaseUrl+updatePasswordUrl, creerStructureFormulaire(donneesFormulaire), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': this.state.token}
-    })
-      .then(function (response) {
-        console.log(response);
-
-        if(response.status === 200){
-          var token = response.data.token;
-          cookie.save('token', token, {path: '/'});
-          toast.success("Mot de passe modifié", {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-          console.log("Password changed");
-          console.log(response.data.token);
-          // self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
+    else {
+      updatePassword(this.state.token, this.state.password, this.state.password2).catch(error => console.log(error));
+    }
   }
 }
 

@@ -1,3 +1,6 @@
+/*  Defines the table component where you can select elements
+* For now, label of each columns are 'Nom', 'Prenom' and 'Role' */
+
 import React from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'

@@ -1,3 +1,5 @@
+/* Defines the component that enables user to create a new prom */
+
 import React, { Component } from 'react'
 import '../Style/PromsCreation.css'
 import TextField from 'material-ui/TextField'
@@ -5,7 +7,7 @@ import Button from 'material-ui/Button'
 import cookie from 'react-cookies'
 import TablesSelectStudents from './TablesSelectStudents'
 import { ToastContainer } from 'react-toastify'
-import { getAllUsers, setPromosInfos } from '../UsefulFuncVar/ApiCall'
+import { getAllUsers, setPromosInfos } from '../Utils/ApiCall'
 import { Input, withStyles } from 'material-ui'
 import { SelectWrapped } from '../GenericComponents/Selects'
 
@@ -134,21 +136,26 @@ class PromsCreation extends Component {
     }
 }
 
-  // Updates dataForTableOne and dataForTableTwo
+  /* Updates dataForTableOne and dataForTableTwo */
   dataTableUpdater (toRemoveInTableOne, toRemoveInTableTwo){
     getAllUsers(this.state.token).then(allUsers => {
+      // retrieve usernames of users to remove for table one and two
       let usernamesToRemoveOne = toRemoveInTableOne.map((el) => el.username);
       let usernamesToRemoveTwo = toRemoveInTableTwo.map((el) => el.username);
       let tableAllUsers = allUsers;
       let dataForTableOne = this.state.dataForTableOne;
       let dataForTableTwo = this.state.dataForTableTwo;
 
+
+      // Remove users from table two and push them in one
       for (let i=0; i<usernamesToRemoveTwo.length; i++) {
         let userInfo = tableAllUsers.filter(user => user.username===usernamesToRemoveTwo[i]);
         dataForTableOne.push(userInfo[0]);
         dataForTableTwo = dataForTableTwo.filter(user=>user.username!==usernamesToRemoveTwo[i]);
       }
 
+
+      // Remove users from table one and push them in two
       for (let i=0; i<usernamesToRemoveOne.length; i++) {
         let userInfo = tableAllUsers.filter(user => user.username===usernamesToRemoveOne[i]);
         dataForTableTwo.push(userInfo[0]);
@@ -163,10 +170,12 @@ class PromsCreation extends Component {
     }).catch(error => console.log(error));
   }
 
+  /* Real time update of what is typed in textfields in concerned state variables */
   handleChange = prop => event => {
     this.setState({ [prop]: event.target.value });
   };
 
+  /* When respo is selected */
   handleChangeSingleRespo = (respo) => {
     this.setState({
       respo,
@@ -178,7 +187,7 @@ class PromsCreation extends Component {
     }
   }
 
-  // Api call to create prom
+  /* Api call to create prom */
   handleClickCreateProm (event) {
     let membersUsernames = this.state.dataForTableTwo.map(el => el.username);
     let respoUsername = this.state.infosPossibleRespos.filter(el => el.label===this.state.nomEtPrenomRespo)[0].value;
@@ -186,6 +195,7 @@ class PromsCreation extends Component {
   }
 
   componentDidMount () {
+    // Api call to fill Select component with names of possible respos
     getAllUsers(this.state.token).then((allUsers) => {
       let possibleRespos = allUsers.filter(user => user.role==='intervenant' || user.role==='administrateur')
         .map(user => ({
@@ -196,7 +206,6 @@ class PromsCreation extends Component {
       this.setState({dataForTableOne: allUsers, infosPossibleRespos: possibleRespos});
 
     });
-    // TODO : Utiliser des requêtes definies dans api call pour mettre les bons users dans les tables
   }
 
   render() {

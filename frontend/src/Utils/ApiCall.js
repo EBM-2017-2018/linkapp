@@ -1,3 +1,7 @@
+/* Defines the structure of each request to our database Mongo
+ * Paths are defined in const at the beginning
+  * Each function corresponds to a specific request */
+
 import axios from 'axios/index'
 import cookie from 'react-cookies'
 import { toast } from 'react-toastify'
@@ -13,6 +17,9 @@ const allPromosUrl = 'listpromos';
 const basicUserInfoUrl = 'basicuserinfos/';
 const signupUrl = 'signup';
 const checkAndRefreshToken = 'checkandrefreshtoken';
+const updatePasswordUrl = 'updatePassword';
+const pictureFileUrl = 'pictures/file/'
+const pictureUploadUrl = 'pictures/upload/'
 
 export let getTokenOnLogin = (username, password) => {
   return new Promise(
@@ -62,7 +69,6 @@ export let funcCheckAndRefreshToken = () => {
   })
 }
 
-
 export let getAllUsers = (token) => {
   return new Promise(
     (resolve, reject) => {
@@ -103,7 +109,6 @@ export let getBasicUserInfos = (token, username) => {
       });
     })
 }
-
 
 export let setUserInfos = (token, username, password, roleUser, nomUser, prenomUser, emailUser) => {
   let dataUser = {
@@ -161,7 +166,6 @@ export let setUserInfos = (token, username, password, roleUser, nomUser, prenomU
   )
 }
 
-
 export let updateUserInfos = (token, username, role, nom, prenom, email) => {
   let donneesFormulaire={
     "username":username,
@@ -196,6 +200,68 @@ export let updateUserInfos = (token, username, role, nom, prenom, email) => {
   )
 }
 
+export let updatePassword = (myToken, oldPassword, newPassword) => {
+  return new Promise ((resolve, reject) => {
+    let donneesFormulaire={
+      "password":oldPassword,
+      "newPassword": newPassword
+    }
+
+    axios.post(apiBaseUrl+updatePasswordUrl, creerStructureFormulaire(donneesFormulaire), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': myToken}
+    })
+      .then(function (response) {
+        if(response.status === 200){
+          let token = response.data.token;
+          cookie.save('token', token, {path: '/'});
+          toast.success("Mot de passe modifié", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000,
+          });
+          resolve('success');
+          reject('error in updatePassword');
+        }
+      })
+  })
+}
+
+export let getPicture = (token, username) => {
+  return new Promise((resolve, reject) => {
+    axios.get(apiBaseUrl+pictureFileUrl+username, {
+      headers: {
+        'Content-Type':'multipart/form-data',
+      }
+    })
+      .then((data) => {
+        if( data.status === 200) {
+          resolve(apiBaseUrl+pictureFileUrl+username);
+          reject('error in getPicture');
+      }
+    })
+  })
+}
+
+export let uploadPicture = (username, data) => {
+  return new Promise ((resolve, reject) => {
+    axios.post(apiBaseUrl + pictureUploadUrl + username, data).then((response) => {
+      if( response.status === 200) {
+        toast.success("photo mise en ligne", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+        resolve(apiBaseUrl + pictureFileUrl + username);
+        reject('Error in uploadPicture');
+      }
+    })
+      .catch((error) => {
+        toast.error("erreur durant la mise en ligne de la photo", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+        });
+      })
+  })
+}
 
 export let getPromosInfos = (nameProm, token) => {
   return new Promise(
@@ -212,7 +278,6 @@ export let getPromosInfos = (nameProm, token) => {
     }
   )
 }
-
 
 export let setPromosInfos = (nomPromo, responsable, token, membres) => {
   let dataProm = {
@@ -247,7 +312,6 @@ export let setPromosInfos = (nomPromo, responsable, token, membres) => {
     }
   )
 }
-
 
 export let updatePromoInfos = (token, nomPromo, responsable, membres) => {
   let dataProm = {
@@ -297,7 +361,7 @@ export let getAllPromos = (token) => {
   )
 }
 
-
+/* Creates a request typical structure */
 export function creerStructureFormulaire(donneesFormulaire) {
   let structureFormulaire = [];
   for (let proprietes in donneesFormulaire) {

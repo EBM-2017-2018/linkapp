@@ -1,3 +1,5 @@
+/* TabContainer is a two options-tab, some changes are needed to enable the creation of more (or less) than two tabs */
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'

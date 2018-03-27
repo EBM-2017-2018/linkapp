@@ -12,7 +12,7 @@ import ClearIcon from 'material-ui-icons/Clear'
 import Chip from 'material-ui/Chip'
 import cookie from 'react-cookies'
 import AccountModification from './AccountModification'
-import { getAllUsers, getUserInfos } from '../UsefulFuncVar/ApiCall'
+import { getAllUsers, getUserInfos } from '../Utils/ApiCall'
 
 class Option extends React.Component {
   handleClick = event => {
@@ -44,7 +44,7 @@ function SelectWrapped(props) {
   return (
     <Select
       optionComponent={ Option }
-      noResultsText={<Typography>{'Aucun utilisateurs trouvé'}</Typography>}
+      noResultsText={<Typography>{'Aucun utilisateur trouvé'}</Typography>}
       arrowRenderer={arrowProps => {
         return arrowProps.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />;
       }}
@@ -202,9 +202,13 @@ class AccountManagement extends Component {
     this.setState({
       single,
     });
-    getUserInfos(this.state.token, single).then(userInfos=>{
-      this.setState({userToModify: userInfos});
-    }).catch(error => console.log(error));
+
+    if( single !== null) {
+      getUserInfos(this.state.token, single).then(userInfos => {
+        this.setState({userToModify: userInfos});
+        console.log(this.state.userToModify);
+      }).catch(error => console.log(error));
+    }
   };
 
 

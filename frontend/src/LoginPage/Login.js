@@ -17,7 +17,7 @@ import Visibility from 'material-ui-icons/Visibility'
 import VisibilityOff from 'material-ui-icons/VisibilityOff'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import { getTokenOnLogin } from '../UsefulFuncVar/ApiCall'
+import { getTokenOnLogin } from '../Utils/ApiCall'
 
 const styles = theme => ({
   margin: {

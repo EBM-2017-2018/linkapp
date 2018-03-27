@@ -1,3 +1,4 @@
+/* Account management main component that defines its structure and deals with view changing */
 import React, { Component } from 'react'
 import AccountManagement from './AccountManagement'
 import AccountCreation from './AccountCreation'
@@ -15,6 +16,8 @@ class AccountManagementPage extends Component {
     this.changeAccountDisplayedScreen = this.changeAccountDisplayedScreen.bind(this)
   }
 
+  /* Initiate the displayed screen change
+  * numberTabs : tab number corresponding to the screen that needs to be displayed */
   changeAccountDisplayedScreen = (numberTab) => {
     this.setState({displayedScreen: this.state.nameTabs[numberTab]});
   }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Login from './Login'
 import cookie from 'react-cookies'
-import { funcCheckAndRefreshToken } from '../UsefulFuncVar/ApiCall'
+import { funcCheckAndRefreshToken } from '../Utils/ApiCall'
 
 class LoginScreen extends Component {
   constructor(props) {
