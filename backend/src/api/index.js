@@ -213,6 +213,7 @@ router.post('/signup', passport.authenticate('jwt', { session: false }), (req, r
             msg: 'Nom d\'utilisateur invalide',
           });
       }
+      // vérification du role
       if (
         (
           (

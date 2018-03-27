@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const bcrypt = require('bcrypt-nodejs');
 const validator = require('validator');
 
-
+// schema d'un utilisateur
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -38,7 +38,7 @@ const UserSchema = new Schema({
   },
 
 });
-
+// encode le mot de passe pour ne pas l'avoir en clair dans la bdd
 UserSchema.pre('save', function hashPass(next) {
   const user = this;
   if (this.isModified('password') || this.isNew) {

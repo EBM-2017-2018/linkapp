@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-
+// schéma d'une promo
 const Promo = new Schema({
   nomPromo: {
     type: String,
