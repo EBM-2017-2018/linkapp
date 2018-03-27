@@ -198,7 +198,7 @@ class MyInformations extends Component {
 
     // check if both new password fields are not equals
     if (this.state.password2 !== this.state.password3) {
-      toast.error("You typed two different passwords", {
+      toast.error("Vous avez tapé deux mots de passe différents", {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 3000,
       });

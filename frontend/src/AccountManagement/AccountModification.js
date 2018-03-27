@@ -3,7 +3,7 @@ import { Button, TextField, withStyles } from 'material-ui'
 import PropTypes from 'prop-types'
 import cookie from 'react-cookies'
 import { ToastContainer } from 'react-toastify'
-import {updateUserInfos} from '../Utils/ApiCall'
+import { getAllUsers, updateUserInfos } from '../Utils/ApiCall'
 
 const styles = theme => ({
   container: {
@@ -57,12 +57,21 @@ class AccountModification extends Component {
 
   handleClick(event)
   {
+    // Update user info and then refresh the select user list
     updateUserInfos(this.state.token,
       this.state.username,
       this.state.role,
       this.state.nom,
       this.state.prenom,
-      this.state.email);
+      this.state.email)
+      .then(() => getAllUsers(this.state.token)
+        .then(allUsers => {
+      let valuesToDisplay = allUsers.map(receivedUsersInfo => ({
+        value: receivedUsersInfo.username,
+        label: receivedUsersInfo.prenom + ' ' + receivedUsersInfo.nom,
+      }));
+      this.props.refreshListHandler(valuesToDisplay);
+    }).catch(error => console.log(error)));
   }
 
   componentDidUpdate = () => {
@@ -154,7 +163,7 @@ class AccountModification extends Component {
           <br/>
           <Button primary={true} variant="raised" color="secondary"
                   onClick={(event) => this.handleClick(event)}>
-            Valider l'ajout
+            Valider la modification
           </Button>
         </div>
       </div>

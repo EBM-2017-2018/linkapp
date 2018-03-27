@@ -68,6 +68,15 @@ class AccountCreation extends Component {
       this.state.nom,
       this.state.prenom,
       this.state.email);
+
+    this.setState({
+      username:'',
+      password:'',
+      role:'etudiant',
+      nom:'',
+      prenom:'',
+      email:'',
+    });
   }
 
   render () {
@@ -79,16 +88,18 @@ class AccountCreation extends Component {
         <h2>Pour ajouter un utilisateur, remplissez le formulaire ci-dessous</h2>
         <div className="addUserForm">
           <TextField
-        label="Identifiant"
-        placeholder="Identifiant"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        margin="normal"
-        onChange={this.handleChange('username')}
+            value={this.state.username}
+            label="Identifiant"
+            placeholder="Identifiant"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin="normal"
+            onChange={this.handleChange('username')}
         />
         <br/>
         <TextField
+          value={this.state.password}
           label="Mot de passe"
           placeholder="Mot de passe"
           InputLabelProps={{
@@ -121,6 +132,7 @@ class AccountCreation extends Component {
           </TextField>
         <br/>
           <TextField
+            value={this.state.nom}
             label="Nom"
             placeholder="Nom"
             InputLabelProps={{
@@ -131,6 +143,7 @@ class AccountCreation extends Component {
           />
           <br/>
           <TextField
+            value={this.state.prenom}
             label="Prenom"
             placeholder="Prenom"
             InputLabelProps={{
@@ -141,6 +154,7 @@ class AccountCreation extends Component {
           />
           <br/>
           <TextField
+            value={this.state.email}
             label="Email"
             placeholder="Email"
             InputLabelProps={{

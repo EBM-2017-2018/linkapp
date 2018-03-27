@@ -131,6 +131,7 @@ class PromsCreation extends Component {
       responsable:'',
       dataForTableOne: [],
       dataForTableTwo: [],
+      allUsers: [],
       nomEtPrenomRespo: "Responsable de l'option",
       infosPossibleRespos: [],
     }
@@ -192,6 +193,12 @@ class PromsCreation extends Component {
     let membersUsernames = this.state.dataForTableTwo.map(el => el.username);
     let respoUsername = this.state.infosPossibleRespos.filter(el => el.label===this.state.nomEtPrenomRespo)[0].value;
     setPromosInfos(this.state.nomPromo, respoUsername, this.state.token, membersUsernames);
+    this.setState({
+      dataForTableOne: this.state.allUsers,
+      dataForTableTwo: [],
+      nomPromo:'',
+      nomEtPrenomRespo: "Responsable de l'option"
+    });
   }
 
   componentDidMount () {
@@ -203,7 +210,7 @@ class PromsCreation extends Component {
           label: user.prenom + " " + user.nom,
         }));
 
-      this.setState({dataForTableOne: allUsers, infosPossibleRespos: possibleRespos});
+      this.setState({allUsers: allUsers, dataForTableOne: allUsers, infosPossibleRespos: possibleRespos});
 
     });
   }
@@ -221,6 +228,7 @@ class PromsCreation extends Component {
           <form noValidate autoComplete="off">
             <div>
               <TextField
+                value={this.state.nomPromo}
                 id="nomPromo"
                 label="Nom de la promo"
                 margin="normal"
