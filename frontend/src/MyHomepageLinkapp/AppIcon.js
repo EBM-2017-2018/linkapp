@@ -1,86 +1,63 @@
+
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
-import {GridList, Popover, withStyles} from 'material-ui';
-
-import AppIcon from './AppIcon';
-import logo from '../Images/IconeApp.png'
+import {Card, CardMedia, GridListTile, Typography, withStyles} from 'material-ui';
 
 const styles = theme => ({
-  root: {
-    overflow: 'hidden',
-    width: 300,
-    padding: '20px 15px',
-    backgroundColor: theme.palette.background.paper,
+  card: {
+    height: '100%',
+    padding: theme.spacing.unit / 2,
+    boxShadow: 'unset',
+    '&:hover': {
+      border: '1px solid #e5e5e5',
+      borderRadius: 2,
+      padding: `calc(${theme.spacing.unit / 2}px - 1px)`,
+      cursor: 'pointer'
+    }
+  },
+  media: {
+    height: `calc(100% - ${theme.typography.subheading.fontSize}*2)`,
+    backgroundSize: 'contain'
+  },
+  appName: {
+    textAlign: 'center',
+    userSelect: 'none'
+  },
+  link: {
+    textDecoration: 'none'
   }
 });
 
-class AppsMenu extends PureComponent {
+class AppIcon extends PureComponent {
+  static muiName = 'GridListTile';
+
   static propTypes = {
-    open: PropTypes.bool.isRequired,
-    anchorEl: PropTypes.object,
-    closeCallback: PropTypes.func.isRequired,
+    ...GridListTile.propTypes,
     classes: PropTypes.object.isRequired,
+    logo: PropTypes.string.isRequired,
+    appName: PropTypes.string.isRequired,
+    href: PropTypes.string.isRequired
   };
 
-  apps = [
-    {
-      name: 'OKLM',
-      url: '//oklm.ebm.nymous.io',
-      logo: logo
-    },
-    {
-      name: 'Redline',
-      url: '//redline.ebm.nymous.io',
-      logo: logo
-    },
-    {
-      name: 'Linkapp',
-      url: '//linkapp.ebm.nymous.io',
-      logo: logo
-    },
-    {
-      name: 'Markus',
-      url: '//markus.ebm.nymous.io',
-      logo: logo
-    },
-    {
-      name: 'SAGG',
-      url: '//sagg.ebm.nymous.io',
-      logo: logo
-    },
-    {
-      name: 'Livecoding',
-      url: '//clock-livecoding.ebm.nymous.io',
-      logo: logo
-    }
-  ];
-
   render() {
-    const {classes} = this.props;
+    const {classes, logo, appName, ...baseProps} = this.props;
 
     return (
-      <Popover
-        open={this.props.open}
-        onClose={this.props.closeCallback}
-        anchorEl={this.props.anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center'
-        }}>
-        <div className={classes.root}>
-          <GridList cellHeight={100} cols={3}>
-            {this.apps.map(app => (
-              <AppIcon key={app.url} logo={app.logo} appName={app.name} href={app.url}/>
-            ))}
-          </GridList>
-        </div>
-      </Popover>
-    )
+      <GridListTile {...baseProps}>
+        <a href={this.props.href} className={classes.link}>
+          <Card className={classes.card}>
+            <CardMedia
+              className={classes.media}
+              image={logo}
+              title={appName}/>
+            <Typography variant="subheading" className={classes.appName}>
+              {this.props.appName}
+            </Typography>
+          </Card>
+        </a>
+      </GridListTile>
+    );
   }
 }
 
-export default withStyles(styles)(AppsMenu);
+export default withStyles(styles)(AppIcon);

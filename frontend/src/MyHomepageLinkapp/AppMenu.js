@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 import {GridList, Popover, withStyles} from 'material-ui';
 
 import AppIcon from './AppIcon';
-import logo from '../Images/IconeApp.png'
-
+import logoClock from '../Images/logo-clock.png'
+import logoMarkus from '../Images/logo-markus.png'
+import logoOklm from '../Images/logo-oklm.png'
+import logoSagg from '../Images/logo-sagg.png'
+import logoRedline from '../Images/logo-redline.png'
+import logoLinkapp from '../Images/logo-linkapp.png'
 const styles = theme => ({
   root: {
     overflow: 'hidden',
@@ -15,15 +19,6 @@ const styles = theme => ({
 });
 
 class AppsMenu extends PureComponent {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: this.props.open,
-      closeCallback: this.props.closeCallback,
-      anchorEl: this.props.anchorEl,
-    };
-  };
 
   static propTypes = {
     open: PropTypes.bool.isRequired,
@@ -36,32 +31,32 @@ class AppsMenu extends PureComponent {
     {
       name: 'OKLM',
       url: '//oklm.ebm.nymous.io',
-      logo: logo
+      logo: logoOklm
     },
     {
       name: 'Redline',
       url: '//redline.ebm.nymous.io',
-      logo: logo
+      logo: logoRedline
     },
     {
       name: 'Linkapp',
       url: '//linkapp.ebm.nymous.io',
-      logo: logo
+      logo: logoLinkapp
     },
     {
       name: 'Markus',
       url: '//markus.ebm.nymous.io',
-      logo: logo
+      logo: logoMarkus
     },
     {
       name: 'SAGG',
       url: '//sagg.ebm.nymous.io',
-      logo: logo
+      logo: logoSagg
     },
     {
       name: 'Livecoding',
       url: '//clock-livecoding.ebm.nymous.io',
-      logo: logo
+      logo: logoClock
     }
   ];
 
@@ -70,9 +65,9 @@ class AppsMenu extends PureComponent {
 
     return (
       <Popover
-        open={this.state.open}
-        onClose={this.state.closeCallback}
-        anchorEl={this.state.anchorEl}
+        open={this.props.open}
+        onClose={this.props.closeCallback}
+        anchorEl={this.props.anchorEl}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'center'
@@ -84,7 +79,15 @@ class AppsMenu extends PureComponent {
         <div className={classes.root}>
           <GridList cellHeight={100} cols={3}>
             {this.apps.map(app => (
-              <AppIcon key={app.url} logo={app.logo} appName={app.name} href={app.url}/>
+              <AppIcon
+                open={this.props.open}
+                onClose={this.props.closeCallback}
+                anchorEl={this.props.anchorEl}
+                key={app.url}
+                logo={app.logo}
+                appName={app.name}
+                href={app.url}
+              />
             ))}
           </GridList>
         </div>

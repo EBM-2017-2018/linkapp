@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react'
 import '../Style/PageAccueilPerso.css'
 import MenuNavigationLinkapp from './MenuNavigationLinkapp'
-import logo from '../Images/IconeApp.png'
-import logoClock from '../Images/logo-clock.png'
 import { AppBar, Button, IconButton, MenuItem, withStyles, Tooltip } from 'material-ui'
 import ApplicationIcon from './ApplicationIcon'
 import Toolbar from 'material-ui/Toolbar'
@@ -16,8 +14,11 @@ import AccountManagementPage from '../AccountManagement/AccountManagementPage'
 import cookie from 'react-cookies'
 import AppsMenu from './AppMenu'
 import {Apps as AppsIcon} from 'material-ui-icons';
-
-
+import logoClock from '../Images/logo-clock.png'
+import logoMarkus from '../Images/logo-markus.png'
+import logoOklm from '../Images/logo-oklm.png'
+import logoSagg from '../Images/logo-sagg.png'
+import logoRedline from '../Images/logo-redline.png'
 const styles = {
   root: {
     flexGrow: 1,
@@ -71,6 +72,7 @@ class PageAccueilPerso extends PureComponent {
   };
 
   handleAppsMenuClick = (event) => {
+    console.log("open");
     this.setState({
       appsMenuOpen: true,
       appsAnchorEl: event.currentTarget,
@@ -86,7 +88,7 @@ class PageAccueilPerso extends PureComponent {
 
   render() {
     const { classes } = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, appsAnchorEl } = this.state;
     let open = this.state.myAccountMenuOpen;
       return (
           <div className="pageAccueilPerso">
@@ -140,7 +142,7 @@ class PageAccueilPerso extends PureComponent {
                   </Tooltip>
                   <AppsMenu
                     open={this.state.appsMenuOpen}
-                    anchorEl={anchorEl}
+                    anchorEl={appsAnchorEl}
                     closeCallback={this.handleAppsMenuClose}/>
                 </Toolbar>
               </AppBar>
@@ -153,19 +155,19 @@ class PageAccueilPerso extends PureComponent {
                 {this.state.displayedScreen === 'Mes applications' && (
                   <div className="myApplications">
                     <ApplicationIcon link={"https://oklm.ebm.nymous.io/"+this.state.query}
-                                     srcImg={logo}
+                                     srcImg={logoOklm}
                                      nameApp="OKLM"/>
                     <ApplicationIcon link={"https://sagg.ebm.nymous.io/"+this.state.query}
-                                     srcImg={logo}
+                                     srcImg={logoSagg}
                                      nameApp="Sagg"/>
                     <ApplicationIcon link={"https://redline.ebm.nymous.io/"+this.state.query}
-                                     srcImg={logo}
+                                     srcImg={logoRedline}
                                      nameApp="Redline"/>
                     <ApplicationIcon link={"https://clock-livecoding.ebm.nymous.io/"+this.state.query}
                                      srcImg={logoClock}
                                      nameApp="CLOCK"/>
                     <ApplicationIcon link={"https://markus.ebm.nymous.io/"+this.state.query}
-                                     srcImg={logo}
+                                     srcImg={logoMarkus}
                                      nameApp="MarkUs"/>
                   </div>)
                 }
